@@ -110,8 +110,8 @@ body {
 
 .header_normal {
   background: linear-gradient(145deg,
-      rgb(32, 106, 80) 15%,
-      rgb(21, 57, 102) 70%);
+      #000 15%,
+      #9a081d 70%);
 }
 
 .header_dark {

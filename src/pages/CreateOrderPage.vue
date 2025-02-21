@@ -3,8 +3,9 @@
     <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
       <q-card flat bordered class>
         <q-card-section class="flex justify-between">
-          <div class="text-h6">Agregar platillo</div>
-          <q-btn align="around" class="btn-fixed-width" color="primary" :label="$t('finish order')" icon="mdi-check" />
+          <div class="text-h6">{{ $t('add_dish') }}</div>
+          <q-btn align="around" class="btn-fixed-width" color="secondary" :label="$t('finish_order')"
+            icon="mdi-check" />
         </q-card-section>
 
         <q-separator inset></q-separator>
@@ -13,35 +14,35 @@
             <q-list>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="q-pb-xs text-h6 text-weight-regular">{{ $t('basic information') }}</q-item-label>
+                  <q-item-label class="q-pb-xs text-h6 text-weight-regular">{{ $t('basic_information') }}</q-item-label>
                   <q-separator></q-separator>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="q-pb-xs">{{ $t('table number') }}</q-item-label>
-                  <q-select :rules="[val => !!val || 'Field is required']" dense label="table number"
+                  <q-item-label class="q-pb-xs">{{ $t('table_number') }}</q-item-label>
+                  <q-select :rules="[val => !!val || $t('field_is_required')]" dense :label="$t('table_number')"
                     option-label="name" option-value="id" outlined v-model="tableNumber" :options="numberTables"
                     options-dense map-options></q-select>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number of diners') }}</q-item-label>
-                  <q-input :rules="[val => !!val || 'Field is required']" dense outlined v-model="numberDiners"
-                    type="number" :label="$t('number of diners')" />
+                  <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners') }}</q-item-label>
+                  <q-input :rules="[val => !!val || $t('field_is_required')]" dense outlined v-model="numberDiners"
+                    type="number" :label="$t('number_of_diners')" />
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="text-h6 q-pb-xs">{{ $t('order information') }}</q-item-label>
+                  <q-item-label class="text-h6 q-pb-xs">{{ $t('order_information') }}</q-item-label>
                   <q-separator></q-separator>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="q-pb-xs">{{ $t('type of dish') }}</q-item-label>
-                  <q-select :rules="[val => !!val || 'Field is required']" dense label="type of dish"
+                  <q-item-label class="q-pb-xs">{{ $t('type_of_dish') }}</q-item-label>
+                  <q-select :rules="[val => !!val || $t('field_is_required')]" dense :label="$t('type_of_dish')"
                     option-label="name" option-value="id" outlined v-model="orderedDishes.typeDish" :options="typesDish"
                     options-dense map-options></q-select>
                 </q-item-section>
@@ -49,22 +50,22 @@
               <q-item>
                 <q-item-section>
                   <q-item-label class="q-pb-xs">{{ $t('dish') }}</q-item-label>
-                  <q-select :rules="[val => !!val || 'Field is required']" dense option-label="name" option-value="id"
-                    outlined v-model="orderedDishes.dishe" :options="dishes" label="dish" map-options
-                    options-dense></q-select>
+                  <q-select :rules="[val => !!val || $t('field_is_required')]" dense option-label="name"
+                    option-value="id" outlined v-model="orderedDishes.dishe" :options="dishes" :label="$t('dish')"
+                    map-options options-dense></q-select>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label class="q-pb-xs">{{ $t('quantity') }}</q-item-label>
-                  <q-input :rules="[val => !!val || 'Field is required']" dense outlined min="1"
+                  <q-input :rules="[val => !!val || $t('field_is_required')]" dense outlined min="1"
                     v-model="orderedDishes.quantity" type="number" :label="$t('quantity')"
                     @update:model-value="val => orderedDishes.quantity = Number(val)" />
                 </q-item-section>
               </q-item>
             </q-list>
             <q-card-actions align="right" class="text-teal">
-              <q-btn @click="addDish" label="Agregar" type="submit" color="primary" v-close-popup />
+              <q-btn @click="addDish" :label="$t('add')" type="submit" color="secondary" v-close-popup />
             </q-card-actions>
           </q-form>
         </q-card-section>
@@ -73,7 +74,7 @@
     <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 q-mt-md">
       <q-card flat bordered class>
         <q-card-section>
-          <div class="text-h6">Ordenes recientes</div>
+          <div class="text-h6">{{ $t('recent_orders') }}</div>
         </q-card-section>
 
         <q-separator inset></q-separator>
@@ -122,13 +123,13 @@
                         <q-item-section avatar>
                           <q-icon color="secondary" name="edit" />
                         </q-item-section>
-                        <q-item-section>Editar</q-item-section>
+                        <q-item-section>{{ $t('edit') }}</q-item-section>
                       </q-item>
                       <q-item clickable v-close-popup @click="deleteItem(props.rowIndex)">
                         <q-item-section avatar>
                           <q-icon color="secondary" name="delete" />
                         </q-item-section>
-                        <q-item-section>Eliminar</q-item-section>
+                        <q-item-section>{{ $t('delete') }}</q-item-section>
                       </q-item>
                     </q-list>
                   </q-menu>
@@ -185,13 +186,13 @@ const dishes = ref([
 const tableNumber = ref()
 const numberDiners = ref(1)
 
-const orderedDishes = reactive({
+let orderedDishes = reactive({
   typeDish: null,
   dishe: null,
   quantity: 1
 });
 
-const data = reactive([]);
+const data = ref([]);
 
 const columns = [
   { name: 'name', label: 'name', field: 'name', sortable: true, align: 'left' },
@@ -200,33 +201,28 @@ const columns = [
   { name: 'Action', label: 'Action', field: 'Action', sortable: false, align: 'center' }
 ];
 
-const cleanForm = (() => {
-  orderedDishes.value = {
-    typeDish: '',
-    dishe: '',
-    quantity: 1
+const resetOrderedDishes = () => {
+  orderedDishes.typeDish = null;
+  orderedDishes.dishe = null;
+  orderedDishes.quantity = 1;
+};
+
+const addDish = async () => {
+  const success = await formRef.value.validate();
+
+  if (!success) return;
+
+  const dishIndex = data.value.findIndex(dish => dish.dishe.id === orderedDishes.dishe.id);
+
+  if (dishIndex !== -1) {
+    data.value[dishIndex].quantity += orderedDishes.quantity;
+  } else {
+    data.value.push({ ...orderedDishes });
   }
-})
-const addDish = (() => {
-  formRef.value.validate().then(success => {
-    console.log('success', success);
-    if (success) {
-      const existingDish = data.value.find(dish => dish.dishe.id === orderedDishes.value.dishe.id);
 
-      if (existingDish) {
-        existingDish.quantity += orderedDishes.value.quantity;
-      } else {
-        data.value.push({
-          ...orderedDishes.value
-        });
-      }
-      // console.log("Formulario válido, enviando datos...");
-    }
-  });
+  resetOrderedDishes();
+};
 
-  cleanForm()
-
-})
 const editItem = ((item) => {
   console.log(item)
   orderedDishes.value = { ...item }

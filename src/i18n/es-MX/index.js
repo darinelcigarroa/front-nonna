@@ -1,8 +1,126 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
-  username: "Usuario",
-  password: "Contraseña",
-  login: "Iniciar sesión"
-};
+  // Autenticación y Usuarios
+  username: 'Usuario',
+  password: 'Contraseña',
+  login: 'Iniciar sesión',
+  logout: 'Cerrar sesión',
+  profile: 'Perfil',
+  settings: 'Configuraciones',
+  change_password: 'Cambiar contraseña',
+
+  // Órdenes y Mesas
+  finish_order: 'Finalizar orden',
+  basic_information: 'Información básica',
+  table_number: 'Número de mesa',
+  number_of_diners: 'Número de comensales',
+  order_information: 'Información del pedido',
+  recent_orders: 'Órdenes recientes',
+  order_status: 'Estado de la orden',
+  pending: 'Pendiente',
+  in_progress: 'En preparación',
+  completed: 'Completada',
+  cancelled: 'Cancelada',
+
+  // Comidas y Menú
+  dish: 'Platillo',
+  dishes: 'Platillos',
+  type_of_dish: 'Tipo de platillo',
+  quantity: 'Cantidad',
+  price: 'Precio',
+  total_price: 'Precio total',
+  subtotal: 'Subtotal',
+  add: 'Agregar',
+  add_dish: 'Agregar platillo',
+  edit_dish: 'Editar platillo',
+  delete_dish: 'Eliminar platillo',
+  food_category: 'Categoría de comida',
+  beverages: 'Bebidas',
+  desserts: 'Postres',
+  starters: 'Entradas',
+  main_courses: 'Platos fuertes',
+  side_dishes: 'Acompañamientos',
+  special_requests: 'Peticiones especiales',
+
+  // Facturación y Pagos
+  payment: 'Pago',
+  payment_method: 'Método de pago',
+  cash: 'Efectivo',
+  card: 'Tarjeta',
+  digital_payment: 'Pago digital',
+  bill: 'Cuenta',
+  invoice: 'Factura',
+  tip: 'Propina',
+  tax: 'Impuesto',
+  discount: 'Descuento',
+  apply_discount: 'Aplicar descuento',
+  total_to_pay: 'Total a pagar',
+
+  // Cocina y Estado de Pedidos
+  kitchen: 'Cocina',
+  chef: 'Chef',
+  waiter: 'Mesero',
+  prepare_order: 'Preparar orden',
+  ready_to_serve: 'Listo para servir',
+  served: 'Servido',
+
+  // Validaciones y Mensajes de Error
+  field_is_required: 'El campo es obligatorio',
+  invalid_number: 'Número inválido',
+  invalid_email: 'Correo electrónico inválido',
+  select_option: 'Seleccione una opción',
+  please_wait: 'Por favor, espere...',
+  action_successful: 'Acción realizada con éxito',
+  action_failed: 'Error en la acción',
+
+  // Botones y Acciones
+  save: 'Guardar',
+  edit: 'Editar',
+  delete: 'Eliminar',
+  confirm: 'Confirmar',
+  cancel: 'Cancelar',
+  close: 'Cerrar',
+  yes: 'Sí',
+  no: 'No',
+  back: 'Atrás',
+  next: 'Siguiente',
+  search: 'Buscar',
+  filter: 'Filtrar',
+  export: 'Exportar',
+  print: 'Imprimir',
+  view_details: 'Ver detalles',
+
+  // Gestión de Inventario
+  inventory: 'Inventario',
+  stock: 'Stock',
+  ingredients: 'Ingredientes',
+  add_stock: 'Agregar stock',
+  remove_stock: 'Remover stock',
+  supplier: 'Proveedor',
+  supply_order: 'Orden de suministro',
+
+  // Notificaciones y Alertas
+  new_order: 'Nueva orden',
+  order_updated: 'Orden actualizada',
+  order_cancelled: 'Orden cancelada',
+  low_stock: 'Stock bajo',
+  out_of_stock: 'Sin stock',
+  maintenance_mode: 'Modo mantenimiento',
+
+  // Fechas y Horarios
+  date: 'Fecha',
+  time: 'Hora',
+  opening_hours: 'Horario de apertura',
+  closing_hours: 'Horario de cierre',
+  reservation: 'Reservación',
+  reservations: 'Reservaciones',
+  book_a_table: 'Reservar una mesa',
+
+  // Clientes
+  customer: 'Cliente',
+  customers: 'Clientes',
+  customer_name: 'Nombre del cliente',
+  customer_phone: 'Teléfono del cliente',
+  customer_email: 'Correo del cliente',
+  loyalty_program: 'Programa de fidelidad',
+  rewards: 'Recompensas',
+}

@@ -6,16 +6,6 @@
 </template>
 
 <script setup>
-// import backgroundUrl from '@/assets/home-3.png';
 
 </script>
-<style scoped>
-/* .image {
-  background-image: url('/images/home-3.png');
-
-  height: 300px;
-  width: 500px;
-  background-size: cover;
-  background-position: center;
-} */
-</style>
+<style scoped></style>
