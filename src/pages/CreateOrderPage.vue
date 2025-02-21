@@ -4,7 +4,7 @@
       <q-card flat bordered class>
         <q-card-section class="flex justify-between">
           <div class="text-h6">{{ $t('add_dish') }}</div>
-          <q-btn align="around" class="btn-fixed-width" color="secondary" :label="$t('finish_order')"
+          <q-btn @click="addOrder" align="around" class="btn-fixed-width" color="secondary" :label="$t('finish_order')"
             icon="mdi-check" />
         </q-card-section>
 
@@ -22,8 +22,8 @@
                 <q-item-section>
                   <q-item-label class="q-pb-xs">{{ $t('table_number') }}</q-item-label>
                   <q-select :rules="[val => !!val || $t('field_is_required')]" dense :label="$t('table_number')"
-                    option-label="name" option-value="id" outlined v-model="tableNumber" :options="numberTables"
-                    options-dense map-options></q-select>
+                    option-label="name" option-value="id" outlined v-model="table" :options="numberTables" options-dense
+                    map-options></q-select>
                 </q-item-section>
               </q-item>
               <q-item>
@@ -146,6 +146,9 @@
 
 <script setup>
 import { reactive, ref } from "vue";
+import { useOrdersStore } from "@/stores/orders-store"
+
+const orderStore = useOrdersStore()
 
 const formRef = ref(null);
 
@@ -183,11 +186,10 @@ const dishes = ref([
   { id: 9, name: "Flan Napolitano", description: "Postre suave de caramelo.", price: 60, typeDishId: 6 }, // Postres
   { id: 10, name: "Jugo de Naranja", description: "Jugo de naranja natural recién exprimido.", price: 40, typeDishId: 7 }, // Bebidas
 ]);
-const tableNumber = ref()
+const table = ref()
 const numberDiners = ref(1)
 
 let orderedDishes = reactive({
-  typeDish: null,
   dishe: null,
   quantity: 1
 });
@@ -224,11 +226,19 @@ const addDish = async () => {
 };
 
 const editItem = ((item) => {
-  console.log(item)
   orderedDishes.value = { ...item }
 })
 const deleteItem = ((index) => {
   data.value.splice(index, 1)
+})
+
+const addOrder = (() => {
+  const payload = {
+    table: table.value,
+    numberDiners: numberDiners.value,
+    orders: data.value
+  }
+  orderStore.addOrderStore(payload)
 })
 </script>
 

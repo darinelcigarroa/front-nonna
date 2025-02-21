@@ -86,6 +86,12 @@ export default defineConfig((ctx) => {
           { server: false },
         ],
       ],
+      extendViteConf(viteConf) {
+        viteConf.resolve.alias = {
+          ...viteConf.resolve.alias,
+          '@': fileURLToPath(new URL('./src', import.meta.url)),
+        }
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
