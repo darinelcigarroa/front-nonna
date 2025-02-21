@@ -3,12 +3,21 @@ import { createI18n } from 'vue-i18n'
 import messages from 'src/i18n'
 
 export default defineBoot(({ app }) => {
+  // Obtener el idioma guardado en localStorage o usar español por defecto
+  const savedLang = localStorage.getItem('lang') || 'es-MX';
+
   const i18n = createI18n({
-    locale: 'en-US',
+    locale: savedLang,  // Se usa 'es-MX' si no hay idioma guardado
+    fallbackLocale: 'es-MX', // Si no encuentra traducción, usa español
     globalInjection: true,
     messages
-  })
+  });
 
-  // Set i18n instance on app
-  app.use(i18n)
-})
+  // Guardar 'es-MX' en localStorage si aún no está guardado
+  if (!localStorage.getItem('lang')) {
+    localStorage.setItem('lang', 'es-MX');
+  }
+
+  // Aplicar i18n a la app
+  app.use(i18n);
+});

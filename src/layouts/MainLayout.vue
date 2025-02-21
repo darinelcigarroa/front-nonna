@@ -1,102 +1,120 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="lHh LpR lFf">
+    <q-header reveal :class="$q.dark.isActive ? 'header_dark' : 'header_normal'">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />
+        <q-toolbar-title>Dinamico</q-toolbar-title>
+        <q-btn class="q-mr-xs" flat round @click="$q.dark.toggle()"
+          :icon="$q.dark.isActive ? 'nights_stay' : 'wb_sunny'" />
+        <q-btn flat round dense icon="mdi-logout" @click="logoutNotify" to="/" />
       </q-toolbar>
     </q-header>
+    <q-drawer class="left-navigation text-white" show-if-above v-model="left"
+      style="background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;"
+      side="left" elevated>
+      <div class="full-height" :class="$q.dark.isActive ? 'drawer_dark' : 'drawer_normal'">
+        <div style="height: calc(100% - 117px);padding:10px;">
+          <q-toolbar>
+            <q-avatar>
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+            <q-toolbar-title>Mayank Patel</q-toolbar-title>
+          </q-toolbar>
+          <hr />
+          <q-scroll-area style="height:100%;">
+            <q-list padding>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+
+              <q-item active-class="tab-active" to="/quotes" class="q-ma-sm navigation-item" clickable v-ripple>
+                <q-item-section avatar>
+                  <q-icon name="money" />
+                </q-item-section>
+
+                <q-item-section>
+                  Quotes
+                </q-item-section>
+              </q-item>
+
+              <q-item active-class="tab-active" to="/my_profile" class="q-ma-sm navigation-item" clickable v-ripple>
+                <q-item-section avatar>
+                  <q-icon name="drafts" />
+                </q-item-section>
+
+                <q-item-section>
+                  My Profile
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-scroll-area>
+        </div>
+      </div>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-page class="row no-wrap">
+        <div class="col">
+          <div class="full-height">
+            <q-scroll-area class="col q-pr-sm full-height" visible>
+              <router-view />
+            </q-scroll-area>
+          </div>
+        </div>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+<script>
+export default {
+  data() {
+    return {
+      left: false
+    };
   },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+  methods: {
+    logoutNotify() {
+      this.$q.notify({
+        message: "Logged out"
+      });
+    }
   }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+};
 </script>
+
+<style>
+.q-drawer {
+  background-image: url("/statics/images/lake.jpg") !important;
+  background-size: cover !important;
+}
+
+.drawer_normal {
+  background-color: rgba(1, 1, 1, 0.75);
+}
+
+.drawer_dark {
+  background-color: #010101f2;
+}
+
+.navigation-item {
+  border-radius: 5px;
+}
+
+.tab-active {
+  background-color: green;
+}
+
+body {
+  background: #f1f1f1 !important;
+}
+
+.header_normal {
+  background: linear-gradient(145deg,
+      rgb(32, 106, 80) 15%,
+      rgb(21, 57, 102) 70%);
+}
+
+.header_dark {
+  background: linear-gradient(145deg, rgb(61, 14, 42) 15%, rgb(14, 43, 78) 70%);
+}
+</style>
