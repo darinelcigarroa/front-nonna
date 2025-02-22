@@ -1,6 +1,6 @@
 <template>
-  <div class="row q-col-gutter-sm q-ma-xs q-mr-sm test">
-    <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
+  <div class="row q-col-gutter-sm q-ma-xs q-mr-sm">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
       <q-card flat bordered class>
         <q-card-section class="flex justify-between">
           <div class="text-h6">{{ $t('add_dish') }}</div>
@@ -71,7 +71,7 @@
         </q-card-section>
       </q-card>
     </div>
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 q-mt-md">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
       <q-card flat bordered class>
         <q-card-section>
           <div class="text-h6">{{ $t('recent_orders') }}</div>
@@ -79,8 +79,7 @@
 
         <q-separator inset></q-separator>
 
-        <q-separator></q-separator>
-        <q-card-section class="q-pa-none">
+        <q-card-section>
           <q-table :rows="data" :columns="columns" row-key="id">
             <!-- Nombre del platillo -->
             <template v-slot:body-cell-name="props">

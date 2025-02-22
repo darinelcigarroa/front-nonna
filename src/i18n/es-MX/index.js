@@ -20,6 +20,11 @@ export default {
   in_progress: 'En preparación',
   completed: 'Completada',
   cancelled: 'Cancelada',
+  create_order: 'Crear orden',
+  active_tables: 'Mesas activas',
+  create_an_order_to_send_to_the_chef: 'Crear un pedido para enviar al chef',
+  check_out_the_tables_they_are_in_charge_of: 'Revisa las mesas que están a tu cargo',
+  view_your_information: 'ver tu información',
 
   // Comidas y Menú
   dish: 'Platillo',
@@ -88,6 +93,9 @@ export default {
   export: 'Exportar',
   print: 'Imprimir',
   view_details: 'Ver detalles',
+  create: 'Crear',
+  show: 'Ver',
+  go_to_profile: 'Ir al perfil',
 
   // Gestión de Inventario
   inventory: 'Inventario',
