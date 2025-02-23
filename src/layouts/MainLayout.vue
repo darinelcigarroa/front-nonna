@@ -52,7 +52,7 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="row no-wrap">
+      <q-page :class="[{ 'page-dark': $q.dark.isActive }, 'row', 'no-wrap']">
         <div class="col">
           <div class="full-height">
             <q-scroll-area class="col q-pr-sm full-height" visible>
@@ -110,8 +110,13 @@ body {
 
 .header_normal {
   background: linear-gradient(145deg,
-      #000 15%,
-      #9a081d 70%);
+      #000 20%,
+      var(--q-secondary) 70%);
+}
+
+.page-dark {
+  /* background: rgb(37 20 20); */
+  background: #000;
 }
 
 .header_dark {

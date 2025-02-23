@@ -3,8 +3,8 @@
     <!-- Sección de Fecha y Saludo -->
     <div class="col-12 column q-gutter-md">
       <div class="row items-center">
-        <q-icon color="accent" name="mdi-white-balance-sunny" size="md" />
-        <div class="date-now column q-pa-md text-blue-grey-10">
+        <q-icon color="primary" name="mdi-white-balance-sunny" size="md" />
+        <div class="date-now column q-pa-md">
           <span class="q-mx-sm">{{ date }}</span>
           <span class="q-mx-sm">{{ currentTime }}</span>
         </div>
@@ -27,7 +27,8 @@
             <q-icon class="q-mr-sm" name="mdi-lightbulb-on" color="primary" size="sm"></q-icon>
             <span class="text-h6 text-weight-medium">Consejo</span>
           </div> -->
-          <span class="text-grey-9 text-body1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis omnis
+          <span class="text-body1">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Blanditiis omnis
             sequi
             libero.</span>
         </div>
@@ -94,7 +95,7 @@ onUnmounted(() => {
 
 const cards = [
   { name: 'create_order', description: 'create_an_order_to_send_to_the_chef', image: 'create_order.svg', action: 'create', path: '/create-order' },
-  { name: 'active_tables', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', action: 'show', path: '/create-order' },
+  { name: 'active_tables', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', action: 'show', path: '/active-tables' },
   { name: 'profile', description: 'view_your_information', image: 'profile.svg', action: 'go_to_profile', path: '/create-order' }
 ]
 
@@ -138,9 +139,7 @@ const navigateTo = ((path) => {
 
 .grid-item {
   flex: 1 1 250px;
-  /* Mínimo 250px, pero se expande */
   max-width: 400px;
-  /* Para no hacerlas demasiado grandes */
 }
 
 @keyframes spin {

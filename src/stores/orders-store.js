@@ -1,4 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
+import { notifySuccess } from '@/utils/notify'
 
 export const useOrdersStore = defineStore('orders', {
   state: () => ({
@@ -10,6 +11,7 @@ export const useOrdersStore = defineStore('orders', {
   actions: {
     addOrderStore(payload) {
       this.orders.push(payload)
+      notifySuccess()
     },
   },
   persist: true,

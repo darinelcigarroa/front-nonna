@@ -105,7 +105,10 @@ export default {
   remove_stock: 'Remover stock',
   supplier: 'Proveedor',
   supply_order: 'Orden de suministro',
-
+  total_tables: 'Total mesas',
+  total_dishes: 'Total platillos',
+  total_diners: 'Total comensales',
+  available: 'Disponible:',
   // Notificaciones y Alertas
   new_order: 'Nueva orden',
   order_updated: 'Orden actualizada',

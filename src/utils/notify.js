@@ -5,9 +5,9 @@ import { Notify } from 'quasar'
 export const notifySuccess = (message, options = {}) => {
   Notify.create({
     type: 'positive',
-    message,
+    message: message ?? 'Operacion realizada con exito',
     icon: 'check_circle',
-    position: 'top-right',
+    position: 'bottom',
     timeout: 3000,
     ...options,
   })
@@ -19,7 +19,7 @@ export const notifyError = (message, options = {}) => {
     type: 'negative',
     message,
     icon: 'error',
-    position: 'top-right',
+    position: 'bottom',
     timeout: 3000,
     ...options,
   })
@@ -31,7 +31,7 @@ export const notifyInfo = (message, options = {}) => {
     type: 'info',
     message,
     icon: 'info',
-    position: 'top-right',
+    position: 'bottom',
     timeout: 3000,
     ...options,
   })

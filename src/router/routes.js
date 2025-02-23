@@ -3,21 +3,22 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'create-order', component: () => import('pages/CreateOrderPage.vue') },
-      { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
+      { path: 'create-order', component: () => import('src/pages/waiter/CreateOrderPage.vue') },
+      { path: 'active-tables', component: () => import('src/pages/waiter/ActiveTablesPage.vue') },
+      { path: '', component: () => import('pages/IndexPage.vue') },
+    ],
   },
   {
     path: '/login',
-    component: () => import('pages/LoginPage.vue')
+    component: () => import('pages/LoginPage.vue'),
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
-  }
+    component: () => import('pages/ErrorNotFound.vue'),
+  },
 ]
 
 export default routes
