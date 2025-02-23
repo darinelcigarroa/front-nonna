@@ -34,7 +34,6 @@
       </div>
     </div>
 
-    <!-- Tarjeta: Walking -->
     <q-card v-for="table in tableCards" :key="table" class="no-shadow q-mb-md shadow rounded-borders">
       <div class="row items-center q-pa-md no-wrap">
         <div class="column">
@@ -46,8 +45,8 @@
             <span class="q-mx-xs">{{ table.title }}</span>
           </div>
           <div>
-            <q-btn :class="[`box_button_${table.number}`]" rounded align="between" size="sm"
-              class="btn-fixed-width q-mt-xs" :label="`${table.plates} platillos`" icon="edit" />
+            <q-btn :class="[`box_button_${table.number}`, 'base_box_button']" rounded align="between" size="sm"
+              class="text-weight-bolder btn-fixed-width q-mt-xs" :label="`${table.plates} platillo(s)`" icon="edit" />
           </div>
         </div>
       </div>
@@ -123,9 +122,15 @@ const capacity = ((item) => {
   color: var(--q-secondary);
 }
 
+.base_box_button {
+  font-family: cursive;
+  font-size: 12px !important;
+}
+
 .box_button_1 {
-  color: var(--q-dark);
+  color: var(--q-primary);
   background-color: #e8686862;
+
 }
 
 .box_2 {
@@ -135,7 +140,6 @@ const capacity = ((item) => {
 .box_button_2 {
   color: var(--q-accent);
   background-color: #08446588;
-  font-weight: 700;
 }
 
 .box_3 {
@@ -143,7 +147,7 @@ const capacity = ((item) => {
 }
 
 .box_button_3 {
-  color: var(--q-dark);
+  color: var(--q-teal);
   background-color: #087e8b80;
   /* background-color: rgba(8, 126, 139, 0.5); */
 }

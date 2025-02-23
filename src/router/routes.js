@@ -1,10 +1,12 @@
+// src/router/routes.js
+import waiterRoutes from './modules/waiterRoutes'
+
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'create-order', component: () => import('src/pages/waiter/CreateOrderPage.vue') },
-      { path: 'active-tables', component: () => import('src/pages/waiter/ActiveTablesPage.vue') },
+      ...waiterRoutes, // Agrega las rutas del waiter
       { path: '', component: () => import('pages/IndexPage.vue') },
     ],
   },
@@ -12,9 +14,6 @@ const routes = [
     path: '/login',
     component: () => import('pages/LoginPage.vue'),
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
