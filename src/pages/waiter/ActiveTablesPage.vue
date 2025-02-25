@@ -45,7 +45,7 @@
             <span class="q-mx-xs">{{ table.title }}</span>
           </div>
           <div>
-            <q-btn :to="{ name: 'editar-orden', params: { id: table.id } }"
+            <q-btn :to="{ name: 'edit-order', params: { id: table.id } }"
               :class="[`box_button_${table.number}`, 'base_box_button']" rounded align="between" size="sm"
               class="text-weight-bolder btn-fixed-width q-mt-xs" :label="`${table.plates} platillo(s)`" icon="edit" />
           </div>

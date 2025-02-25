@@ -45,7 +45,7 @@ export default {
   main_courses: 'Platos fuertes',
   side_dishes: 'Acompañamientos',
   special_requests: 'Peticiones especiales',
-
+  orders_in_kitchen: 'Ordenes en cocina',
   // Facturación y Pagos
   payment: 'Pago',
   payment_method: 'Método de pago',
@@ -67,7 +67,7 @@ export default {
   prepare_order: 'Preparar orden',
   ready_to_serve: 'Listo para servir',
   served: 'Servido',
-
+  orders_taken: 'Ordenes tomadas',
   // Validaciones y Mensajes de Error
   field_is_required: 'El campo es obligatorio',
   invalid_number: 'Número inválido',

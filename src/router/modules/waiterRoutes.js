@@ -1,17 +1,17 @@
 export default [
   {
     path: 'create-order',
-    name: 'crear-orden',
+    name: 'create-order',
     component: () => import('src/pages/waiter/CreateOrderPage.vue'),
   },
   {
     path: 'active-tables',
-    name: 'tablas-activas',
+    name: 'active-tables',
     component: () => import('src/pages/waiter/ActiveTablesPage.vue'),
   },
   {
     path: 'edit/:id',
-    name: 'editar-orden',
+    name: 'edit-order',
     component: () => import('src/pages/waiter/EditOrderPage.vue'),
   },
 ]

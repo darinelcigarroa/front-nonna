@@ -1,4 +1,3 @@
-// src/router/routes.js
 import waiterRoutes from './modules/waiterRoutes'
 
 const routes = [
@@ -6,8 +5,8 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      ...waiterRoutes, // Agrega las rutas del waiter
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      ...waiterRoutes,
+      { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
     ],
   },
   {
