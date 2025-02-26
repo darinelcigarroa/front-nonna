@@ -14,6 +14,17 @@ export const notifySuccess = (message, options = {}) => {
 }
 
 // Notificación de error
+export const notifyWarning = (message, options = {}) => {
+  Notify.create({
+    type: 'warning',
+    message,
+    icon: 'warning',
+    position: 'bottom',
+    timeout: 3000,
+    ...options,
+  })
+}
+// Notificación de error
 export const notifyError = (message, options = {}) => {
   Notify.create({
     type: 'negative',

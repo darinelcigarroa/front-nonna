@@ -2,8 +2,8 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 
 export const useOrderStore = defineStore('order', {
   state: () => ({
-    table: '',
-    numberDiners: '',
+    table: null,
+    numberDiners: 1,
     order: {},
   }),
 
@@ -11,16 +11,16 @@ export const useOrderStore = defineStore('order', {
 
   actions: {
     setOrder({ table, numberDiners, orderedDishes }) {
-      this.table = table
-      this.numberDiners = numberDiners
+      this.table = table || null
+      this.numberDiners = numberDiners || 1
       this.order = { ...orderedDishes }
     },
+
     resetState() {
-      this.table = ''
-      this.numberDiners = ''
-      this.order = {}
+      this.$reset()
     },
   },
+
   persist: true,
 })
 

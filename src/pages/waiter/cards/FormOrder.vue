@@ -24,16 +24,17 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('table_number') }}</q-item-label>
-          <q-select :rules="[val => !!val || $t('field_is_required')]" dense :label="$t('table_number')"
-            option-label="name" option-value="id" outlined v-model="table" :options="numberTables" options-dense
-            map-options></q-select>
+          <q-select :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense
+            :label="$t('table_number')" option-label="name" option-value="id" outlined v-model="table"
+            :options="numberTables" options-dense map-options></q-select>
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners') }}</q-item-label>
-          <q-input :rules="[val => !!val || $t('field_is_required')]" dense outlined v-model="numberDiners"
-            type="number" :label="$t('number_of_diners')" />
+          <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
+            }}</q-item-label>
+          <q-input :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense outlined
+            v-model="numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -73,26 +74,31 @@
   </q-form>
 </template>
 <script setup>
-import { ref, reactive } from "vue"
+import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 import { useOrderStore } from "@/stores/waiter/order-store"
+import { ref, reactive } from "vue"
 import { useRoute } from "vue-router";
+import { notifyError } from 'src/utils/notify';
 
 const formRef = ref(null);
-const table = ref()
-const numberDiners = ref(1)
+const table = ref([])
 const orderStore = useOrderStore()
+const ordersTable = useOrdersTableStore();
+const numberDiners = ref(1)
+
 const route = useRoute()
 const orderID = route.params.id
 
 const resetOrderedDishes = () => {
-  orderedDishes.typeDish = null;
-  orderedDishes.dishe = null;
-  orderedDishes.quantity = 1;
+  Object.assign(orderedDishes, {
+    typeDish: '',
+    dishe: '',
+    quantity: 1
+  });
 };
-
 let orderedDishes = reactive({
-  typeDish: null,
-  dishe: null,
+  typeDish: '',
+  dishe: '',
   quantity: 1
 });
 
@@ -136,16 +142,26 @@ const onUpdateQuantity = ((val) => {
 })
 
 const formAction = async () => {
-  const success = await formRef.value.validate();
+  if (!formRef.value) return;
 
+  const success = await formRef.value.validate();
   if (!success) return;
 
-  orderStore.setOrder({
-    table: table.value,
-    numberDiners: numberDiners.value,
-    orderedDishes: orderedDishes
-  })
+  try {
+    await orderStore.setOrder({
+      table: table.value,
+      numberDiners: numberDiners.value,
+      orderedDishes: { ...orderedDishes },
+    });
 
-  resetOrderedDishes();
+    await ordersTable.set();
+
+    resetOrderedDishes();
+
+    formRef.value.resetValidation();
+  } catch (error) {
+    notifyError(error)
+  }
 };
+
 </script>

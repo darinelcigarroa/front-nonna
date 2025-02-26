@@ -7,7 +7,7 @@
     <q-separator inset></q-separator>
 
     <q-card-section>
-      <q-table :rows="data" :columns="columns">
+      <q-table :rows="ordersTable.data" :columns="columns">
         <template v-slot:body-cell-name="props">
           <q-td :props="props">
             <q-item style="max-width: 420px">
@@ -76,15 +76,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { useOrderStore } from '@/stores/waiter/order-store';
-import { useChefOrdersStore } from '@/stores/chef-orders-store';
-import { useRouter } from 'vue-router';
+import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 
-const router = useRouter();
-const data = ref([]);
-const orderStore = useOrderStore();
-const chefOrderStore = useChefOrdersStore();
+const ordersTable = useOrdersTableStore()
 
 const columns = [
   { name: 'name', label: 'name', field: 'name', sortable: true, align: 'left' },
@@ -94,13 +88,7 @@ const columns = [
 ];
 
 const addOrderToTable = () => {
-  chefOrderStore.addOrder({
-    table: orderStore.table,
-    numberDiners: orderStore.numberDiners,
-    orders: data.value
-  });
-  orderStore.resetState()
-  router.push({ name: 'home', });
+
 };
 
 defineExpose({ addOrderToTable });
@@ -110,23 +98,9 @@ const editItem = (item) => {
 };
 
 const deleteItem = (index) => {
-  data.value.splice(index, 1);
+  console.log(index)
+  // data.value.splice(index, 1);
 };
 
-watch(() => orderStore.order, () => {
-  if (!orderStore.order || !orderStore.order.dishe) {
-    return;
-  }
 
-  const dishIndex = data.value.findIndex(dish => dish.dishe.id === orderStore.order.dishe.id);
-
-  if (dishIndex !== -1) {
-    data.value[dishIndex].quantity += orderStore.order.quantity;
-  } else {
-    data.value.push({
-      ...orderStore.order,
-      status: 'created'
-    });
-  }
-});
 </script>

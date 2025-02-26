@@ -46,6 +46,8 @@ export default {
   side_dishes: 'Acompañamientos',
   special_requests: 'Peticiones especiales',
   orders_in_kitchen: 'Ordenes en cocina',
+  in_kitchen: 'En cocina',
+  ordering: 'Ordenando',
   // Facturación y Pagos
   payment: 'Pago',
   payment_method: 'Método de pago',
@@ -68,6 +70,7 @@ export default {
   ready_to_serve: 'Listo para servir',
   served: 'Servido',
   orders_taken: 'Ordenes tomadas',
+  active_services: 'Servicios activos',
   // Validaciones y Mensajes de Error
   field_is_required: 'El campo es obligatorio',
   invalid_number: 'Número inválido',

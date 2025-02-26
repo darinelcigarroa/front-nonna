@@ -37,7 +37,7 @@
     <q-card v-for="table in tableCards" :key="table" class="no-shadow q-mb-md shadow rounded-borders">
       <div class="row items-center q-pa-md no-wrap">
         <div class="column">
-          <q-icon name="mdi-table-furniture" size="4em" :class="[`box_${table.number}`]"></q-icon>
+          <q-icon name="mdi-room-service" size="4em" :class="[`box_${table.number}`]"></q-icon>
           <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ table.time }}</div>
         </div>
         <div class="q-ml-auto column items-end">

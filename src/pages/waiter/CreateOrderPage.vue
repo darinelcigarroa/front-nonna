@@ -16,21 +16,33 @@
     </div>
 
     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-      <TableOrdersTaken ref="tableOrdersRef" />
+      <TableOrdersTaken />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+import { useChefOrdersStore } from '@/stores/chef-orders-store';
+import { useOrderStore } from '@/stores/waiter/order-store';
+import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 import FormOrder from "./cards/FormOrder.vue";
 import TableOrdersTaken from "./tables/TableOrdersTaken.vue";
 
-const tableOrdersRef = ref(null);
+const router = useRouter()
+const chefOrderStore = useChefOrdersStore()
+const orderStore = useOrderStore();
+const ordersTable = useOrdersTableStore();
 
 const handleOrderAdded = () => {
-  if (tableOrdersRef.value) {
-    tableOrdersRef.value.addOrderToTable();
-  }
+  chefOrderStore.addOrder({
+    table: orderStore.table,
+    numberDiners: orderStore.numberDiners,
+    orders: ordersTable.data
+  });
+
+  orderStore.resetState()
+  ordersTable.resetState()
+  router.push({ name: 'home', });
 };
 </script>

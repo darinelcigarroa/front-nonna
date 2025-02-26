@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { notifySuccess } from '@/utils/notify'
+import { notifyError } from 'src/utils/notify'
 // import { toRaw } from 'vue'
 
 export const useChefOrdersStore = defineStore('chefOrders', {
@@ -11,10 +12,18 @@ export const useChefOrdersStore = defineStore('chefOrders', {
 
   actions: {
     addOrder(payload) {
-      const clonedPayload = JSON.parse(JSON.stringify(payload))
-      console.log('clone', clonedPayload)
-      this.orders.push(clonedPayload)
-      notifySuccess()
+      try {
+        const clonedPayload = JSON.parse(JSON.stringify(payload))
+
+        clonedPayload.orders.forEach((item) => {
+          item.status = 'kitchen'
+        })
+
+        this.orders.push(clonedPayload)
+        notifySuccess()
+      } catch (error) {
+        notifyError(error)
+      }
     },
   },
   persist: true,
