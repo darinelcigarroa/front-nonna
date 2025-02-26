@@ -19,12 +19,12 @@
       <q-card-section class="row items-center no-wrap q-gutter-md">
         <!-- Contenedor del GIF -->
         <div class="gif-container">
-          <q-img src="waiter/298.svg" alt="GIF" class="gif-img rotating-star" />
+          <q-img src="/home/star.svg" alt="GIF" class="gif-img rotating-star" />
         </div>
 
         <!-- Contenedor del Texto -->
         <div class="col column justify-center">
-          <span class="text-body1">
+          <span class="text-body1" style="font-size: 1em;">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis omnis sequi libero.
           </span>
         </div>
@@ -80,13 +80,14 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  clearInterval(intervalId);
+  clearInterval(intervalId)
 });
 
 const cards = [
   { name: 'create_order', description: 'Crear un pedido para enviar al chef', image: 'create_order.svg', path: '/create-order' },
   { name: 'active_services', description: 'Revisa las mesas que están a tu cargo', image: 'active_tables.svg', path: '/active-tables' },
-  { name: 'profile', description: 'Ver tu información', image: 'profile.svg', path: '/profile' }
+  { name: 'kitchen_orders', description: 'Seguimiento de platillos en proceso para el chef', image: '328.svg', path: '/profile' },
+  { name: 'profile', description: 'Ver tu información', image: '481.svg', path: '/profile' },
 ];
 
 const navigateTo = (path) => {
@@ -98,7 +99,7 @@ const navigateTo = (path) => {
 };
 
 const getImagePath = (imageName) => {
-  return `/waiter/${imageName}`;
+  return `/home/${imageName}`;
 };
 
 </script>
@@ -157,6 +158,10 @@ const getImagePath = (imageName) => {
 
 .rotating-star {
   animation: spin 2s linear infinite;
+}
+
+.gif-container {
+  width: 120px;
 }
 
 @keyframes spin {

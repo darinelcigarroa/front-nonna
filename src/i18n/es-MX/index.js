@@ -1,4 +1,6 @@
 export default {
+  // General
+  kitchen_orders: 'Pedidos de cocina',
   // Autenticación y Usuarios
   username: 'Usuario',
   password: 'Contraseña',
