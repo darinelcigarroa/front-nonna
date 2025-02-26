@@ -7,6 +7,7 @@ const routes = [
     children: [
       ...waiterRoutes,
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
+      { path: '/profile', name: 'profile', component: () => import('pages/MyProfile.vue') },
     ],
   },
   {

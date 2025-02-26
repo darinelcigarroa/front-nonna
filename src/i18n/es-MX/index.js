@@ -83,6 +83,7 @@ export default {
   // Botones y Acciones
   save: 'Guardar',
   edit: 'Editar',
+  update: 'Actualizar',
   delete: 'Eliminar',
   confirm: 'Confirmar',
   cancel: 'Cancelar',
