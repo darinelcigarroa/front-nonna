@@ -3,7 +3,7 @@
     <!-- Sección de Fecha y Saludo -->
     <div class="col-12 column q-gutter-md">
       <div class="row items-center">
-        <q-icon color="primary" name="mdi-white-balance-sunny" size="md" />
+        <q-icon color="secondary" name="mdi-white-balance-sunny" size="md" />
         <div class="date-now column q-pa-md">
           <span class="q-mx-sm">{{ date }}</span>
           <span class="q-mx-sm">{{ currentTime }}</span>
@@ -86,7 +86,7 @@ onUnmounted(() => {
 const cards = [
   { name: 'create_order', description: 'Crear un pedido para enviar al chef', image: 'create_order.svg', path: '/create-order' },
   { name: 'active_services', description: 'Revisa las mesas que están a tu cargo', image: 'active_tables.svg', path: '/active-tables' },
-  { name: 'kitchen_orders', description: 'Seguimiento de platillos en proceso para el chef', image: '328.svg', path: '/profile' },
+  { name: 'kitchen_orders', description: 'Seguimiento de platillos en proceso para el chef', image: '328.svg', path: '/kitchen-orders' },
   { name: 'profile', description: 'Ver tu información', image: '481.svg', path: '/profile' },
 ];
 

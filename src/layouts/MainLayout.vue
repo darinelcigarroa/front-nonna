@@ -3,7 +3,13 @@
     <q-header reveal :class="$q.dark.isActive ? 'header_dark' : 'header_normal'">
       <q-toolbar>
         <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />
-        <q-toolbar-title>Dinamico</q-toolbar-title>
+        <!-- <q-toolbar-title to="/home">Dinamico</q-toolbar-title> -->
+        <q-toolbar-title>
+          <router-link :to="{ name: 'home' }" style="text-decoration: none;" class="text-white">
+            LA NONNA
+          </router-link>
+        </q-toolbar-title>
+
         <q-btn class="q-mr-xs" flat round @click="$q.dark.toggle()"
           :icon="$q.dark.isActive ? 'nights_stay' : 'wb_sunny'" />
         <q-btn flat round dense icon="mdi-logout" @click="logoutNotify" to="/" />
@@ -55,7 +61,8 @@
       <q-page :class="[{ 'page-dark': $q.dark.isActive }, 'row', 'no-wrap']">
         <div class="col">
           <div class="full-height">
-            <q-scroll-area class="col q-pr-sm full-height" visible>
+            <q-scroll-area class="col q-pr-sm full-height scroll-container" :thumb-style="{ opacity: 0 }"
+              style="padding-right: 0px; margin-right: -10px;">
               <router-view />
             </q-scroll-area>
           </div>
@@ -109,9 +116,10 @@ body {
 }
 
 .header_normal {
-  background: linear-gradient(145deg,
+  /* background: linear-gradient(145deg,
       #000 20%,
-      var(--q-secondary) 70%);
+      var(--q-secondary) 70%); */
+  background: var(--q-primary);
 }
 
 .page-dark {
