@@ -32,7 +32,7 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
-            }}</q-item-label>
+          }}</q-item-label>
           <q-input :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense outlined
             v-model="numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
@@ -67,6 +67,12 @@
             @update:model-value="onUpdateQuantity" />
         </q-item-section>
       </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label class="q-pb-xs">{{ $t('Observaciones') }}</q-item-label>
+          <q-input v-model="text" label="Observaciones" placeholder="Sin cebolla" outlined dense autogrow />
+        </q-item-section>
+      </q-item>
     </q-list>
     <q-card-actions align="right" class="text-teal">
       <q-btn @click="formAction" :label="$t('add')" type="submit" color="secondary" v-close-popup />
@@ -99,7 +105,8 @@ const resetOrderedDishes = () => {
 let orderedDishes = reactive({
   typeDish: '',
   dishe: '',
-  quantity: 1
+  quantity: 1,
+  observations: ''
 });
 
 const numberTables = ref([
