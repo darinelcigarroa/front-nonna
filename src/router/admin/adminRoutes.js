@@ -2,6 +2,6 @@ export default [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import('src/pages/dashboardPage.vue'),
+    component: () => import('src/pages/DashboardPage.vue'),
   },
 ]
