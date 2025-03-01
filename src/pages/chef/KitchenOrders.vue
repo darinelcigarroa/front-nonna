@@ -1,6 +1,6 @@
 <template>
-  <q-img src="/wave-5.svg" style="bottom:  1px;"></q-img>
-  <div class="q-px-xl">
+  <q-img src="/wave-5.svg" style="bottom: 1px;"></q-img>
+  <q-page class="q-ma-md q-px-xl">
     <q-timeline color="secondary">
       <q-timeline-entry heading body="November, 2017" />
       <q-timeline-entry color="secondary">
@@ -9,9 +9,9 @@
           <div class="text-grey-7 text-caption">30min</div>
         </div>
         <q-expansion-item class="no-padding text-weight-bold" label="Mesa 1">
-          <q-card flat bordered class="q-pa-sm" style="border-radius: 10px;">
+          <q-card flat bordered class="q-pa-sm q-mt-xs" style="border-radius: 10px;">
             <q-card v-for="(item, index) in platillos" :key="index"
-              class="col-lg-4 fit col-md-4 col-sm-12 col-xs-12 no-shadow q-px-sm q-mt-xs no-border custom-card"
+              class="col-lg-4 fit col-md-4 col-sm-12 col-xs-12 no-shadow q-px-sm  no-border custom-card"
               :class="{ 'border-bottom': index === platillos.length - 1 }">
               <q-item>
                 <q-item-section avatar>
@@ -57,7 +57,7 @@
         </q-expansion-item>
       </q-timeline-entry>
     </q-timeline>
-  </div>
+  </q-page>
 </template>
 <script setup>
 const platillos = [

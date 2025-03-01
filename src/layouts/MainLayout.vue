@@ -15,9 +15,7 @@
         <q-btn flat round dense icon="mdi-logout" @click="logoutNotify" to="/" />
       </q-toolbar>
     </q-header>
-    <q-drawer class="left-navigation text-white" show-if-above v-model="left"
-      style="background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;"
-      side="left" elevated>
+    <q-drawer class="left-navigation text-white bg-secondary" show-if-above v-model="left" side="left" elevated>
       <div class="full-height" :class="$q.dark.isActive ? 'drawer_dark' : 'drawer_normal'">
         <div style="height: calc(100% - 117px);padding:10px;">
           <q-toolbar>
@@ -31,34 +29,59 @@
           <q-scroll-area style="height:100%;">
             <q-list padding>
 
-              <q-item active-class="tab-active" to="/dashboard" exact class="q-ma-sm navigation-item" clickable
-                v-ripple>
+              <q-item active-class="tab-active" :to="{ name: 'dashboard' }" exact class="q-ma-sm navigation-item"
+                clickable v-ripple>
                 <q-item-section avatar>
                   <q-icon name="dashboard" />
                 </q-item-section>
 
                 <q-item-section>
-                  Dashboard
+                  {{ $t('Dashboard') }}
                 </q-item-section>
               </q-item>
 
-              <q-item active-class="tab-active" to="/quotes" class="q-ma-sm navigation-item" clickable v-ripple>
+              <q-item active-class="tab-active" :to="{ name: 'createEmployee' }" class="q-ma-sm navigation-item"
+                clickable v-ripple>
                 <q-item-section avatar>
-                  <q-icon name="money" />
+                  <q-icon name="mdi-account-group" />
                 </q-item-section>
 
                 <q-item-section>
-                  Quotes
+                  {{ $t('employees') }}
                 </q-item-section>
               </q-item>
 
-              <q-item active-class="tab-active" to="/my_profile" class="q-ma-sm navigation-item" clickable v-ripple>
+              <q-item active-class="tab-active" :to="{ name: 'createTables' }" class="q-ma-sm navigation-item" clickable
+                v-ripple>
+                <q-item-section avatar>
+                  <q-icon name="table_bar" />
+                </q-item-section>
+
+                <q-item-section>
+                  {{ $t('tables') }}
+                </q-item-section>
+              </q-item>
+
+              <q-item active-class="tab-active" :to="{ name: 'createDishes' }" class="q-ma-sm navigation-item" clickable
+                v-ripple>
+                <q-item-section avatar>
+                  <q-icon name="local_dining" />
+
+                </q-item-section>
+
+                <q-item-section>
+                  {{ $t('dishes') }}
+                </q-item-section>
+              </q-item>
+
+              <q-item active-class="tab-active" :to="{ name: 'admin-profile' }" class="q-ma-sm navigation-item"
+                clickable v-ripple>
                 <q-item-section avatar>
                   <q-icon name="drafts" />
                 </q-item-section>
 
                 <q-item-section>
-                  My Profile
+                  {{ $t('profile') }}
                 </q-item-section>
               </q-item>
             </q-list>
@@ -66,17 +89,9 @@
         </div>
       </div>
     </q-drawer>
-
     <q-page-container>
-      <q-page :class="[{ 'page-dark': $q.dark.isActive }, 'row', 'no-wrap']">
-        <div class="col">
-          <div class="full-height">
-            <q-scroll-area class="col q-pr-sm full-height scroll-container" :thumb-style="{ opacity: 0 }"
-              style="padding-right: 0px; margin-right: -10px;">
-              <router-view />
-            </q-scroll-area>
-          </div>
-        </div>
+      <q-page :class="[{ 'page-dark': $q.dark.isActive }]">
+        <router-view />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -100,11 +115,6 @@ export default {
 </script>
 
 <style>
-.q-drawer {
-  background-image: url("/statics/images/lake.jpg") !important;
-  background-size: cover !important;
-}
-
 .drawer_normal {
   background-color: rgba(1, 1, 1, 0.75);
 }
@@ -118,7 +128,7 @@ export default {
 }
 
 .tab-active {
-  background-color: green;
+  background: var(--q-primary);
 }
 
 body {
