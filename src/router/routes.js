@@ -1,5 +1,6 @@
 import waiterRoutes from './modules/waiterRoutes'
 import chefRoutes from './modules/chefRoutes'
+import adminRoutes from './admin/adminRoutes'
 
 const routes = [
   {
@@ -8,6 +9,7 @@ const routes = [
     children: [
       ...waiterRoutes,
       ...chefRoutes,
+      ...adminRoutes,
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
       { path: '/profile', name: 'profile', component: () => import('pages/MyProfile.vue') },
     ],
