@@ -79,7 +79,7 @@ onMounted(async () => {
   updateTime();
   intervalId = setInterval(updateTime, 1000);
   try {
-    const response = await api.get('/users')
+    const response = await api.get('/test')
     console.log('Respuesta del backend:', response.data)
   } catch (error) {
     console.error('Error en la petición:', error)

@@ -28,7 +28,7 @@ export const notifyWarning = (message, options = {}) => {
 export const notifyError = (message, options = {}) => {
   Notify.create({
     type: 'negative',
-    message,
+    message: message ?? 'Ocurrió un error inesperado. Inténtalo de nuevo.',
     icon: 'error',
     position: 'bottom',
     timeout: 3000,

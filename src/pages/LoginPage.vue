@@ -2,27 +2,24 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card v-bind:style="$q.screen.lt.sm ? { 'width': '80%' } : { 'width': '80%' }">
-          <q-card-section>
-            <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="profile.svg">
+        <q-card v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }">
+          <q-card-section class="text-center">
+            <q-avatar size="103px" class="shadow-10">
+              <img src="profile.svg" />
             </q-avatar>
+            <div class="text-h6 q-pt-lg">Log in</div>
           </q-card-section>
-          <q-card-section>
-            <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
-                Log in
-              </div>
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <q-form class="q-gutter-md">
-              <q-input filled v-model="username" label="Username" lazy-rules />
 
-              <q-input type="password" filled v-model="password" label="Password" lazy-rules />
+          <q-card-section>
+            <q-form @submit="login" class="q-gutter-md">
+              <q-input v-model="form.email" filled :label="$t('user_name')" autocomplete="current-username" lazy-rules
+                :rules="[val => !!val || 'Campo obligatorio']" />
 
+              <q-input v-model="form.password" filled autocomplete="current-password" :label="$t('password')"
+                type="password" lazy-rules :rules="[val => !!val || 'Campo obligatorio']" />
               <div>
-                <q-btn label="Login" to="/" type="button" color="primary" />
+
+                <q-btn label="Iniciar sesión" class="full-width" type="submit" color="primary" :loading="loading" />
               </div>
             </q-form>
           </q-card-section>
@@ -32,23 +29,34 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth-store'
+import { notifyError, notifySuccess } from 'src/utils/notify'
 
-export default defineComponent({
-  setup() {
-    return {
-      username: ref('Pratik'),
-      password: ref('12345')
-    }
-  },
-})
+const auth = useAuthStore()
+const form = ref({ email: '', password: '' })
+const loading = ref(false)
+const router = useRouter()
+
+const login = async () => {
+  loading.value = true
+  const result = await auth.login(form.value.email, form.value.password)
+
+  if (result.success) {
+    notifySuccess(result.message)
+    router.push('/')
+  } else {
+    notifyError(result.message)
+  }
+
+  loading.value = false
+}
 </script>
 
 <style>
 .bg-image {
-  /* background-image: linear-gradient(135deg, #055a58 0%, #0b3964 100%); */
   background-image: linear-gradient(135deg, #000 0%, var(--q-secondary) 100%);
 }
 </style>
