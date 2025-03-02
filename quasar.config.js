@@ -96,9 +96,15 @@ export default defineConfig((ctx) => {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
-      // https: true,
-      open: true, // opens browser window automatically
-    },
+      proxy: {
+        '/api': {
+          target: 'http://backend-nona:8000', // Usa el nombre del servicio en Docker
+          changeOrigin: true,
+          pathRewrite: { '^/api': '' },
+          logLevel: 'debug'
+        }
+      }
+    },   
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
