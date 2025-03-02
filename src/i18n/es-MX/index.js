@@ -1,6 +1,12 @@
 export default {
   // General
   kitchen_orders: 'Pedidos de cocina',
+  dashboard: 'Panel',
+  employees: 'Empleados',
+  tables: 'Mesas',
+  monthly_income_trend: 'Tendencia de ingresos mensuales',
+  top_waiters_by_number_of_tables_served: 'Mejores meseros por número de mesas servidas',
+  trends_in_dish_sales: 'Tendencias en Ventas de Platilloss',
   // Autenticación y Usuarios
   username: 'Usuario',
   password: 'Contraseña',
@@ -27,6 +33,7 @@ export default {
   create_an_order_to_send_to_the_chef: 'Crear un pedido para enviar al chef',
   check_out_the_tables_they_are_in_charge_of: 'Revisa las mesas que están a tu cargo',
   view_your_information: 'ver tu información',
+  most_used_tables: 'Mesas mas usadas',
 
   // Comidas y Menú
   dish: 'Platillo',

@@ -36,7 +36,7 @@
                 </q-item-section>
 
                 <q-item-section>
-                  {{ $t('Dashboard') }}
+                  {{ $t('dashboard') }}
                 </q-item-section>
               </q-item>
 
@@ -74,10 +74,10 @@
                 </q-item-section>
               </q-item>
 
-              <q-item active-class="tab-active" :to="{ name: 'admin-profile' }" class="q-ma-sm navigation-item"
-                clickable v-ripple>
+              <q-item active-class="tab-active" :to="{ name: 'profile' }" class="q-ma-sm navigation-item" clickable
+                v-ripple>
                 <q-item-section avatar>
-                  <q-icon name="drafts" />
+                  <q-icon name="mdi-account" />
                 </q-item-section>
 
                 <q-item-section>

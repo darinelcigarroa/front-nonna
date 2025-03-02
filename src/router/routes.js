@@ -11,7 +11,11 @@ const routes = [
       ...chefRoutes,
       ...adminRoutes,
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
-      { path: '/profile', name: 'profile', component: () => import('pages/MyProfile.vue') },
+      {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('src/components/MyProfile.vue'),
+      },
     ],
   },
   {
