@@ -91,10 +91,10 @@ onUnmounted(() => {
 });
 
 const cards = [
-  { name: 'create_order', description: 'Crear un pedido para enviar al chef', image: 'create_order.svg', path: '/create-order' },
-  { name: 'active_services', description: 'Revisa las mesas que están a tu cargo', image: 'active_tables.svg', path: '/active-tables' },
-  { name: 'kitchen_orders', description: 'Seguimiento de platillos en proceso para el chef', image: '328.svg', path: '/kitchen-orders' },
-  { name: 'profile', description: 'Ver tu información', image: '481.svg', path: '/profile' },
+  { name: 'create_order', description: 'create_an_order_to_send_to_the_chef', image: 'create_order.svg', path: '/create-order' },
+  { name: 'active_services', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', path: '/active-tables' },
+  { name: 'kitchen_orders', description: 'tracking_dishes_in_progress_for_the_chef', image: '328.svg', path: '/kitchen-orders' },
+  { name: 'profile', description: 'view_your_information', image: '481.svg', path: '/profile' },
 ];
 
 const navigateTo = (path) => {

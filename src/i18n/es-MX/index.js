@@ -34,6 +34,7 @@ export default {
   check_out_the_tables_they_are_in_charge_of: 'Revisa las mesas que están a tu cargo',
   view_your_information: 'ver tu información',
   most_used_tables: 'Mesas mas usadas',
+  tracking_dishes_in_progress_for_the_chef: 'Seguimiento de platillos en proceso para el chef',
 
   // Comidas y Menú
   dish: 'Platillo',
