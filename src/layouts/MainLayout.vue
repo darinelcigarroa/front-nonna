@@ -23,67 +23,23 @@
               <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
             </q-avatar>
 
-            <q-toolbar-title>Mayank Patel</q-toolbar-title>
+            <q-toolbar-title>{{ auth.fullName }}</q-toolbar-title>
           </q-toolbar>
           <hr />
           <q-scroll-area style="height:100%;">
             <q-list padding>
-              <CanRoles :roles="['super-admin']">
-                <q-item active-class="tab-active" :to="{ name: 'dashboard' }" exact class="q-ma-sm navigation-item"
-                  clickable v-ripple>
+              <CanRoles v-for="(group, index) in menuGroups" :key="index" :roles="group.roles">
+                <q-item v-for="(item, idx) in group.items" :key="idx" active-class="tab-active"
+                  :to="{ name: item.route }" class="q-ma-sm navigation-item" clickable v-ripple>
                   <q-item-section avatar>
-                    <q-icon name="dashboard" />
+                    <q-icon :name="item.icon" />
                   </q-item-section>
 
                   <q-item-section>
-                    {{ $t('dashboard') }}
-                  </q-item-section>
-                </q-item>
-
-                <q-item active-class="tab-active" :to="{ name: 'createEmployee' }" class="q-ma-sm navigation-item"
-                  clickable v-ripple>
-                  <q-item-section avatar>
-                    <q-icon name="mdi-account-group" />
-                  </q-item-section>
-
-                  <q-item-section>
-                    {{ $t('employees') }}
-                  </q-item-section>
-                </q-item>
-
-                <q-item active-class="tab-active" :to="{ name: 'createTables' }" class="q-ma-sm navigation-item"
-                  clickable v-ripple>
-                  <q-item-section avatar>
-                    <q-icon name="table_bar" />
-                  </q-item-section>
-
-                  <q-item-section>
-                    {{ $t('tables') }}
-                  </q-item-section>
-                </q-item>
-
-                <q-item active-class="tab-active" :to="{ name: 'createDishes' }" class="q-ma-sm navigation-item"
-                  clickable v-ripple>
-                  <q-item-section avatar>
-                    <q-icon name="local_dining" />
-
-                  </q-item-section>
-
-                  <q-item-section>
-                    {{ $t('dishes') }}
+                    {{ $t(item.label) }}
                   </q-item-section>
                 </q-item>
               </CanRoles>
-              <q-item active-class="tab-active" :to="{ name: 'profile' }" class="q-ma-sm navigation-item" clickable
-                v-ripple>
-                <q-item-section avatar>
-                  <q-icon name="mdi-account" />
-                </q-item-section>
-
-                <q-item-section>
-                  {{ $t('profile') }}
-                </q-item-section>
-              </q-item>
             </q-list>
           </q-scroll-area>
         </div>
@@ -108,6 +64,37 @@ const $q = useQuasar();
 const left = ref(false)
 const auth = useAuthStore()
 const router = useRouter()
+
+const menuGroups = [
+  {
+    roles: ["super-admin"],
+    items: [
+      { route: "dashboard", label: "dashboard", icon: "dashboard" },
+      { route: "createEmployee", label: "employees", icon: "mdi-account-group" },
+      { route: "createTables", label: "tables", icon: "table_bar" },
+      { route: "createDishes", label: "dishes", icon: "local_dining" },
+    ],
+  },
+  {
+    roles: ["super-admin", "waiter"],
+    items: [
+      { route: "create-order", label: "create_order", icon: "mdi-order-bool-descending-variant" },
+      { route: "active-tables", label: "active_services", icon: "mdi-table-chair" },
+    ],
+  },
+  {
+    roles: ["super-admin", "chef"],
+    items: [
+      { route: "kitchen-orders", label: "kitchen_orders", icon: "mdi-silverware-fork-knife" },
+    ],
+  },
+  {
+    roles: ["super-admin", "chef", "waiter"],
+    items: [
+      { route: "profile", label: "profile", icon: "mdi-account" },
+    ],
+  },
+];
 
 const logout = (async () => {
   $q.loading.show();

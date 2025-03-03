@@ -8,7 +8,9 @@ export const useAuthStore = defineStore('auth', {
     roles: [],
     token: localStorage.getItem('auth_token') || null,
   }),
-
+  getters: {
+    fullName: (state) => state.user.name + ' ' + state.user.first_surname
+  },
   actions: {
     /**
      * Log in and store user data

@@ -64,6 +64,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
 import { api } from 'boot/axios'
+import { notifyError } from 'src/utils/notify';
 
 const now = ref(new Date());
 const router = useRouter();
@@ -103,7 +104,7 @@ const navigateTo = (path) => {
   if (path) {
     router.push(path);
   } else {
-    console.log('No hay ruta definida para esta tarjeta');
+    notifyError('Error desconocido, contacta con el administrador')
   }
 };
 
