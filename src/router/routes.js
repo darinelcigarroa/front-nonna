@@ -1,8 +1,15 @@
+import waiterRoutes from './modules/waiterRoutes'
+import chefRoutes from './modules/chefRoutes'
+import adminRoutes from './admin/adminRoutes'
+
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
+      ...waiterRoutes,
+      ...chefRoutes,
+      ...adminRoutes,
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
       {
         path: '/profile',
@@ -18,6 +25,7 @@ const routes = [
   },
   {
     path: '/login',
+    name: 'login',
     component: () => import('pages/LoginPage.vue'),
   },
   {

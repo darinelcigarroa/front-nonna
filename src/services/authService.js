@@ -11,23 +11,10 @@ export default {
       const response = await api.post('/login', { email, password })
       return response.data
     } catch (error) {
-      return error.response?.data || { 
-        success: false, 
-        message: 'Error en login' 
+      return error.response?.data || {
+        success: false,
+        message: 'Error en login'
       }
-    }
-  },  
-
-  /**
-   * Obtener el usuario autenticado
-   */
-  async getUser() {
-    try {
-      const response = await api.get('/me')
-      return { success: true, user: response.data }
-    } catch (error) {
-      console.error('Error obteniendo usuario:', error)
-      return { success: false, message: 'No autenticado' }
     }
   },
 
@@ -36,16 +23,15 @@ export default {
    */
   async logout() {
     try {
-      await api.post('/logout')
+      const response = await api.post('/logout')
 
-      // Remover el token de localStorage y Axios
-      localStorage.removeItem(AUTH_TOKEN_KEY)
-      delete api.defaults.headers.common['Authorization']
+      return response.data
 
-      return { success: true }
     } catch (error) {
-      console.error('Error en logout:', error)
-      return { success: false, message: 'No se pudo cerrar sesión' }
+      return error.response?.data || {
+        success: false,
+        message: 'Error en login'
+      }
     }
   },
 

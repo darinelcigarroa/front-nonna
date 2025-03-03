@@ -104,11 +104,17 @@ export default defineConfig((ctx) => {
           logLevel: 'debug'
         }
       }
-    },   
+    },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
-      config: {},
+      config: {
+        loading: {
+          spinner: 'QSpinnerOrbit',
+          spinnerColor: 'primary',
+          spinnerSize: 70,
+        }
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -121,7 +127,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify'],
+      plugins: ['Notify', 'Loading'],
     },
 
     animations: 'all', // --- includes all animations

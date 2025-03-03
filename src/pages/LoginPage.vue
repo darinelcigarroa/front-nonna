@@ -12,13 +12,12 @@
 
           <q-card-section>
             <q-form @submit="login" class="q-gutter-md">
-              <q-input v-model="form.email" filled :label="$t('user_name')" autocomplete="current-username" lazy-rules
+              <q-input v-model="form.email" filled :label="$t('user_name')" autocomplete="email" lazy-rules
                 :rules="[val => !!val || 'Campo obligatorio']" />
 
-              <q-input v-model="form.password" filled autocomplete="current-password" :label="$t('password')"
-                type="password" lazy-rules :rules="[val => !!val || 'Campo obligatorio']" />
+              <q-input v-model="form.password" filled autocomplete="password" :label="$t('password')" type="password"
+                lazy-rules :rules="[val => !!val || 'Campo obligatorio']" />
               <div>
-
                 <q-btn label="Iniciar sesión" class="full-width" type="submit" color="primary" :loading="loading" />
               </div>
             </q-form>

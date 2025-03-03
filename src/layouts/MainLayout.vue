@@ -12,7 +12,7 @@
 
         <q-btn class="q-mr-xs" flat round @click="$q.dark.toggle()"
           :icon="$q.dark.isActive ? 'nights_stay' : 'wb_sunny'" />
-        <q-btn flat round dense icon="mdi-logout" @click="logoutNotify" to="/" />
+        <q-btn flat round dense icon="mdi-logout" @click="logout" to="/" />
       </q-toolbar>
     </q-header>
     <q-drawer class="left-navigation text-white bg-secondary" show-if-above v-model="left" side="left" elevated>
@@ -97,21 +97,29 @@
   </q-layout>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      left: false
-    };
-  },
-  methods: {
-    logoutNotify() {
-      this.$q.notify({
-        message: "Logged out"
-      });
-    }
+<script setup>
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
+import { useQuasar } from 'quasar';
+import { notifyError, notifySuccess } from 'src/utils/notify';
+import { useRouter } from 'vue-router';
+
+const $q = useQuasar();
+const left = ref(false)
+const auth = useAuthStore()
+const router = useRouter()
+
+const logout = (async () => {
+  $q.loading.show();
+  const result = await auth.logout()
+  if (result.success) {
+    notifySuccess(result.message)
+    router.push({ name: 'login' })
+  } else {
+    notifyError(result.message)
   }
-};
+  $q.loading.hide();
+})
 </script>
 
 <style>
