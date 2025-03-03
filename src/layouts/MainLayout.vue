@@ -28,52 +28,52 @@
           <hr />
           <q-scroll-area style="height:100%;">
             <q-list padding>
+              <CanRoles :roles="['super-admin']">
+                <q-item active-class="tab-active" :to="{ name: 'dashboard' }" exact class="q-ma-sm navigation-item"
+                  clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="dashboard" />
+                  </q-item-section>
 
-              <q-item active-class="tab-active" :to="{ name: 'dashboard' }" exact class="q-ma-sm navigation-item"
-                clickable v-ripple>
-                <q-item-section avatar>
-                  <q-icon name="dashboard" />
-                </q-item-section>
+                  <q-item-section>
+                    {{ $t('dashboard') }}
+                  </q-item-section>
+                </q-item>
 
-                <q-item-section>
-                  {{ $t('dashboard') }}
-                </q-item-section>
-              </q-item>
+                <q-item active-class="tab-active" :to="{ name: 'createEmployee' }" class="q-ma-sm navigation-item"
+                  clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="mdi-account-group" />
+                  </q-item-section>
 
-              <q-item active-class="tab-active" :to="{ name: 'createEmployee' }" class="q-ma-sm navigation-item"
-                clickable v-ripple>
-                <q-item-section avatar>
-                  <q-icon name="mdi-account-group" />
-                </q-item-section>
+                  <q-item-section>
+                    {{ $t('employees') }}
+                  </q-item-section>
+                </q-item>
 
-                <q-item-section>
-                  {{ $t('employees') }}
-                </q-item-section>
-              </q-item>
+                <q-item active-class="tab-active" :to="{ name: 'createTables' }" class="q-ma-sm navigation-item"
+                  clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="table_bar" />
+                  </q-item-section>
 
-              <q-item active-class="tab-active" :to="{ name: 'createTables' }" class="q-ma-sm navigation-item" clickable
-                v-ripple>
-                <q-item-section avatar>
-                  <q-icon name="table_bar" />
-                </q-item-section>
+                  <q-item-section>
+                    {{ $t('tables') }}
+                  </q-item-section>
+                </q-item>
 
-                <q-item-section>
-                  {{ $t('tables') }}
-                </q-item-section>
-              </q-item>
+                <q-item active-class="tab-active" :to="{ name: 'createDishes' }" class="q-ma-sm navigation-item"
+                  clickable v-ripple>
+                  <q-item-section avatar>
+                    <q-icon name="local_dining" />
 
-              <q-item active-class="tab-active" :to="{ name: 'createDishes' }" class="q-ma-sm navigation-item" clickable
-                v-ripple>
-                <q-item-section avatar>
-                  <q-icon name="local_dining" />
+                  </q-item-section>
 
-                </q-item-section>
-
-                <q-item-section>
-                  {{ $t('dishes') }}
-                </q-item-section>
-              </q-item>
-
+                  <q-item-section>
+                    {{ $t('dishes') }}
+                  </q-item-section>
+                </q-item>
+              </CanRoles>
               <q-item active-class="tab-active" :to="{ name: 'profile' }" class="q-ma-sm navigation-item" clickable
                 v-ripple>
                 <q-item-section avatar>

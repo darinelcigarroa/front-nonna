@@ -2,16 +2,19 @@ export default [
   {
     path: 'create-order',
     name: 'create-order',
-    component: () => import('src/pages/waiter/CreateOrderPage.vue'),
+    component: () => import('@/pages/waiter/CreateOrderPage.vue'),
+    meta: { requiresAuth: true, roles: ['waiter'] }
   },
   {
     path: 'active-tables',
     name: 'active-tables',
-    component: () => import('src/pages/waiter/ActiveTablesPage.vue'),
+    component: () => import('@/pages/waiter/ActiveTablesPage.vue'),
+    meta: { requiresAuth: true, roles: ['waiter'] }
   },
   {
     path: 'edit/:id',
     name: 'edit-order',
-    component: () => import('src/pages/waiter/EditOrderPage.vue'),
+    component: () => import('@/pages/waiter/EditOrderPage.vue'),
+    meta: { requiresAuth: true, roles: ['waiter'] }
   },
 ]

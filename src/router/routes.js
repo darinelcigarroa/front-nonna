@@ -10,16 +10,15 @@ const routes = [
       ...waiterRoutes,
       ...chefRoutes,
       ...adminRoutes,
-      { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
+      {
+        path: '', name: 'home', component: () => import('pages/IndexPage.vue'),
+        meta: { requiresAuth: true }
+      },
       {
         path: '/profile',
         name: 'profile',
         component: () => import('src/components/MyProfile.vue'),
-      },
-      {
-        path: '/admin',
-        name: 'admin',
-        component: () => import('pages/admin/DashboardPage.vue'),
+        meta: { requiresAuth: true }
       },
     ],
   },
@@ -29,8 +28,12 @@ const routes = [
     component: () => import('pages/LoginPage.vue'),
   },
   {
+    path: '/403',
+    component: () => import('pages/Error403Page.vue')
+  },
+  {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('src/pages/Error404Page.vue'),
   },
 ]
 

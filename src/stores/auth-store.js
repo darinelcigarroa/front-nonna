@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'boot/axios'
 import authService from 'src/services/authService'
 
@@ -58,20 +58,23 @@ export const useAuthStore = defineStore('auth', {
 
       return result;
     },
-
     /**
-     * Check if the user has a specific role
+     * Check specific roles
      */
-    hasRole(role) {
-      return this.roles.includes(role);
+    hasAnyRole(roles) {
+      return roles.some(role => this.roles.includes(role))
     },
-
     /**
      * Verify if there is an active session
      */
     isAuthenticated() {
-      console.log('Token value:', this.token)
-      return Boolean(this.token) && this.token !== 'undefined' && this.token !== 'null'
+      return !!this.token
+      // return Boolean(this.token) && this.token !== 'undefined' && this.token !== 'null'
     }
-  }
+  },
+  persist: true,
 })
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+}
+

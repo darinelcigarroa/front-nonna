@@ -1,6 +1,6 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
-import { useAuthStore } from 'stores/auth-store' // Importar el store de autenticación
+import { useAuthStore } from 'stores/auth-store' // Import authentication store
 import routes from './routes'
 
 export default defineRouter(function () {
@@ -14,18 +14,27 @@ export default defineRouter(function () {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  // 🔹 **Proteger todas las rutas excepto login**
+  // 🔹 **Global Route Guard: Protect Routes Based on Authentication and Multiple Roles**
   Router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
     const isAuthenticated = authStore.isAuthenticated()
 
-    if (to.path !== '/login' && !isAuthenticated) {
-      next('/login')
-    } else if (to.path === '/login' && isAuthenticated) {
-      next('/')
-    } else {
-      next()
+    // 🔹 Redirect to login if not authenticated
+    if (to.meta.requiresAuth && !isAuthenticated) {
+      return next('/login')
     }
+
+    // 🔹 Prevent authenticated users from accessing the login page
+    if (to.path === '/login' && isAuthenticated) {
+      return next('/')
+    }
+
+    // 🔹 Check if the user has any of the required roles
+    if (to.meta.roles?.length && !authStore.hasAnyRole(to.meta.roles)) {
+      return next('/403')
+    }
+
+    next()
   })
 
   return Router

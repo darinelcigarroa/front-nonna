@@ -37,20 +37,22 @@
 
       <!-- Contenedor de las tarjetas -->
       <div class="grid-container">
-        <q-card v-for="(card, index) in cards" :key="index" class="grid-item" @click="navigateTo(card.path)">
-          <q-card-section>
-            <span class="text-body1 text-weight-bold">{{ $t(card.name) }}</span>
-          </q-card-section>
+        <CanRoles v-for="(card, index) in cards" :key="index" :roles="card.roles">
+          <q-card class="grid-item" @click="navigateTo(card.path)">
+            <q-card-section>
+              <span class="text-body1 text-weight-bold">{{ $t(card.name) }}</span>
+            </q-card-section>
 
-          <!-- Imagen dentro de su contenedor -->
-          <q-card-section class="image-container">
-            <q-img :src="getImagePath(card.image)" alt="SVG" fit="contain" class="card-image" />
-          </q-card-section>
+            <!-- Imagen dentro de su contenedor -->
+            <q-card-section class="image-container">
+              <q-img :src="getImagePath(card.image)" alt="SVG" fit="contain" class="card-image" />
+            </q-card-section>
 
-          <q-card-section>
-            <span class="text-caption text-body1">{{ $t(card.description) }}</span>
-          </q-card-section>
-        </q-card>
+            <q-card-section>
+              <span class="text-caption text-body1">{{ $t(card.description) }}</span>
+            </q-card-section>
+          </q-card>
+        </CanRoles>
       </div>
     </div>
   </div>
@@ -91,10 +93,10 @@ onUnmounted(() => {
 });
 
 const cards = [
-  { name: 'create_order', description: 'create_an_order_to_send_to_the_chef', image: 'create_order.svg', path: '/create-order' },
-  { name: 'active_services', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', path: '/active-tables' },
-  { name: 'kitchen_orders', description: 'tracking_dishes_in_progress_for_the_chef', image: '328.svg', path: '/kitchen-orders' },
-  { name: 'profile', description: 'view_your_information', image: '481.svg', path: '/profile' },
+  { name: 'create_order', description: 'create_an_order_to_send_to_the_chef', image: 'create_order.svg', path: '/create-order', roles: ['super-admin', 'waiter'] },
+  { name: 'active_services', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', path: '/active-tables', roles: ['super-admin', 'waiter'] },
+  { name: 'kitchen_orders', description: 'tracking_dishes_in_progress_for_the_chef', image: '328.svg', path: '/kitchen-orders', roles: ['super-admin', 'chef'] },
+  { name: 'profile', description: 'view_your_information', image: '481.svg', path: '/profile', roles: ['super-admin', 'waiter', 'chef'] },
 ];
 
 const navigateTo = (path) => {
