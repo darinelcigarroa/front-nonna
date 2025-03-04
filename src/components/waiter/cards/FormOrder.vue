@@ -24,15 +24,17 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('table_number') }}</q-item-label>
-          <q-select :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense
-            :label="$t('table_number')" option-label="name" option-value="id" outlined v-model="table"
-            :options="numberTables" options-dense map-options></q-select>
+          <q-select :rules="[val => !!val || $t('field_is_required')]" dense option-label="name" option-value="id"
+            :disable="orderID != undefined" outlined v-model="table" :options="filteredTables"
+            :label="$t('table_number')" map-options options-dense @filter="filterTables" behavior="menu" use-input
+            fill-input hide-selected>
+          </q-select>
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
-          }}</q-item-label>
+            }}</q-item-label>
           <q-input :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense outlined
             v-model="numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
@@ -54,9 +56,10 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('dish') }}</q-item-label>
-          <q-select :rules="[val => !!val || $t('field_is_required')]" dense option-label="name" option-value="id"
-            outlined v-model="orderedDishes.dishe" :options="dishes" :label="$t('dish')" map-options
-            options-dense></q-select>
+          <q-select :disable="orderedDishes.typeDish == null" :rules="[val => !!val || $t('field_is_required')]" dense
+            option-label="name" option-value="id" outlined v-model="orderedDishes.dishe" :options="filteredDishes"
+            :label="$t('dish')" map-options options-dense @filter="filterDishes" :loading="loadingDishes"
+            behavior="menu" use-input fill-input hide-selected></q-select>
         </q-item-section>
       </q-item>
       <q-item>
@@ -82,7 +85,7 @@
 <script setup>
 import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 import { useOrderStore } from "@/stores/waiter/order-store"
-import { ref, reactive, onMounted } from "vue"
+import { ref, reactive, onMounted, watch } from "vue"
 import { useRoute } from "vue-router";
 import { notifyError } from 'src/utils/notify';
 import { useQuasar } from 'quasar';
@@ -91,25 +94,35 @@ import dishTypeService from '@/services/dishTypeService';
 import dishesService from '@/services/dishesService';
 
 const formRef = ref(null);
+const loadingDishes = ref(false)
 const table = ref([])
-const orderStore = useOrderStore()
-const ordersTable = useOrdersTableStore();
 const numberDiners = ref(1)
-const numberTables = ref([])
 const dishes = ref([])
+const numberTables = ref([])
 const typesDish = ref([])
 const text = ref()
-const $q = useQuasar();
 
+const filteredTables = ref([...numberTables.value]);
+const filteredDishes = ref([...dishes.value]);
+
+const orderStore = useOrderStore()
+const ordersTable = useOrdersTableStore();
+const $q = useQuasar();
 
 const route = useRoute()
 const orderID = route.params.id
+
+let orderedDishes = reactive({
+  typeDish: null,
+  dishe: null,
+  quantity: 1,
+  observations: null
+});
 
 onMounted(async () => {
   $q.loading.show()
   const dataTable = await tableService.index()
   const dataDishType = await dishTypeService.index()
-  const dataDishes = await dishesService.index()
 
   if (dataTable.success) {
     numberTables.value = dataTable.data.tables
@@ -119,34 +132,62 @@ onMounted(async () => {
     typesDish.value = dataDishType.data.dishTypes
   }
 
-  if (dataDishes.success) {
-    dishes.value = dataDishes.data.dishes
-  }
-
   $q.loading.hide()
 
 })
 
-const resetOrderedDishes = () => {
-  Object.assign(orderedDishes, {
-    typeDish: '',
-    dishe: '',
-    quantity: 1
-  });
-};
+watch(() => orderedDishes.typeDish, async (newVal) => {
+  if (!newVal) return;
+  loadingDishes.value = true
+  orderedDishes.dishe = null
+  const typeDishId = orderedDishes.typeDish.id
+  const dataDishes = await dishesService.index({ typeDish: typeDishId });
 
-let orderedDishes = reactive({
-  typeDish: '',
-  dishe: '',
-  quantity: 1,
-  observations: ''
+  if (dataDishes.success) {
+    dishes.value = dataDishes.data.dishes;
+    loadingDishes.value = false
+  }
 });
 
+const filterTables = (val, update) => {
+  if (val === "") {
+    update(() => {
+      filteredTables.value = [...numberTables.value];
+    });
+    return;
+  }
 
+  update(() => {
+    filteredTables.value = numberTables.value.filter(table =>
+      table.name.toLowerCase().includes(val.toLowerCase())
+    );
+  });
+};
+const filterDishes = (val, update) => {
+  if (val === "") {
+    update(() => {
+      filteredDishes.value = [...dishes.value];
+    });
+    return;
+  }
+
+  update(() => {
+    filteredDishes.value = dishes.value.filter(dish =>
+      dish.name.toLowerCase().includes(val.toLowerCase())
+    );
+  });
+};
+const resetOrderedDishes = () => {
+  Object.assign(orderedDishes, {
+    typeDish: null,
+    dishe: null,
+    quantity: 1,
+    observations: null
+  });
+};
 const onUpdateQuantity = ((val) => {
   orderedDishes.quantity = Number(val)
 })
-
 const formAction = async () => {
   if (!formRef.value) return;
 

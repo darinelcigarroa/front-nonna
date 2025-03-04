@@ -1,7 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { notifySuccess } from '@/utils/notify'
-import { notifyError } from 'src/utils/notify'
-// import { toRaw } from 'vue'
+import orderService from '@/services/orderService';
 
 export const useChefOrdersStore = defineStore('chefOrders', {
   state: () => ({
@@ -12,18 +10,19 @@ export const useChefOrdersStore = defineStore('chefOrders', {
 
   actions: {
     addOrder(payload) {
-      try {
-        const clonedPayload = JSON.parse(JSON.stringify(payload))
+      const clonedPayload = JSON.parse(JSON.stringify(payload))
 
-        clonedPayload.orders.forEach((item) => {
-          item.status = 'kitchen'
-        })
+      clonedPayload.orders.forEach((item) => {
+        item.status = 'Pendiente'
+      })
 
+      const response = orderService.store(clonedPayload)
+
+      if (response.success) {
         this.orders.push(clonedPayload)
-        notifySuccess()
-      } catch (error) {
-        notifyError(error)
       }
+
+      return response
     },
   },
   persist: true,
