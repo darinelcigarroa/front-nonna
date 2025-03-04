@@ -8,6 +8,7 @@ export default {
   top_waiters_by_number_of_tables_served: 'Mejores meseros por número de mesas servidas',
   trends_in_dish_sales: 'Tendencias en Ventas de Platillos',
   user_name: 'Usuario',
+  observation: 'Observaciones',
 
   // Autenticación y Usuarios
   username: 'Usuario',

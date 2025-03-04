@@ -69,8 +69,8 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label class="q-pb-xs">{{ $t('Observaciones') }}</q-item-label>
-          <q-input v-model="text" label="Observaciones" placeholder="Sin cebolla" outlined dense autogrow />
+          <q-item-label class="q-pb-xs">{{ $t('observation') }}</q-item-label>
+          <q-input v-model="text" :label="$t('observation')" placeholder="Sin cebolla" outlined dense autogrow />
         </q-item-section>
       </q-item>
     </q-list>
@@ -82,18 +82,50 @@
 <script setup>
 import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 import { useOrderStore } from "@/stores/waiter/order-store"
-import { ref, reactive } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { useRoute } from "vue-router";
 import { notifyError } from 'src/utils/notify';
+import { useQuasar } from 'quasar';
+import tableService from '@/services/tableService';
+import dishTypeService from '@/services/dishTypeService';
+import dishesService from '@/services/dishesService';
 
 const formRef = ref(null);
 const table = ref([])
 const orderStore = useOrderStore()
 const ordersTable = useOrdersTableStore();
 const numberDiners = ref(1)
+const numberTables = ref([])
+const dishes = ref([])
+const typesDish = ref([])
+const text = ref()
+const $q = useQuasar();
+
 
 const route = useRoute()
 const orderID = route.params.id
+
+onMounted(async () => {
+  $q.loading.show()
+  const dataTable = await tableService.index()
+  const dataDishType = await dishTypeService.index()
+  const dataDishes = await dishesService.index()
+
+  if (dataTable.success) {
+    numberTables.value = dataTable.data.tables
+  }
+
+  if (dataDishType.success) {
+    typesDish.value = dataDishType.data.dishTypes
+  }
+
+  if (dataDishes.success) {
+    dishes.value = dataDishes.data.dishes
+  }
+
+  $q.loading.hide()
+
+})
 
 const resetOrderedDishes = () => {
   Object.assign(orderedDishes, {
@@ -102,6 +134,7 @@ const resetOrderedDishes = () => {
     quantity: 1
   });
 };
+
 let orderedDishes = reactive({
   typeDish: '',
   dishe: '',
@@ -109,40 +142,6 @@ let orderedDishes = reactive({
   observations: ''
 });
 
-const numberTables = ref([
-  { id: 1, name: 'Mesa 1' },
-  { id: 2, name: 'Mesa 2' },
-  { id: 3, name: 'Mesa 3' },
-  { id: 4, name: 'Mesa 4' },
-])
-
-const typesDish = ref([
-  { id: 1, name: 'Desayuno' },
-  { id: 2, name: 'Almuerzo' },
-  { id: 3, name: 'Cena' },
-  { id: 4, name: 'Entradas' },
-  { id: 5, name: 'Platos Fuertes' },
-  { id: 6, name: 'Postres' },
-  { id: 7, name: 'Bebidas' },
-  { id: 8, name: 'Aperitivos' },
-  { id: 9, name: 'Comida Rápida' },
-  { id: 10, name: 'Vegetariano' },
-  { id: 11, name: 'Mariscos' },
-  { id: 12, name: 'Carnes' },
-]);
-
-const dishes = ref([
-  { id: 1, name: "Huevos Rancheros", description: "Huevos fritos sobre tortillas con salsa picante.", price: 80, typeDishId: 1 }, // Desayuno
-  { id: 2, name: "Panqueques con Miel", description: "Panqueques esponjosos con miel de maple.", price: 75, typeDishId: 1 }, // Desayuno
-  { id: 3, name: "Ensalada César", description: "Lechuga, pollo a la parrilla, crutones y aderezo césar.", price: 95, typeDishId: 4 }, // Entrada
-  { id: 4, name: "Hamburguesa Clásica", description: "Carne de res, queso cheddar, lechuga, tomate y papas fritas.", price: 120, typeDishId: 9 }, // Comida Rápida
-  { id: 5, name: "Pizza Margarita", description: "Pizza con salsa de tomate, mozzarella y albahaca fresca.", price: 150, typeDishId: 5 }, // Plato Fuerte
-  { id: 6, name: "Salmón a la Parrilla", description: "Salmón con espárragos y puré de papas.", price: 180, typeDishId: 11 }, // Mariscos
-  { id: 7, name: "Filete de Res", description: "Filete jugoso con papas y ensalada.", price: 250, typeDishId: 12 }, // Carnes
-  { id: 8, name: "Pasta Alfredo", description: "Fetuccini con salsa cremosa de queso parmesano.", price: 140, typeDishId: 5 }, // Plato Fuerte
-  { id: 9, name: "Flan Napolitano", description: "Postre suave de caramelo.", price: 60, typeDishId: 6 }, // Postres
-  { id: 10, name: "Jugo de Naranja", description: "Jugo de naranja natural recién exprimido.", price: 40, typeDishId: 7 }, // Bebidas
-]);
 
 const onUpdateQuantity = ((val) => {
   orderedDishes.quantity = Number(val)

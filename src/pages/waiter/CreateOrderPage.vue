@@ -25,8 +25,8 @@ import { useRouter } from 'vue-router';
 import { useChefOrdersStore } from '@/stores/chef-orders-store';
 import { useOrderStore } from '@/stores/waiter/order-store';
 import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
-import FormOrder from "./cards/FormOrder.vue";
-import TableOrdersTaken from "./tables/TableOrdersTaken.vue";
+import FormOrder from "@/components/waiter/cards/FormOrder.vue";
+import TableOrdersTaken from "@/components/waiter/tables/TableOrdersTaken.vue";
 
 const router = useRouter()
 const chefOrderStore = useChefOrdersStore()
@@ -34,6 +34,7 @@ const orderStore = useOrderStore();
 const ordersTable = useOrdersTableStore();
 
 const handleOrderAdded = () => {
+
   chefOrderStore.addOrder({
     table: orderStore.table,
     numberDiners: orderStore.numberDiners,
