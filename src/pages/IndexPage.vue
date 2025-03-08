@@ -63,7 +63,6 @@ import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
-import { api } from 'boot/axios'
 import { notifyError } from 'src/utils/notify';
 
 const now = ref(new Date());
@@ -80,13 +79,6 @@ let intervalId = null;
 
 onMounted(async () => {
   updateTime();
-  intervalId = setInterval(updateTime, 1000);
-  try {
-    const response = await api.get('/test')
-    console.log('Respuesta del backend:', response.data)
-  } catch (error) {
-    console.error('Error en la petición:', error)
-  }
 });
 
 onUnmounted(() => {

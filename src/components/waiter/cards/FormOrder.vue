@@ -7,25 +7,25 @@
           <q-separator></q-separator>
         </q-item-section>
       </q-item>
-      <q-item v-if="orderID != undefined" class="column">
+      <q-item v-if="isEditingOrder" class="column">
         <div class="row justify-between items-center full-width">
           <div class="bg-green-1" style="display: inline-block; line-height: 1; padding: 2px;">
-            N.º de folio: 282FYA0183JAI
+            N.º de folio: {{ orderStore.currentOrder.folio }}
           </div>
           <div class="bg-blue-1" style="display: inline-block; line-height: 1; padding: 2px;">
-            Fecha: 24/02/2025
+            Fecha: {{ orderStore.currentOrder.date }}
           </div>
         </div>
         <div class="bg-purple-1 q-mt-md"
           style="display: inline-block; line-height: 1; padding: 2px; align-self: flex-start;">
-          Hora: 24/02/2025
+          Hora: {{ orderStore.currentOrder.time }}
         </div>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('table_number') }}</q-item-label>
           <q-select :rules="[val => !!val || $t('field_is_required')]" dense option-label="name" option-value="id"
-            :disable="orderID != undefined" outlined v-model="table" :options="filteredTables"
+            :disable="isEditingOrder" outlined v-model="orderStore.currentOrder.table" :options="filteredTables"
             :label="$t('table_number')" map-options options-dense @filter="filterTables" behavior="menu" use-input
             fill-input hide-selected>
           </q-select>
@@ -34,9 +34,9 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
-            }}</q-item-label>
-          <q-input :disable="orderID != undefined" :rules="[val => !!val || $t('field_is_required')]" dense outlined
-            v-model="numberDiners" type="number" :label="$t('number_of_diners')" />
+          }}</q-item-label>
+          <q-input :disable="isEditingOrder" :rules="[val => !!val || $t('field_is_required')]" dense outlined
+            v-model="orderStore.currentOrder.numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -49,105 +49,105 @@
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('type_of_dish') }}</q-item-label>
           <q-select :rules="[val => !!val || $t('field_is_required')]" dense :label="$t('type_of_dish')"
-            option-label="name" option-value="id" outlined v-model="orderedDishes.typeDish" :options="typesDish"
-            options-dense map-options></q-select>
+            option-label="name" option-value="id" outlined v-model="orderStore.currentOrder.typeDish"
+            :options="dishTypeStore.dishType" options-dense map-options></q-select>
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('dish') }}</q-item-label>
-          <q-select :disable="orderedDishes.typeDish == null" :rules="[val => !!val || $t('field_is_required')]" dense
-            option-label="name" option-value="id" outlined v-model="orderedDishes.dishe" :options="filteredDishes"
-            :label="$t('dish')" map-options options-dense @filter="filterDishes" :loading="loadingDishes"
-            behavior="menu" use-input fill-input hide-selected></q-select>
+          <q-select :disable="orderStore.currentOrder.typeDish == null"
+            :rules="[val => !!val || $t('field_is_required')]" dense option-label="name" option-value="id" outlined
+            v-model="orderStore.currentOrder.dish" :options="filteredDishes" :label="$t('dish')" map-options
+            options-dense @filter="filterDishes" :loading="loadingDishes" behavior="menu" use-input fill-input
+            hide-selected></q-select>
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('quantity') }}</q-item-label>
           <q-input :rules="[val => !!val || $t('field_is_required')]" dense outlined min="1"
-            v-model="orderedDishes.quantity" type="number" :label="$t('quantity')"
+            v-model="orderStore.currentOrder.quantity" type="number" :label="$t('quantity')"
             @update:model-value="onUpdateQuantity" />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs">{{ $t('observation') }}</q-item-label>
-          <q-input v-model="text" :label="$t('observation')" placeholder="Sin cebolla" outlined dense autogrow />
+          <q-input v-model="orderStore.currentOrder.observations" :label="$t('observation')" placeholder="Sin cebolla"
+            outlined dense autogrow />
         </q-item-section>
       </q-item>
     </q-list>
-    <q-card-actions align="right" class="text-teal">
-      <q-btn @click="formAction" :label="$t('add')" type="submit" color="secondary" v-close-popup />
+    <q-card-actions align="right" class="text-teal justify-between">
+      <q-btn @click="handleOrderClick" :label="isEditingOrder ? $t('update_order') : $t('finish_order')"
+        icon="mdi-check" color="accent" v-close-popup />
+
+      <q-btn v-if="orderStore.currentOrder.edit" @click="updateOrderTable" :label="$t('update')" color="secondary"
+        v-close-popup />
+      <q-btn v-else :label="$t('add')" @click="onSubmit" color="secondary" v-close-popup />
+
     </q-card-actions>
   </q-form>
 </template>
 <script setup>
-import { useOrdersTableStore } from '@/stores/waiter/orders-table-store';
 import { useOrderStore } from "@/stores/waiter/order-store"
-import { ref, reactive, onMounted, watch } from "vue"
-import { useRoute } from "vue-router";
-import { notifyError } from 'src/utils/notify';
+import { ref, onMounted, watch, computed } from "vue"
+import { notifyError, notifySuccess } from 'src/utils/notify';
 import { useQuasar } from 'quasar';
 import tableService from '@/services/tableService';
-import dishTypeService from '@/services/dishTypeService';
 import dishesService from '@/services/dishesService';
+import { useDishTypeStore } from '@/stores/waiter/dish-type'
+import { useRouter, useRoute } from 'vue-router';
 
+// 🟢 1. Referencias reactivas
 const formRef = ref(null);
-const loadingDishes = ref(false)
-const table = ref([])
-const numberDiners = ref(1)
-const dishes = ref([])
-const numberTables = ref([])
-const typesDish = ref([])
-const text = ref()
+const loadingDishes = ref(false);
+const dishes = ref([]);
+const numberTables = ref([]);
 
+// 🟢 2. Variables derivadas (dependen de las referencias anteriores)
 const filteredTables = ref([...numberTables.value]);
 const filteredDishes = ref([...dishes.value]);
 
-const orderStore = useOrderStore()
-const ordersTable = useOrdersTableStore();
+// 🟢 3. Instancias de librerías y stores
+const router = useRouter();
+const route = useRoute();
 const $q = useQuasar();
+const orderStore = useOrderStore();
+const dishTypeStore = useDishTypeStore();
 
-const route = useRoute()
-const orderID = route.params.id
+// 🟢 4. Variables de parámetros de ruta
+const orderID = route.params.id;
 
-let orderedDishes = reactive({
-  typeDish: null,
-  dishe: null,
-  quantity: 1,
-  observations: null
-});
 
 onMounted(async () => {
   $q.loading.show()
   const dataTable = await tableService.index()
-  const dataDishType = await dishTypeService.index()
+
+  await dishTypeStore.index()
 
   if (dataTable.success) {
     numberTables.value = dataTable.data.tables
   }
 
-  if (dataDishType.success) {
-    typesDish.value = dataDishType.data.dishTypes
-  }
-
   $q.loading.hide()
-
 })
 
-watch(() => orderedDishes.typeDish, async (newVal) => {
+watch(() => orderStore.currentOrder.typeDish, async (newVal) => {
   if (!newVal) return;
   loadingDishes.value = true
-  orderedDishes.dishe = null
-  const typeDishId = orderedDishes.typeDish.id
-  const dataDishes = await dishesService.index({ typeDish: typeDishId });
 
-  if (dataDishes.success) {
-    dishes.value = dataDishes.data.dishes;
+  const result = await dishesService.index({ typeDish: orderStore.currentOrder.typeDish.id });
+
+  if (result.success) {
+    dishes.value = result.data.dishes;
     loadingDishes.value = false
   }
 });
+
+const isEditingOrder = computed(() => !!orderID);
+const handleOrderClick = computed(() => isEditingOrder.value ? handleOrderUpdate : handleOrderAdded);
 
 const filterTables = (val, update) => {
   if (val === "") {
@@ -177,38 +177,57 @@ const filterDishes = (val, update) => {
     );
   });
 };
-const resetOrderedDishes = () => {
-  Object.assign(orderedDishes, {
-    typeDish: null,
-    dishe: null,
-    quantity: 1,
-    observations: null
-  });
-};
 const onUpdateQuantity = ((val) => {
-  orderedDishes.quantity = Number(val)
+  orderStore.currentOrder.quantity = Number(val)
 })
-const formAction = async () => {
+const onSubmit = async () => {
   if (!formRef.value) return;
 
   const success = await formRef.value.validate();
   if (!success) return;
 
   try {
-    await orderStore.setOrder({
-      table: table.value,
-      numberDiners: numberDiners.value,
-      orderedDishes: { ...orderedDishes },
-    });
-
-    await ordersTable.set();
-
-    resetOrderedDishes();
-
+    await orderStore.setOrder();
     formRef.value.resetValidation();
   } catch (error) {
     notifyError(error)
   }
-};
+}
+const updateOrderTable = (async () => {
+  if (!formRef.value) return;
 
+  const success = await formRef.value.validate();
+  if (!success) return;
+
+  try {
+    orderStore.updateOrderTable()
+  } catch (error) {
+    notifyError(error)
+  }
+})
+const handleOrderAdded = async () => {
+
+  const response = await orderStore.sendOrder();
+
+  if (response.success) {
+    orderStore.resetState()
+    notifySuccess(response.message)
+    router.push({ name: 'home', });
+  } else {
+    notifyError(response.message)
+  }
+
+}
+const handleOrderUpdate = async () => {
+
+  const response = await orderStore.updateOrder();
+
+  if (response.success) {
+    orderStore.resetState()
+    notifySuccess(response.message)
+  } else {
+    notifyError(response.message)
+  }
+
+}
 </script>

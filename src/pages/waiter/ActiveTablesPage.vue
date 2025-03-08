@@ -34,20 +34,23 @@
       </div>
     </div>
 
-    <q-card v-for="table in tableCards" :key="table" class="no-shadow q-mb-md shadow rounded-borders">
+    <q-card v-for="item in tableCards" :key="item.id" class="no-shadow q-mb-md shadow rounded-borders">
       <div class="row items-center q-pa-md no-wrap">
         <div class="column">
-          <q-icon name="mdi-room-service" size="4em" :class="[`box_${table.number}`]"></q-icon>
-          <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ table.time }}</div>
+          <q-avatar rounded :class="[`box_button_${item.number}`]" text-color="dark">
+            <q-icon name="table_bar" />
+          </q-avatar>
+
+          <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ item.formatted_time }}</div>
         </div>
         <div class="q-ml-auto column items-end">
           <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
-            <span class="q-mx-xs">{{ table.title }}</span>
+            <span class="q-mx-xs">{{ item.table.name }}</span>
           </div>
           <div>
-            <q-btn :to="{ name: 'edit-order', params: { id: table.id } }"
-              :class="[`box_button_${table.number}`, 'base_box_button']" rounded align="between" size="sm"
-              class="text-weight-bolder btn-fixed-width q-mt-xs" :label="`${table.plates} platillo(s)`" icon="edit" />
+            <q-btn :to="{ name: 'edit-order', params: { id: item.id } }"
+              :class="[`box_button_${item.number}`, 'base_box_button']" rounded align="between" size="sm"
+              class="text-weight-bolder btn-fixed-width q-mt-xs text-dark" :label="`${item.folio}`" icon="edit" />
           </div>
         </div>
       </div>
@@ -57,49 +60,24 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-let tableCards = ref([])
-onMounted(() => {
-  tableCards.value = [
-    {
-      id: 1,
-      icon: 'mdi-table-furniture',
-      time: 'Today 11:45 AM',
-      title: 'Mesa T11',
-      plates: 2
-    },
-    {
-      id: 2,
-      icon: 'mdi-silverware-fork-knife',
-      time: 'Today 12:30 PM',
-      title: 'Mesa T5',
-      plates: 3
-    },
-    {
-      id: 3,
-      icon: 'mdi-food',
-      time: 'Today 01:15 PM',
-      title: 'Mesa T9',
-      plates: 5
-    },
-    {
-      id: 4,
-      icon: 'mdi-coffee-outline',
-      time: 'Today 02:00 PM',
-      title: 'Mesa T3',
-      plates: 1
-    },
-    {
-      id: 5,
-      icon: 'mdi-beer-outline',
-      time: 'Today 02:45 PM',
-      title: 'Mesa T7',
-      plates: 4
-    }
-  ];
+import { useOrderStore } from 'src/stores/waiter/order-store';
+import { notifyError } from 'src/utils/notify';
 
-  tableCards.value.forEach((table, index) => {
-    table.number = (index % 3) + 1;
-  });
+let tableCards = ref([])
+
+onMounted(async () => {
+  const orderStore = useOrderStore()
+  const response = await orderStore.index()
+  console.log('ok', response)
+
+  if (response.success) {
+    tableCards.value = response.data.orders
+    tableCards.value.forEach((table, index) => {
+      table.number = (index % 3) + 1;
+    });
+  } else {
+    notifyError(response.messsage)
+  }
 })
 
 const restaurantStatus = ref([

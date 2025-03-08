@@ -61,6 +61,7 @@ export default {
   orders_in_kitchen: 'Ordenes en cocina',
   in_kitchen: 'En cocina',
   ordering: 'Ordenando',
+  update_order: 'Actualizar orden',
   // Facturación y Pagos
   payment: 'Pago',
   payment_method: 'Método de pago',
@@ -84,6 +85,7 @@ export default {
   served: 'Servido',
   orders_taken: 'Ordenes tomadas',
   active_services: 'Servicios activos',
+  in_preparation: 'En preparación',
   // Validaciones y Mensajes de Error
   field_is_required: 'El campo es obligatorio',
   invalid_number: 'Número inválido',

@@ -1,5 +1,4 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import orderService from '@/services/orderService';
 
 export const useChefOrdersStore = defineStore('chefOrders', {
   state: () => ({
@@ -9,20 +8,8 @@ export const useChefOrdersStore = defineStore('chefOrders', {
   getters: {},
 
   actions: {
-    addOrder(payload) {
-      const clonedPayload = JSON.parse(JSON.stringify(payload))
+    addOrder() {
 
-      clonedPayload.orders.forEach((item) => {
-        item.status = 'Pendiente'
-      })
-
-      const response = orderService.store(clonedPayload)
-
-      if (response.success) {
-        this.orders.push(clonedPayload)
-      }
-
-      return response
     },
   },
   persist: true,

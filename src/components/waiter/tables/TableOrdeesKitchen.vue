@@ -1,28 +1,54 @@
 <template>
-  <q-card flat bordered class>
+  <q-card flat bordered>
     <q-card-section>
-      <div class="text-h6">{{ $t('orders_in_kitchen') }}</div>
+      <div class="text-h6">{{ $t('orders_taken') }}</div>
     </q-card-section>
 
     <q-separator inset></q-separator>
 
     <q-card-section>
-      <q-table :rows="dataKitchen" :columns="columns" row-key="id">
-        <!-- Nombre del platillo -->
+      <q-table :rows="dataTable" :columns="columns" row-key="name" :dense="$q.screen.lt.md" :grid="mode === 'grid'"
+        :hide-header="mode === 'grid'" :separator="separator" class="full-width" card-class="q-table__grid"
+        :filter="filter">
+        <!-- Barra de herramientas superior -->
+        <template v-slot:top-right="props">
+          <q-input outlined dense debounce="300" v-model="filter" placeholder="Buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+
+          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+            @click="props.toggleFullscreen" v-show="mode === 'list'">
+            <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
+              {{ props.inFullscreen ? "Salir de Pantalla Completa" : "Pantalla Completa" }}
+            </q-tooltip>
+          </q-btn>
+
+          <q-btn flat round dense :icon="mode === 'grid' ? 'list' : 'grid_on'"
+            @click="mode = mode === 'grid' ? 'list' : 'grid'; separator = mode === 'grid' ? 'none' : 'horizontal';"
+            v-show="!props.inFullscreen">
+            <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
+              {{ mode === "grid" ? "Ver Tabla" : "Ver Grid" }}
+            </q-tooltip>
+          </q-btn>
+
+        </template>
+
+        <!-- Formato de Celdas (solo si está en modo tabla) -->
         <template v-slot:body-cell-name="props">
           <q-td :props="props">
-            <q-item style="max-width: 420px">
+            <q-item>
               <q-item-section>
-                <q-item-label>{{ props.row.dishe?.name || 'Sin nombre' }}</q-item-label>
+                <q-item-label>{{ props.row.dish.name || "Sin nombre" }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-td>
         </template>
 
-        <!-- Cantidad -->
         <template v-slot:body-cell-quantity="props">
           <q-td :props="props">
-            <q-item style="max-width: 420px">
+            <q-item>
               <q-item-section>
                 <q-item-label>{{ props.row.quantity || 0 }}</q-item-label>
               </q-item-section>
@@ -30,192 +56,77 @@
           </q-td>
         </template>
 
-        <!-- Precio -->
         <template v-slot:body-cell-price="props">
           <q-td :props="props">
-            <q-item style="max-width: 420px">
+            <q-item>
               <q-item-section>
-                <q-item-label>${{ props.row.dishe?.price || 0 }}</q-item-label>
+                <q-item-label>${{ props.row.dish.price || 0 }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-td>
         </template>
 
-        <!-- Status -->
-        <template v-slot:body-cell-status="props">
+        <template v-slot:body-cell-status_id="props">
           <q-td :props="props">
             <q-chip
-              :color="(props.row.status == 'kitchen') ? 'yellow' : (props.row.status == 'cooked' ? 'green' : 'grey')"
+              :color="props.row.status_id == 2 ? 'blue' : props.row.status_id == 3 ? 'green' : props.row.status_id == 4 ? 'red' : 'primary'"
               text-color="white" dense class="text-weight-bolder" square>
-              {{ props.row.status }}
+              {{ status(props.row.status_id) }}
             </q-chip>
           </q-td>
         </template>
-        <template v-slot:body-cell-d="props">
-          <q-td :props="props">
-            Divisor
-          </q-td>
+        <!-- Formato en Modo Grid -->
+        <template v-slot:item="props">
+          <div>
+            <q-card class="q-mb-sm">
+              <q-card-section>
+                <div class="text-h6">{{ props.row.dish_name || "Sin nombre" }}</div>
+                <div class="text-caption">Cantidad: {{ props.row.quantity || 0 }}</div>
+                <div class="text-caption">Precio: ${{ props.row.dish.price || 0 }}</div>
+                <q-chip
+                  :color="props.row.status_id == 2 ? 'blue' : props.row.status_id == 3 ? 'green' : props.row.status_id == 4 ? 'red' : 'primary'"
+                  text-color="white" dense class="q-mt-sm">
+                  {{ status(props.row.status_id) }}
+                </q-chip>
+              </q-card-section>
+            </q-card>
+          </div>
         </template>
-        <!-- Action -->
-        <template v-slot:body-cell-Action="props">
-          <q-td :props="props">
-            <q-btn flat dense round icon="more_vert">
-              <q-menu>
-                <q-list style="min-width: 150px">
-                  <q-item clickable v-close-popup @click="editItem(props.row)">
-                    <q-item-section avatar>
-                      <q-icon color="secondary" name="edit" />
-                    </q-item-section>
-                    <q-item-section>{{ $t('edit') }}</q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="deleteItem(props.rowIndex)">
-                    <q-item-section avatar>
-                      <q-icon color="secondary" name="delete" />
-                    </q-item-section>
-                    <q-item-section>{{ $t('delete') }}</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </q-td>
-        </template>
+
       </q-table>
     </q-card-section>
+
   </q-card>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { useOrderStore } from '@/stores/waiter/order-store';
-import { useChefOrdersStore } from '@/stores/chef-orders-store';
-import { useRouter } from 'vue-router';
-import { onMounted } from 'vue';
+import { computed, ref } from "vue";
+import { useOrderStore } from "src/stores/waiter/order-store";
 
-const router = useRouter();
-const dataKitchen = ref([]);
-const orderStore = useOrderStore();
-const chefOrderStore = useChefOrdersStore();
+const filter = ref("")
+const mode = ref("list")
+const separator = ref("horizontal")
+const orderStore = useOrderStore()
 
-onMounted(() => {
-  const data =
-  {
-    table: {
-      "id": 2,
-      "name": "Mesa 2",
-      "numberDiners": 1
-    },
-    orders: [
-      {
-        "dishe": { "id": 101, "name": "Ensalada César" },
-        "quantity": 1,
-        "status": "created",
-        "typeDish": { "id": 1, "name": "Entradas" }
-      },
-      {
-        "dishe": { "id": 102, "name": "Sopa de Tortilla" },
-        "quantity": 2,
-        "status": "created",
-        "typeDish": { "id": 2, "name": "Sopas" }
-      },
-      {
-        "dishe": { "id": 103, "name": "Pasta Alfredo" },
-        "quantity": 1,
-        "status": "created",
-        "typeDish": { "id": 3, "name": "Pastas" }
-      },
-      {
-        "dishe": { "id": 104, "name": "Hamburguesa BBQ" },
-        "quantity": 1,
-        "status": "created",
-        "typeDish": { "id": 4, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 105, "name": "Tacos al Pastor" },
-        "quantity": 3,
-        "status": "created",
-        "typeDish": { "id": 5, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 106, "name": "Pizza Margarita" },
-        "quantity": 1,
-        "status": "kitchen",
-        "typeDish": { "id": 6, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 107, "name": "Churrasco" },
-        "quantity": 2,
-        "status": "kitchen",
-        "typeDish": { "id": 7, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 108, "name": "Risotto de Champiñones" },
-        "quantity": 1,
-        "status": "kitchen",
-        "typeDish": { "id": 8, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 109, "name": "Filete de Salmón" },
-        "quantity": 2,
-        "status": "kitchen",
-        "typeDish": { "id": 9, "name": "Platos Fuertes" }
-      },
-      {
-        "dishe": { "id": 110, "name": "Postre de Chocolate" },
-        "quantity": 1,
-        "status": "kitchen",
-        "typeDish": { "id": 10, "name": "Postres" }
-      }
-    ]
-  }
+const statuses = {
+  1: 'Creado',
+  2: 'En cocina',
+  3: 'En Preparación',
+  4: 'Listo para Servir',
+  5: 'Cancelado'
+}
 
-  // console.log(data)
-  dataKitchen.value = data.orders.filter((item) => {
-    // console.log('item', item)
-    return item.status == 'kitchen'
-  })
-})
+const dataTable = computed(() => orderStore.orders.filter((item) => item.status_id !== 1 && item.status_id !== 2))
 
 const columns = [
-  { name: 'name', label: 'name', field: 'name', sortable: true, align: 'left' },
-  { name: 'quantity', label: 'quantity', field: 'quantity', sortable: true, align: 'left' },
-  { name: 'price', label: 'price', field: 'price', sortable: true, align: 'left' },
-  { name: 'Action', label: 'Action', field: 'Action', sortable: false, align: 'center' }
+  { name: "name", label: "Nombre", field: "name", sortable: true, align: "left" },
+  { name: "quantity", label: "Cantidad", field: "quantity", sortable: true, align: "left" },
+  { name: "price", label: "Precio", field: "price", sortable: true, align: "left" },
+  { name: "status_id", label: "Estado", field: "status_id", sortable: false, align: "left" },
 ];
 
-const addOrderToTable = () => {
-  chefOrderStore.addOrder({
-    table: orderStore.table,
-    numberDiners: orderStore.numberDiners,
-    orders: dataKitchen.value
-  });
-  orderStore.resetState()
-  router.push({ name: 'home', });
-};
+const status = (status_id) => {
+  return statuses[status_id] || 'Desconocido'
+}
 
-defineExpose({ addOrderToTable });
-
-const editItem = (item) => {
-  console.log('editItem', item);
-};
-
-const deleteItem = (index) => {
-  dataKitchen.value.splice(index, 1);
-};
-
-watch(() => orderStore.order, () => {
-  if (!orderStore.order || !orderStore.order.dishe) {
-    return;
-  }
-
-  const dishIndex = dataKitchen.value.findIndex(dish => dish.dishe.id === orderStore.order.dishe.id);
-
-  if (dishIndex !== -1) {
-    dataKitchen.value[dishIndex].quantity += orderStore.order.quantity;
-  } else {
-    dataKitchen.value.push({
-      ...orderStore.order,
-      status: 'created'
-    });
-  }
-});
 </script>
