@@ -1,18 +1,25 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
+import { echo } from 'src/boot/echo'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: false, // No usa cookies, sino tokens
+  withCredentials: false,
   headers: { 'Accept': 'application/json' }
 })
 
-// Interceptor para agregar automáticamente el token en cada petición
+
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('auth_token')
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+
+  if (echo && echo.socketId()) {
+    config.headers['X-Socket-ID'] = echo.socketId()
+  }
+
   return config
 })
 

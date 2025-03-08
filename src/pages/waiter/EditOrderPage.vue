@@ -47,16 +47,17 @@ import TableOrdersTaken from "@/components/waiter/tables/TableOrdersTaken.vue";
 import FormOrder from "@/components/waiter/cards/FormOrder.vue";
 import { useRouter, useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { notifyError } from 'src/utils/notify';
+import { echo } from 'boot/echo';
 
-const router = useRouter(); // Para hacer redirecciones
-const route = useRoute(); // Para obtener parámetros de la URL
+const router = useRouter()
+const route = useRoute()
 const orderStore = useOrderStore();
 const tab = ref('ordering');
 const q = useQuasar();
 
-const orderID = ref(route.params.id); // Asegurar que es reactivo
+const orderID = ref(route.params.id)
 
 onMounted(async () => {
   q.loading.show();
@@ -68,6 +69,32 @@ onMounted(async () => {
   }
 
   q.loading.hide();
+});
+
+const fetchOrder = async () => {
+  q.loading.show();
+
+  const result = await orderStore.getOrder(orderID.value);
+
+  if (!result.success) {
+    notifyError(result.message);
+  }
+
+  q.loading.hide();
+};
+
+onMounted(async () => {
+  await fetchOrder()
+
+  echo.private('orders')
+    .listen('.OrderStatusUpdated', (event) => {
+      console.log('✅ Evento recibido:', event);
+    });
+
+});
+
+onBeforeUnmount(() => {
+  echo.leave(`orders.${orderID.value}`);
 });
 
 const cancelOrder = (() => {
