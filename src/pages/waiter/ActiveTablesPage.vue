@@ -1,60 +1,67 @@
 <template>
+
   <div class="q-pa-md">
-    <div class="row q-my-md shadow" style="border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.12);">
-      <div v-for="(item) in restaurantStatus" :key="item.id"
-        :class="['box_' + item.id, 'col-md-4', 'col-lg-4', 'col-sm-12', 'col-xs-12']">
-        <q-card class="no-shadow q-pa-sm">
-          <q-item class="q-pb-none q-pt-xs">
-            <q-item-section>
-              <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">
-                {{ item.total }}
-              </q-item-label>
-              <q-item-label :class="!$q.dark.isActive ? 'text-dark' : 'text-white'" style="letter-spacing: 1px;">
-                {{ $t(item.name) }}
-              </q-item-label>
-              <q-item-label :class="[!$q.dark.isActive ? `box_${item.id}` : 'text-white', 'text-weight-medium']"
-                style="letter-spacing: 1px;">
-                {{ $t('available') }} {{ (item.total - item.consumed) }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-icon :name="item.icon" :class="['box_' + item.id]" size="60px" />
-            </q-item-section>
-          </q-item>
-          <q-item class="q-py-xs" style="min-height: unset">
-            <q-item-section>
-              <div class="progress-base q-my-sm">
-                <div :class="['progress-bar-' + item.id]"
-                  :style="{ backgroundColor: item.color, width: capacity(item) }">
+    <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
+      <div class="row q-my-md shadow" style="border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.12);">
+        <div v-for="(item) in restaurantStatus" :key="item.id"
+          :class="['box_' + item.id, 'col-md-4', 'col-lg-4', 'col-sm-12', 'col-xs-12']">
+          <q-card class="no-shadow q-pa-sm">
+            <q-item class="q-pb-none q-pt-xs">
+              <q-item-section>
+                <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">
+                  {{ item.total }}
+                </q-item-label>
+                <q-item-label :class="!$q.dark.isActive ? 'text-dark' : 'text-white'" style="letter-spacing: 1px;">
+                  {{ $t(item.name) }}
+                </q-item-label>
+                <q-item-label :class="[!$q.dark.isActive ? `box_${item.id}` : 'text-white', 'text-weight-medium']"
+                  style="letter-spacing: 1px;">
+                  {{ $t('available') }} {{ (item.total - item.consumed) }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon :name="item.icon" :class="['box_' + item.id]" size="60px" />
+              </q-item-section>
+            </q-item>
+            <q-item class="q-py-xs" style="min-height: unset">
+              <q-item-section>
+                <div class="progress-base q-my-sm">
+                  <div :class="['progress-bar-' + item.id]"
+                    :style="{ backgroundColor: item.color, width: capacity(item) }">
+                  </div>
                 </div>
+              </q-item-section>
+            </q-item>
+          </q-card>
+        </div>
+      </div>
+    </transition>
+    <transition appear enter-active-class="animated lightSpeedInLeft slower"
+      leave-active-class="animated zoomOut slower">
+      <div>
+        <q-card v-for="item in tableCards" :key="item.id" class="no-shadow q-mb-md shadow rounded-borders">
+          <div class="row items-center q-pa-md no-wrap">
+            <div class="column">
+              <q-avatar rounded :class="[`box_button_${item.number}`]" text-color="dark">
+                <q-icon name="table_bar" />
+              </q-avatar>
+
+              <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ item.formatted_time }}</div>
+            </div>
+            <div class="q-ml-auto column items-end">
+              <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
+                <span class="q-mx-xs">{{ item.table.name }}</span>
               </div>
-            </q-item-section>
-          </q-item>
+              <div>
+                <q-btn :to="{ name: 'edit-order', params: { id: item.id } }"
+                  :class="[`box_button_${item.number}`, 'base_box_button']" rounded align="between" size="sm"
+                  class="text-weight-bolder btn-fixed-width q-mt-xs text-dark" :label="`${item.folio}`" icon="edit" />
+              </div>
+            </div>
+          </div>
         </q-card>
       </div>
-    </div>
-
-    <q-card v-for="item in tableCards" :key="item.id" class="no-shadow q-mb-md shadow rounded-borders">
-      <div class="row items-center q-pa-md no-wrap">
-        <div class="column">
-          <q-avatar rounded :class="[`box_button_${item.number}`]" text-color="dark">
-            <q-icon name="table_bar" />
-          </q-avatar>
-
-          <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ item.formatted_time }}</div>
-        </div>
-        <div class="q-ml-auto column items-end">
-          <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
-            <span class="q-mx-xs">{{ item.table.name }}</span>
-          </div>
-          <div>
-            <q-btn :to="{ name: 'edit-order', params: { id: item.id } }"
-              :class="[`box_button_${item.number}`, 'base_box_button']" rounded align="between" size="sm"
-              class="text-weight-bolder btn-fixed-width q-mt-xs text-dark" :label="`${item.folio}`" icon="edit" />
-          </div>
-        </div>
-      </div>
-    </q-card>
+    </transition>
   </div>
 </template>
 
