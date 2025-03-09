@@ -4,7 +4,7 @@ import { api } from 'boot/axios'
 export default {
     async index() {
         try {
-            const response = await api.get('waiter/orders')
+            const response = await api.get('orders')
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -15,7 +15,7 @@ export default {
     },
     async store(payload) {
         try {
-            const response = await api.post('waiter/orders', payload)
+            const response = await api.post('orders', payload)
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -26,7 +26,7 @@ export default {
     },
     async edit(id) {
         try {
-            const response = await api.get(`waiter/orders/${id}/edit`)
+            const response = await api.get(`orders/${id}/edit`)
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -37,7 +37,7 @@ export default {
     },
     async update(orderID, params) {
         try {
-            const response = await api.patch(`waiter/orders/${orderID}`, params)
+            const response = await api.patch(`orders/${orderID}`, params)
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -48,7 +48,7 @@ export default {
     },
     async delete(payload) {
         try {
-            const response = await api.delete(`waiter/orders/${payload.orderID}`)
+            const response = await api.delete(`orders/${payload.orderID}`)
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -59,7 +59,7 @@ export default {
     },
     async cancelEditing(orderID) {
         try {
-            const response = await api.post(`waiter/orders/cancel-editing/${orderID}`)
+            const response = await api.post(`orders/cancel-editing/${orderID}`)
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -70,7 +70,7 @@ export default {
     },
     async deleteOrderItem(orderItemID) {
         try {
-            const response = await api.delete(`waiter/orders/delete-order-item/${orderItemID}`)
+            const response = await api.delete(`orders/delete-order-item/${orderItemID}`)
             return response.data
         } catch (error) {
             return error.response?.data || {

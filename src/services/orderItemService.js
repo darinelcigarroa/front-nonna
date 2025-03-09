@@ -57,5 +57,16 @@ export default {
             }
         }
     },
+    async updateDishStatus(ids, status_id) {
+        try {
+            const response = await api.patch(`order-items/status/preparing`, { ids, status_id });
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    },
 
 }

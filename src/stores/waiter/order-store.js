@@ -64,7 +64,6 @@ export const useOrderStore = defineStore('order', {
     },
     resetCurrentOrder() {
       Object.assign(this.currentOrder, {
-        numberDiners: 1,
         quantity: 1,
         observations: null,
         dish: null,
