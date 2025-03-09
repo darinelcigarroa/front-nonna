@@ -68,7 +68,6 @@ let tableCards = ref([])
 onMounted(async () => {
   const orderStore = useOrderStore()
   const response = await orderStore.index()
-  console.log('ok', response)
 
   if (response.success) {
     tableCards.value = response.data.orders

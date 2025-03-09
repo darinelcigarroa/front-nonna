@@ -57,6 +57,17 @@ export default {
             }
         }
     },
+    async cancelEditing(orderID) {
+        try {
+            const response = await api.post(`waiter/orders/cancel-editing/${orderID}`)
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    },
     async deleteOrderItem(orderItemID) {
         try {
             const response = await api.delete(`waiter/orders/delete-order-item/${orderItemID}`)
@@ -67,5 +78,6 @@ export default {
                 message: 'Error al obtener la orden'
             }
         }
-    }
+    },
+
 }

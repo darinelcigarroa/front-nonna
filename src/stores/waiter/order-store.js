@@ -52,11 +52,15 @@ export const useOrderStore = defineStore('order', {
     },
     async updateOrder() {
       const orderID = this.currentOrder.orderID
-      const response = await orderService.update(orderID, { orders: this.orders })
+      const dataOrders = this.orders.filter((item) => [1, 2].includes(item.status_id) || item.edit == true)
+      const response = await orderService.update(orderID, { orders: dataOrders })
       if (response.success) {
         this.getOrder(orderID)
       }
       return response
+    },
+    async cancelEditingOrder() {
+      return await orderService.cancelEditing(this.currentOrder.orderID)
     },
     resetCurrentOrder() {
       Object.assign(this.currentOrder, {
@@ -68,7 +72,12 @@ export const useOrderStore = defineStore('order', {
         edit: false
       });
     },
+    resetState() {
+      this.$reset()
+    },
+    // Functions orderItem
     setOrder() {
+      console.log('set order')
       const { dish, quantity = 1, observations } = this.currentOrder || {};
 
       if (!dish) {
@@ -92,23 +101,6 @@ export const useOrderStore = defineStore('order', {
       }
 
       this.resetCurrentOrder();
-    },
-    updateOrderTable() {
-      const updateIndex = this.currentOrder.originalIndex
-
-      if (!this.currentOrder || !this.currentOrder.dish) {
-        notifyWarning('Intento de agregar una orden inválida.');
-        return;
-      }
-
-      this.orders[updateIndex].dish = this.currentOrder.dish
-      this.orders[updateIndex].observations = this.currentOrder.observations
-      this.orders[updateIndex].quantity = this.currentOrder.quantity
-
-      this.resetCurrentOrder()
-    },
-    resetState() {
-      this.$reset()
     },
     async deleteOrderItem(orderItem) {
       if (orderItem.status_id == 2) {
@@ -134,6 +126,23 @@ export const useOrderStore = defineStore('order', {
         originalIndex: data.originalIndex,
         edit: true
       });
+    },
+    updateOrderTable() {
+
+      console.log('update order')
+      const updateIndex = this.currentOrder.originalIndex
+
+      if (!this.currentOrder || !this.currentOrder.dish) {
+        notifyWarning('Intento de agregar una orden inválida.');
+        return;
+      }
+
+      this.orders[updateIndex].dish = this.currentOrder.dish
+      this.orders[updateIndex].observations = this.currentOrder.observations
+      this.orders[updateIndex].quantity = this.currentOrder.quantity
+      this.orders[updateIndex].edit = true
+
+      this.resetCurrentOrder()
     },
   },
 

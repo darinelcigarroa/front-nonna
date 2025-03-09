@@ -13,7 +13,7 @@ export const notifySuccess = (message, options = {}) => {
   })
 }
 
-// Notificación de error
+// Notificación de advertencia
 export const notifyWarning = (message, options = {}) => {
   Notify.create({
     type: 'warning',
@@ -44,6 +44,7 @@ export const notifyInfo = (message, options = {}) => {
     icon: 'info',
     position: 'bottom',
     timeout: 3000,
+    textColor: 'dark',
     ...options,
   })
 }

@@ -37,9 +37,25 @@
         </keep-alive>
       </q-card>
     </div>
+    <q-dialog v-model="showExtendModal">
+      <q-card>
+        <q-toolbar class="bg-primary text-center">
+          <q-icon name="mdi-clock" size="40px" color="white" />
+          <q-toolbar-title><span class="text-weight-bold text-white">¿Extender el tiempo de edición?</span>
+          </q-toolbar-title>
+          <q-btn text-color="white" flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+
+        <q-card-section class="text-center" style="font-size: 1.3em;">
+          El tiempo de edición está a punto de terminar. ¿Quieres extenderlo por 5 minutos?
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Extender 5 minutos" color="accent" @click="extendTime" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
-
 <script setup>
 import { useOrderStore } from '@/stores/waiter/order-store';
 import TableOrdeesKitchen from '@/components/waiter/tables/TableOrdeesKitchen.vue';
@@ -47,60 +63,86 @@ import TableOrdersTaken from "@/components/waiter/tables/TableOrdersTaken.vue";
 import FormOrder from "@/components/waiter/cards/FormOrder.vue";
 import { useRouter, useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { notifyError } from 'src/utils/notify';
+import { ref, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
+import { notifyError, notifyInfo } from 'src/utils/notify';
 import { echo } from 'boot/echo';
 
-const router = useRouter()
-const route = useRoute()
+// ✅ Constantes y referencias
+const router = useRouter();
+const route = useRoute();
 const orderStore = useOrderStore();
-const tab = ref('ordering');
 const q = useQuasar();
 
-const orderID = ref(route.params.id)
+const orderID = ref(route.params.id);
+const tab = ref('ordering');
+const showExtendModal = ref(false);
+let timer = null;
 
-onMounted(async () => {
-  q.loading.show();
-
-  const result = await orderStore.getOrder(orderID.value);
-
-  if (!result.success) {
-    notifyError(result.message);
-  }
-
-  q.loading.hide();
-});
-
+// ✅ Funciones de negocio
 const fetchOrder = async () => {
-  q.loading.show();
+  try {
+    q.loading.show();
 
-  const result = await orderStore.getOrder(orderID.value);
+    const result = await orderStore.getOrder(orderID.value);
+    if (!result.success) {
+      notifyError(result.message);
+    }
 
-  if (!result.success) {
-    notifyError(result.message);
+  } catch (error) {
+    notifyError('Error al cargar la orden');
+    console.error(error);
+  } finally {
+    q.loading.hide();
   }
-
-  q.loading.hide();
 };
 
-onMounted(async () => {
-  await fetchOrder()
+const startTimer = () => {
+  // 🧹 Limpiar temporizador previo (si existe)
+  clearTimeout(timer);
 
+  // ⏳ Tiempo total = 1 minuto (para pruebas)
+  timer = setTimeout(() => {
+    notifyInfo('El tiempo de edición ha terminado');
+    router.push({ name: 'home' });
+  }, 60_000);
+
+  // 🚨 Mostrar advertencia 15 segundos antes de terminar
+  setTimeout(() => {
+    showExtendModal.value = true;
+  }, 45_000);
+};
+
+const extendTime = () => {
+  showExtendModal.value = false;
+  startTimer(); // ✅ Reiniciar el temporizador
+};
+
+const cancelOrder = () => {
+  orderStore.resetState();
+  router.push({ name: 'home' });
+};
+
+// ✅ Hooks
+onMounted(async () => {
+  await fetchOrder();
+
+  // ✅ Iniciar temporizador
+  startTimer();
+
+  // ✅ Escuchar canal privado
   echo.private('orders')
     .listen('.OrderStatusUpdated', (event) => {
       console.log('✅ Evento recibido:', event);
     });
+});
 
+onUnmounted(() => {
+  clearTimeout(timer);
+  orderStore.cancelEditingOrder();
 });
 
 onBeforeUnmount(() => {
   echo.leave(`orders.${orderID.value}`);
 });
 
-const cancelOrder = (() => {
-  orderStore.resetState()
-  router.push({ name: 'home' })
-})
 </script>
-
-<style scoped></style>

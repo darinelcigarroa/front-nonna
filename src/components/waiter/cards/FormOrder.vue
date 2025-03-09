@@ -4,7 +4,7 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-h6 text-weight-regular">{{ $t('basic_information') }}</q-item-label>
-          <q-separator></q-separator>
+          <!-- <q-separator></q-separator> -->
         </q-item-section>
       </q-item>
       <q-item v-if="isEditingOrder" class="column">
@@ -34,7 +34,7 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
-          }}</q-item-label>
+            }}</q-item-label>
           <q-input :disable="isEditingOrder" :rules="[val => !!val || $t('field_is_required')]" dense outlined
             v-model="orderStore.currentOrder.numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
