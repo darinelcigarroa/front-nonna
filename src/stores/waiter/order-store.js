@@ -22,8 +22,8 @@ export const useOrderStore = defineStore('order', {
   getters: {},
 
   actions: {
-    index() {
-      const result = orderService.index()
+    async index(params) {
+      const result = await orderService.index(params)
       return result
     },
     sendOrder() {

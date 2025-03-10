@@ -57,9 +57,9 @@ export default {
             }
         }
     },
-    async updateDishStatus(ids, status_id) {
+    async updateDishStatus(orderItems, status_id) {
         try {
-            const response = await api.patch(`order-items/status/preparing`, { ids, status_id });
+            const response = await api.patch('order-items/update-dish-status', { orderItems, status_id });
             return response.data
         } catch (error) {
             return error.response?.data || {

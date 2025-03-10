@@ -125,14 +125,14 @@ const cancelOrder = () => {
 // ✅ Hooks
 onMounted(async () => {
   await fetchOrder();
+  console.log(`📢 Intentando escuchar canal: order-items-updated.${orderID.value}`);
 
-  // ✅ Iniciar temporizador
-  startTimer();
-
-  // ✅ Escuchar canal privado
-  echo.private('orders')
-    .listen('.OrderStatusUpdated', (event) => {
+  echo.private(`order-items-updated.${orderID.value}`)
+    .listen('OrderItemsUpdated', (event) => {
       console.log('✅ Evento recibido:', event);
+    })
+    .error((error) => {
+      console.error('🚨 Error en el canal:', error);
     });
 });
 
