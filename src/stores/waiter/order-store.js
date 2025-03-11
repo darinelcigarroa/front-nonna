@@ -19,7 +19,11 @@ export const useOrderStore = defineStore('order', {
     orders: [],
   }),
 
-  getters: {},
+  getters: {
+    activeOrders: (state) => {
+      return state.orders.filter((item) => [1, 2].includes(item.status_id) || item.edit)
+    }
+  },
 
   actions: {
     async index(params) {
@@ -27,8 +31,10 @@ export const useOrderStore = defineStore('order', {
       return result
     },
     sendOrder() {
-      const orders = this.orders.filter((item) => item.status_id == 1 || item.status_id == 2)
+      const orders = this.activeOrders
+
       console.log('send orders', orders)
+
       const payload = {
         num_dinners: this.currentOrder.numberDiners,
         table_id: this.currentOrder.table.id,

@@ -34,7 +34,7 @@
       <q-item>
         <q-item-section>
           <q-item-label class="q-pb-xs text-weight-regular">{{ $t('number_of_diners')
-            }}</q-item-label>
+          }}</q-item-label>
           <q-input :disable="isEditingOrder" :rules="[val => !!val || $t('field_is_required')]" dense outlined
             v-model="orderStore.currentOrder.numberDiners" type="number" :label="$t('number_of_diners')" />
         </q-item-section>
@@ -93,7 +93,7 @@
 <script setup>
 import { useOrderStore } from "@/stores/waiter/order-store"
 import { ref, onMounted, watch, computed } from "vue"
-import { notifyError, notifySuccess } from 'src/utils/notify';
+import { notifyError, notifySuccess, notifyWarning } from 'src/utils/notify';
 import { useQuasar } from 'quasar';
 import tableService from '@/services/tableService';
 import dishesService from '@/services/dishesService';
@@ -119,7 +119,6 @@ const dishTypeStore = useDishTypeStore();
 
 // 🟢 4. Variables de parámetros de ruta
 const orderID = route.params.id;
-
 
 onMounted(async () => {
   $q.loading.show()
@@ -181,18 +180,27 @@ const onUpdateQuantity = ((val) => {
   orderStore.currentOrder.quantity = Number(val)
 })
 const onSubmit = async () => {
-  if (!formRef.value) return;
-
-  const success = await formRef.value.validate();
-  if (!success) return;
-
   try {
-    await orderStore.setOrder();
-    formRef.value.resetValidation();
+    if (!formRef.value) {
+      notifyWarning('Formulario no disponible')
+    }
+
+    const success = await formRef.value.validate()
+
+    if (!success) {
+      notifyWarning('Por favor, completa todos los campos correctamente.')
+      return
+    }
+
+    await orderStore.setOrder()
+    formRef.value.resetValidation()
+
+    notifySuccess('', { timeout: 100 })
   } catch (error) {
-    notifyError(error)
+    notifyError(error?.message || 'Ocurrió un error inesperado')
   }
 }
+
 const updateOrderTable = (async () => {
   if (!formRef.value) return;
 
@@ -207,6 +215,11 @@ const updateOrderTable = (async () => {
 })
 const handleOrderAdded = async () => {
 
+  if (orderStore.activeOrders.length === 0) {
+    notifyWarning('No tienes platillos válidos')
+    return
+  }
+
   const response = await orderStore.sendOrder();
 
   if (response.success) {
@@ -219,6 +232,11 @@ const handleOrderAdded = async () => {
 
 }
 const handleOrderUpdate = async () => {
+
+  if (orderStore.activeOrders.length === 0) {
+    notifyWarning('No tienes platillos válidos')
+    return
+  }
 
   const response = await orderStore.updateOrder();
 
