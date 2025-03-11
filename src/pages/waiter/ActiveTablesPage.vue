@@ -38,53 +38,64 @@
     </transition>
     <transition appear enter-active-class="animated lightSpeedInLeft slower"
       leave-active-class="animated zoomOut slower">
-      <div>
-        <q-card v-for="item in tableCards" :key="item.id" class="no-shadow q-mb-md shadow rounded-borders">
-          <div class="row items-center q-pa-md no-wrap">
-            <div class="column">
-              <q-avatar rounded :class="[`box_button_${item.number}`]" text-color="dark">
-                <q-icon name="table_bar" />
-              </q-avatar>
+      <q-infinite-scroll @load="onLoad" :offset="16">
+        <div>
+          <q-card v-for="(order, index) in orders" :key="order.id" class="no-shadow q-mb-md shadow rounded-borders">
+            <div class="row items-center q-pa-md no-wrap">
+              <div class="column">
+                <q-avatar rounded :class="[`box_button_${(index % 3) + 1}`]" text-color="dark">
+                  <q-icon name="table_bar" />
+                </q-avatar>
 
-              <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">{{ item.formatted_time }}</div>
-            </div>
-            <div class="q-ml-auto column items-end">
-              <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
-                <span class="q-mx-xs">{{ item.table.name }}</span>
+                <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">
+                  {{ order.formatted_time }}
+                </div>
               </div>
-              <div>
-                <q-btn :to="{ name: 'edit-order', params: { id: item.id } }"
-                  :class="[`box_button_${item.number}`, 'base_box_button']" rounded align="between" size="sm"
-                  class="text-weight-bolder btn-fixed-width q-mt-xs text-dark" :label="`${item.folio}`" icon="edit" />
+              <div class="q-ml-auto column items-end">
+                <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
+                  <span class="q-mx-xs">{{ order.folio }}</span>
+                </div>
+                <div>
+                  <q-btn :to="{ name: 'edit-order', params: { id: order.id } }"
+                    :class="[`box_button_${(index % 3) + 1}`, 'base_box_button']" rounded align="between" size="sm"
+                    class="text-weight-bolder btn-fixed-width q-mt-xs text-dark" :label="`${order.table.name}`"
+                    icon="edit" />
+                </div>
               </div>
             </div>
-          </div>
-        </q-card>
-      </div>
+          </q-card>
+        </div>
+
+      </q-infinite-scroll>
     </transition>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useOrderStore } from 'src/stores/waiter/order-store';
-import { notifyError } from 'src/utils/notify';
+import { ref } from 'vue';
+import orderService from '@/services/orderService';
 
-let tableCards = ref([])
+const currentPage = ref(1)
+const perPage = ref(4)
+const hasMoreData = ref(true)
+const orders = ref([])
 
-onMounted(async () => {
-  const orderStore = useOrderStore()
-  const response = await orderStore.index()
+const onLoad = async (index, done) => {
+  if (!hasMoreData.value) return done(true)
+
+  const response = await orderService.index({
+    page: currentPage.value,
+    per_page: perPage.value
+  })
 
   if (response.success) {
-    tableCards.value = response.data.orders
-    tableCards.value.forEach((table, index) => {
-      table.number = (index % 3) + 1;
-    });
-  } else {
-    notifyError(response.messsage)
+    const data = response.data.orders
+    orders.value = orders.value.concat(data.data)
+    hasMoreData.value = !!data.next_page_url
+    if (data.next_page_url) currentPage.value++
   }
-})
+  done(false)
+}
 
 const restaurantStatus = ref([
   { id: 1, name: 'total_tables', icon: 'mdi-table-chair', total: 25, consumed: 20 },

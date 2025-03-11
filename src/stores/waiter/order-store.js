@@ -26,10 +26,6 @@ export const useOrderStore = defineStore('order', {
   },
 
   actions: {
-    async index(params) {
-      const result = await orderService.index(params)
-      return result
-    },
     sendOrder() {
       const orders = this.activeOrders
 

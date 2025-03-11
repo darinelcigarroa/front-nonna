@@ -154,13 +154,12 @@ const onLoad = async (index, done) => {
 
   if (response.success) {
     const data = response.data.orders
-    orders.value = orders.value.concat(data.data) // ⬅️ Mejor reactividad
+    orders.value = orders.value.concat(data.data)
     hasMoreData.value = !!data.next_page_url
     if (data.next_page_url) currentPage.value++
   }
   done(false)
 }
-
 
 const toggleSelectAll = (order) => {
   order.order_items = order.order_items.map(item => {
