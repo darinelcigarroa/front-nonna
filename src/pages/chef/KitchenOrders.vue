@@ -15,9 +15,17 @@
                 <q-expansion-item class="text-weight-bold" :label="order.table.name">
                   <q-card flat bordered class="q-pa-sm q-mt-xs" style="border-radius: 10px;">
                     <!-- Checkbox para seleccionar todos los items -->
-                    <q-checkbox v-model="order.selectAll" label="Seleccionar todo"
-                      @update:model-value="toggleSelectAll(order)" class="q-mb-md" />
+                    <div class="row justify-between items-center q-mb-md"
+                      :class="{ 'bg-teal-1': order.order_status_id == ORDER_STATUS.EDIT }">
+                      <div class="row items-center">
+                        <q-checkbox v-model="order.selectAll" label="Seleccionar todo"
+                          @update:model-value="toggleSelectAll(order)" class="q-ml-sm" />
+                      </div>
 
+                      <!-- ✅ Animación Lottie al lado del checkbox -->
+                      <LottieAnimation v-if="order.order_status_id == ORDER_STATUS.EDIT" :animationData="animationData"
+                        :loop="true" :autoplay="true" width="60px" height="60px" class="q-ml-sm" />
+                    </div>
                     <!-- Renderizado de los items -->
                     <q-virtual-scroll :items="order.order_items" v-slot="{ item, index }" virtual-scroll-item-size="100"
                       virtual-scroll-sticky>
@@ -100,7 +108,11 @@
 
           </q-virtual-scroll>
         </q-timeline>
-
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner-puff color="primary" size="2.5em" />
+          </div>
+        </template>
       </q-infinite-scroll>
     </q-page>
   </transition>
@@ -110,8 +122,10 @@
 import { ref, computed, onMounted } from 'vue'
 import orderService from 'src/services/chef/orderService'
 import orderItemService from 'src/services/orderItemService'
-import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS } from '@/constants/status.js'
+import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, ORDER_STATUS } from '@/constants/status.js'
 import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
+import LottieAnimation from 'src/components/LottieAnimation.vue'
+import animationData from 'src/assets/chef/waiter-edit.json'
 import { echo } from 'boot/echo'
 
 const orders = ref([])
@@ -119,30 +133,48 @@ const currentPage = ref(1)
 const hasMoreData = ref(true)
 const perPage = ref(4)
 
-// ✅ WebSocket para actualización de datos en tiempo real
 onMounted(() => {
+  console.log('Animation Data:', animationData)
+
   echo.private('order-items-updated')
-    .listen('OrderItemsUpdated', (event) => {
-      console.log('event', event)
-      const orderIndex = orders.value.findIndex(order => +order.id === +event.orderId)
-      if (orderIndex !== -1) {
-        const order = orders.value[orderIndex]
+    .listen('OrderItemsUpdated', handleOrderUpdated)
 
-        order.order_items = order.order_items.map(item => {
-          const updatedItem = event.orderItems.find(updated => +updated.id === +item.id)
-          return updatedItem ? { ...item, ...updatedItem, checked: false } : item
-        })
-
-        order.selectAll = false
-
-        if (event.completed) {
-          orders.value.splice(orderIndex, 1);
-          notifyInfo(`Orden ${order.folio} completada.`)
-        }
-
-      }
-    })
+  echo.private('waiter-editing-order')
+    .listen('WaiterEditingOrder', handleWaiterEditingOrder)
 })
+
+const handleOrderUpdated = (event) => {
+  console.log('event', event)
+
+  const orderIndex = orders.value.findIndex(order => +order.id === +event.orderId)
+  if (orderIndex !== -1) {
+    const order = orders.value[orderIndex]
+
+    // ✅ Actualizar los items de la orden
+    order.order_items = order.order_items.map(item => {
+      const updatedItem = event.orderItems.find(updated => +updated.id === +item.id)
+      return updatedItem ? { ...item, ...updatedItem, checked: false } : item
+    })
+
+    // ✅ Desmarcar checkbox general
+    order.selectAll = false
+
+    // ✅ Eliminar orden si está completada
+    if (event.completed) {
+      orders.value.splice(orderIndex, 1)
+      notifyInfo(`Orden ${order.folio} completada.`)
+    }
+  }
+}
+
+const handleWaiterEditingOrder = (event) => {
+  console.log('event', event)
+
+  const order = orders.value.find(order => +order.id === +event.order.id)
+  if (order) {
+    order.order_status_id = event.order.order_status_id
+  }
+}
 
 const onLoad = async (index, done) => {
   if (!hasMoreData.value) return done(true)
@@ -186,7 +218,6 @@ const selectedStatus = computed(() => (order) => {
 
   if (selectedItems.length === 0) return null;
 
-  // Verifica si todos tienen el mismo status_id
   const status = selectedItems[0].status_id;
   const allSameStatus = selectedItems.every(item => item.status_id === status);
 

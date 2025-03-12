@@ -68,7 +68,7 @@
 
         <template v-slot:body-cell-status_id="props">
           <q-td :props="props">
-            <q-chip :color="props.row.status_id == 2 ? 'yellow' : 'grey'" text-color="dark" square>
+            <q-chip :color="props.row.status_id == 2 ? 'yellow-2' : 'grey'" text-color="dark" square>
               {{ status(props.row.status_id) }}
             </q-chip>
           </q-td>
@@ -142,7 +142,7 @@ const statuses = {
 
 const dataTable = computed(() =>
   orderStore.orders
-    .map((item, index) => ({ ...item, originalIndex: index })) // Agregar el índice original
+    .map((item, index) => ({ ...item, originalIndex: index }))
     .filter((item) => item.status_id == 1 || item.status_id == 2)
 );
 

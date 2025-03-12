@@ -83,10 +83,14 @@ const fetchOrder = async () => {
   try {
     q.loading.show();
 
-    const result = await orderStore.getOrder(orderID.value);
+    const result = await orderStore.editOrder(orderID.value);
+
     if (!result.success) {
       notifyError(result.message);
+    } else {
+      startTimer()
     }
+
 
   } catch (error) {
     notifyError('Error al cargar la orden');
@@ -124,21 +128,30 @@ const cancelOrder = () => {
 
 // ✅ Hooks
 onMounted(async () => {
-  await fetchOrder();
-  console.log(`📢 Intentando escuchar canal: order-items-updated.${orderID.value}`);
-
-  echo.private(`order-items-updated.${orderID.value}`)
-    .listen('OrderItemsUpdated', (event) => {
-      console.log('✅ Evento recibido:', event);
-    })
-    .error((error) => {
-      console.error('🚨 Error en el canal:', error);
-    });
+  await fetchOrder()
+  echo.private('order-items-updated')
+    .listen('OrderItemsUpdated', handleOrderUpdated)
 });
+
+const handleOrderUpdated = (event) => {
+  console.log('event', event)
+  if (event.orderId == orderID.value) {
+
+    orderStore.orders.forEach(item => {
+      const updatedItem = event.orderItems.find(updated => +updated.id === +item.id)
+      if (updatedItem) {
+        notifyInfo(`El estado del platillo "${updatedItem.dish_name}" ha sido actualizado por el chef`)
+        Object.assign(item, updatedItem)
+      }
+    })
+  }
+}
+
+
 
 onUnmounted(() => {
   clearTimeout(timer);
-  orderStore.cancelEditingOrder();
+  orderStore.cancelEditingOrder(orderID.value);
 });
 
 onBeforeUnmount(() => {

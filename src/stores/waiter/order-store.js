@@ -41,7 +41,7 @@ export const useOrderStore = defineStore('order', {
 
       return response
     },
-    async getOrder(orderID) {
+    async editOrder(orderID) {
       const result = await orderService.edit(orderID)
 
       if (result.success) {
@@ -57,12 +57,13 @@ export const useOrderStore = defineStore('order', {
       const dataOrders = this.orders.filter((item) => [1, 2].includes(item.status_id) || item.edit == true)
       const response = await orderService.update(orderID, { orders: dataOrders })
       if (response.success) {
-        this.getOrder(orderID)
+        this.editOrder(orderID)
       }
       return response
     },
-    async cancelEditingOrder() {
-      return await orderService.cancelEditing(this.currentOrder.orderID)
+    async cancelEditingOrder(orderID) {
+      console.log('orderId', orderID)
+      return await orderService.cancelEditing(orderID)
     },
     resetCurrentOrder() {
       Object.assign(this.currentOrder, {

@@ -1,5 +1,4 @@
 <template>
-
   <div class="q-pa-md">
     <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
       <div class="row q-my-md shadow" style="border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.12);">
@@ -46,7 +45,6 @@
                 <q-avatar rounded :class="[`box_button_${(index % 3) + 1}`]" text-color="dark">
                   <q-icon name="table_bar" />
                 </q-avatar>
-
                 <div :class="!$q.dark.isActive ? 'text-dark' : 'text-white'">
                   {{ order.formatted_time }}
                 </div>
@@ -65,7 +63,11 @@
             </div>
           </q-card>
         </div>
-
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner-puff color="primary" size="2.5em" />
+          </div>
+        </template>
       </q-infinite-scroll>
     </transition>
   </div>

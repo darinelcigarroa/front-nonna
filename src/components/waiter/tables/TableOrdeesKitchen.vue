@@ -69,8 +69,8 @@
         <template v-slot:body-cell-status_id="props">
           <q-td :props="props">
             <q-chip
-              :color="props.row.status_id == 2 ? 'blue' : props.row.status_id == 3 ? 'green' : props.row.status_id == 4 ? 'red' : 'primary'"
-              text-color="white" dense class="text-weight-bolder" square>
+              :color="props.row.status_id == ORDER_ITEM_STATUS.PREPARING ? 'blue-2' : props.row.status_id == ORDER_ITEM_STATUS.READY_TO_SERVE ? 'green-3' : 'grey'"
+              text-color="dark" dense square>
               {{ status(props.row.status_id) }}
             </q-chip>
           </q-td>
@@ -102,7 +102,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useOrderStore } from "src/stores/waiter/order-store";
-
+import { ORDER_ITEM_STATUS } from "src/constants/status"
 const filter = ref("")
 const mode = ref("list")
 const separator = ref("horizontal")
