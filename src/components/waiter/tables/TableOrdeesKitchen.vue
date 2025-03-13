@@ -103,6 +103,7 @@
 import { computed, ref } from "vue";
 import { useOrderStore } from "src/stores/waiter/order-store";
 import { ORDER_ITEM_STATUS } from "src/constants/status"
+
 const filter = ref("")
 const mode = ref("list")
 const separator = ref("horizontal")

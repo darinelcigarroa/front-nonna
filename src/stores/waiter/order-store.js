@@ -109,11 +109,12 @@ export const useOrderStore = defineStore('order', {
         const response = await orderItemService.delete(orderItem.id)
         if (response.success) {
           notifySuccess(response.message)
+          this.orders.splice(orderItem.originalIndex, 1)
         } else {
+          console.log('response', response)
           notifyError(response.message)
         }
       }
-      this.orders.splice(orderItem.originalIndex, 1)
     },
     editOrderItem(data) {
       const dishTypeStore = useDishTypeStore()
