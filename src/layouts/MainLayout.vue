@@ -76,14 +76,14 @@ const menuGroups = [
     ],
   },
   {
-    roles: ["super-admin", "waiter"],
+    roles: ["waiter"],
     items: [
       { route: "create-order", label: "create_order", icon: "mdi-order-bool-descending-variant" },
       { route: "active-tables", label: "active_services", icon: "mdi-table-chair" },
     ],
   },
   {
-    roles: ["super-admin", "chef"],
+    roles: ["chef"],
     items: [
       { route: "kitchen-orders", label: "kitchen_orders", icon: "mdi-silverware-fork-knife" },
     ],

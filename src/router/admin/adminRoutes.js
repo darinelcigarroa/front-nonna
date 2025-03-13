@@ -25,7 +25,7 @@ export default [
   },
   {
     path: '/admin/profile',
-    name: 'createEmployee',
+    name: 'myProfile',
     component: () => import('@/components/MyProfile.vue'),
     meta: { requiresAuth: true, roles: ['super-admin'] }
   },
