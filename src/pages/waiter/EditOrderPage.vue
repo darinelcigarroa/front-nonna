@@ -130,6 +130,7 @@ const cancelOrder = () => {
 onMounted(async () => {
   await fetchOrder()
   echo.private('order-items-updated')
+    .stopListening('OrderItemsUpdated')
     .listen('OrderItemsUpdated', handleOrderUpdated)
 });
 
@@ -146,8 +147,6 @@ const handleOrderUpdated = (event) => {
     })
   }
 }
-
-
 
 onUnmounted(() => {
   clearTimeout(timer);

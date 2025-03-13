@@ -48,7 +48,7 @@ export default {
     },
     async delete(orderItemID) {
         try {
-            const response = await api.delete(`waiter/order-item/${orderItemID}`)
+            const response = await api.delete(`order-item/${orderItemID}`)
             return response.data
         } catch (error) {
             return error.response?.data || {

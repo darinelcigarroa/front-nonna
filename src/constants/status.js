@@ -8,10 +8,11 @@ export const ORDER_ITEM_STATUS = {
 
 export const ORDER_STATUS = {
     PENDING: 1,
+    COMPLETED: 2,
     SENT: 2,
     PAID: 3,
-    EDIT: 4,
-    CANCELED: 5
+    EDIT: 5,
+    CANCELED: 6
 };
 
 export const STATUS_COLORS = {

@@ -1,6 +1,6 @@
 <template>
   <transition appear enter-active-class="animated bounceInLeft slower" leave-active-class="animated zoomOut slower">
-    <q-page class="q-ma-md q-px-xl">
+    <q-page class="q-px-xl">
       <q-page-sticky position="top-right" :offset="[18, 18]">
         <q-btn color="primary" glossy round size="md" icon="mdi-bell-ring" @click="handleScrollToBottom">
           <!-- Badge para el número de órdenes pendientes -->
@@ -12,9 +12,8 @@
           </q-tooltip>
         </q-btn>
       </q-page-sticky>
-      <q-infinite-scroll ref="infiniteScrollRef" @load="onLoad" :offset="16"
-        style="height: calc(100vh - 100px); overflow-y: auto">
-        <q-timeline color="secondary">
+      <q-infinite-scroll @load="onLoad" :offset="16">
+        <q-timeline color=" secondary">
           <q-timeline-entry heading body="November, 2017" />
           <!-- <q-virtual-scroll :items="orders" v-slot="{ item: order }" ref="orderScrollRef"> -->
           <transition-group appear leave-active-class="animated fadeOut slow">
@@ -68,11 +67,11 @@
                           <transition appear enter-active-class="animated fadeIn slow"
                             leave-active-class="animated fadeOutRight slow"
                             @leave="(el) => { el.style.height = '0px'; }">
-                            <div :key="item.order_item_status.id">
-                              <q-chip :color="getStatusColor(item.order_item_status.id)" text-color="dark" dense
+                            <div :key="item.order_item_status?.id">
+                              <q-chip :color="getStatusColor(item.order_item_status?.id)" text-color="dark" dense
                                 class="text-weight-bold text-center" square>
-                                <q-icon :name="getStatusIcon(item.order_item_status.id)" class="q-mr-xs" />
-                                {{ item.order_item_status.name }}
+                                <q-icon :name="getStatusIcon(item.order_item_status?.id)" class="q-mr-xs" />
+                                {{ item.order_item_status?.name }}
                               </q-chip>
                             </div>
                           </transition>
@@ -130,7 +129,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import orderService from 'src/services/chef/orderService'
 import orderItemService from 'src/services/orderItemService'
 import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, ORDER_STATUS } from '@/constants/status.js'
@@ -147,49 +146,110 @@ const pendingOrders = ref(null)
 
 onMounted(() => {
   echo.private('order-items-updated')
+    .stopListening('OrderItemsUpdated')
     .listen('OrderItemsUpdated', handleOrderUpdated)
 
   echo.private('waiter-editing-order')
+    .stopListening('WaiterEditingOrder')
     .listen('WaiterEditingOrder', handleWaiterEditingOrder)
 
   echo.private('orders-updated')
+    .stopListening('OrdersUpdated')
     .listen('OrdersUpdated', ordersUpdated)
+
+  echo.private('order-item-deleted')
+    .stopListening('OrderItemDeleted')
+    .listen('OrderItemDeleted', orderItemDeleted)
+})
+
+onBeforeUnmount(() => {
+  echo.private('order-items-updated').stopListening('OrderItemsUpdated')
+  echo.private('waiter-editing-order').stopListening('WaiterEditingOrder')
+  echo.private('orders-updated').stopListening('OrdersUpdated')
+  echo.private('order-item-deleted').stopListening('OrderItemDeleted')
 })
 
 const ordersUpdated = (event) => {
   pendingOrders.value = event.pendingOrders
-
   if (event.order) {
 
-    const existingOrder = orders.value.find(order => +order.id === +event.order.id);
+    const existingOrder = orderMap.value.get(+event.order.id)
 
-    console.log('existingOrder', existingOrder)
     if (existingOrder || hasMoreData.value) {
       return;
     }
-    console.log('ok')
+
     orders.value.push(event.order)
-    // orders.value = orders.value.concat(event.order)
   }
-
 };
+
+const orderItemDeleted = (event) => {
+
+  const order = orderMap.value.get(+event.orderItem.order_id)
+
+  if (order) {
+    order.order_items = order.order_items.filter(
+      item => +item.id !== +event.orderItem.id
+    )
+  }
+}
 const handleOrderUpdated = (event) => {
+  console.log('handleOrderUpdated', event)
+  const order = orderMap.value.get(+event.orderId)
 
-  const orderIndex = orders.value.findIndex(order => +order.id === +event.orderId)
-  if (orderIndex !== -1) {
-    const order = orders.value[orderIndex]
+  if (order) {
+    const updatedItemsMap = new Map(event.orderItems.map(item => [item.id, item]))
+    console.log('updatedItemsMap', updatedItemsMap)
 
-    // ✅ Actualizar los items de la orden
-    order.order_items = order.order_items.map(item => {
-      const updatedItem = event.orderItems.find(updated => +updated.id === +item.id)
-      return updatedItem ? { ...item, ...updatedItem, checked: false } : item
-    })
+    // ✅ Actualizar
+    order.order_items = updateExistingItems(order, updatedItemsMap)
+    // ✅ Agregar
+    addNewItems(order, updatedItemsMap)
 
     // ✅ Desmarcar checkbox general
     order.selectAll = false
 
-    // ✅ Eliminar orden si está completada
-    if (event.completed) {
+    // ✅ Finalizar orden si está completada
+    finalizeOrder(event, order)
+  }
+}
+
+const updateExistingItems = (order, updatedItemsMap) => {
+  return order.order_items.map(item => {
+    if (updatedItemsMap.has(item.id)) {
+      const updatedItem = updatedItemsMap.get(item.id)
+      return {
+        ...item,
+        ...updatedItem,
+        checked: false
+      }
+    }
+    return item
+  })
+}
+
+const addNewItems = (order, updatedItemsMap) => {
+  // ✅ Crear un Map para búsqueda rápida de ítems existentes
+  const existingItemsMap = new Map(order.order_items.map(item => [item.id, item]))
+  console.log('existingItemsMap', existingItemsMap)
+
+  for (const [id, item] of updatedItemsMap) {
+    console.log('id', id, 'item')
+    if (!existingItemsMap.has(id)) {
+      order.order_items.push({
+        ...item,
+        checked: false // ✅ Desmarcar después de agregar
+      })
+
+      console.log(`Nuevo item agregado con ID: ${id}`)
+    }
+  }
+}
+
+const finalizeOrder = (event, order) => {
+  if (event.completed) {
+    const orderIndex = orders.value.findIndex(o => +o.id === +event.orderId)
+    if (orderIndex !== -1) {
       orders.value.splice(orderIndex, 1)
       notifyInfo(`Orden ${order.folio} completada.`)
     }
@@ -197,12 +257,13 @@ const handleOrderUpdated = (event) => {
 }
 
 const handleWaiterEditingOrder = (event) => {
-  const order = orders.value.find(order => +order.id === +event.order.id)
+
+  const order = orderMap.value.get(+event.order.id)
+
   if (order) {
     order.order_status_id = event.order.order_status_id
   }
 }
-
 const onLoad = async (index, done) => {
   console.log(index)
   if (!hasMoreData.value) return done(true)
@@ -237,7 +298,6 @@ const updateSelectAll = (order) => {
     .every(checked => checked)
 }
 
-const infiniteScrollRef = ref(null);
 
 const handleScrollToBottom = async () => {
   console.log('ok')
@@ -259,6 +319,11 @@ const selectedStatus = computed(() => (order) => {
 
   return allSameStatus ? status : null;
 });
+
+const orderMap = computed(() => {
+  return new Map(orders.value.map(order => [order.id, order]))
+})
+
 </script>
 
 <style scoped>
