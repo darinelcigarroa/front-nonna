@@ -1,7 +1,7 @@
 <template>
   <transition appear enter-active-class="animated bounceInLeft slower" leave-active-class="animated zoomOut slower">
-    <q-page class="q-px-xl">
-      <q-page-sticky position="top-right" :offset="[18, 18]">
+    <q-page class="q-px-xl" style="z-index: 1">
+      <q-page-sticky position="top-right" :offset="[18, 18]" style="z-index: 2;">
         <q-btn color="primary" glossy round size="md" icon="mdi-bell-ring" @click="handleScrollToBottom">
           <!-- Badge para el número de órdenes pendientes -->
           <q-badge color="yellow" class="text-dark" floating v-if="pendingOrders > 0">
@@ -60,10 +60,13 @@
                         <q-item-label class="text-grey-8 text-weight-bold">
                           {{ item.dish_name }}
                         </q-item-label>
+                        <q-item-label class="text-grey-8 text-weight-bold">
+                          {{ item.dish_type }}
+                        </q-item-label>
                         <q-item-label class="text-grey-8">
                           Cantidad: {{ item.quantity }}
                         </q-item-label>
-                        <q-item-label>
+                        <q-item-label style="overflow: hidden;">
                           <transition appear enter-active-class="animated fadeIn slow"
                             leave-active-class="animated fadeOutRight slow"
                             @leave="(el) => { el.style.height = '0px'; }">

@@ -200,7 +200,6 @@ const onSubmit = async () => {
     notifyError(error?.message || 'Ocurrió un error inesperado')
   }
 }
-
 const updateOrderTable = (async () => {
   if (!formRef.value) return;
 

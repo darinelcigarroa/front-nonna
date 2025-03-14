@@ -80,7 +80,7 @@ export const useOrderStore = defineStore('order', {
     // Functions orderItem
     setOrder() {
       console.log('set order')
-      const { dish, quantity = 1, observations } = this.currentOrder || {};
+      const { dish, quantity = 1, typeDish, observations } = this.currentOrder || {};
 
       if (!dish) {
         notifyWarning('Intento de agregar una orden inválida.');
@@ -98,6 +98,7 @@ export const useOrderStore = defineStore('order', {
           dish,
           quantity,
           observations,
+          typeDish,
           status_id: dish?.status_id ?? 1,
         });
       }
