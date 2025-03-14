@@ -79,17 +79,18 @@
                       </q-item-section>
                       <!-- Botones de acción -->
                       <q-item-section side>
-                        <q-btn v-if="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
-                          @click="updateDishStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
+                        <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
+                          @click="changeStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
                           icon="mdi-chef-hat" class="bg-accent text-white">
                           <q-tooltip>¡Voy a preparar!</q-tooltip>
                         </q-btn>
 
-                        <q-btn v-if="item.status_id === ORDER_ITEM_STATUS.PREPARING"
-                          @click="updateDishStatus([item], ORDER_ITEM_STATUS.READY_TO_SERVE)" size="md" dense flat round
+                        <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.PREPARING"
+                          @click="changeStatus([item], ORDER_ITEM_STATUS.READY_TO_SERVE)" size="md" dense flat round
                           icon="mdi-silverware-fork-knife" class="bg-mulberry text-white">
                           <q-tooltip>¡Listo para servir!</q-tooltip>
                         </q-btn>
+
                       </q-item-section>
                     </q-item>
                   </q-card>
@@ -99,13 +100,11 @@
                   <div v-if="selectedStatus(order) !== null" class="row justify-between items-center q-py-sm q-mx-md">
 
                     <q-btn v-if="selectedStatus(order) === ORDER_ITEM_STATUS.IN_KITCHEN" icon="mdi-chef-hat" size="12px"
-                      color="accent" outline label="Voy a preparar" @click="updateDishStatus(
-                        order.order_items.filter(item => item.checked),
-                        ORDER_ITEM_STATUS.PREPARING
-                      )" />
+                      color="accent" outline label="Voy a preparar" @click="changeStatus(order.order_items.filter(item => item.checked),
+                        ORDER_ITEM_STATUS.PREPARING)" />
 
                     <q-btn v-if="selectedStatus(order) === ORDER_ITEM_STATUS.PREPARING" icon="mdi-silverware-fork-knife"
-                      size="12px" outline color="green-10" label="Listo para servir" @click="updateDishStatus(
+                      size="12px" outline color="green-10" label="Listo para servir" @click="changeStatus(
                         order.order_items.filter(item => item.checked),
                         ORDER_ITEM_STATUS.READY_TO_SERVE
                       )" />
@@ -124,12 +123,13 @@
           </div>
         </template>
       </q-infinite-scroll>
+      <confirm-dialog v-model="isVisible" :confirm-items="confirmItems" :confirm-status="confirmStatus"
+        :order-folio="orderFolio" @confirm="updateDishStatus" />
     </q-page>
   </transition>
 </template>
-
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import orderService from 'src/services/chef/orderService'
 import orderItemService from 'src/services/orderItemService'
 import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, ORDER_STATUS } from '@/constants/status.js'
@@ -137,13 +137,39 @@ import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
 import LottieAnimation from 'src/components/LottieAnimation.vue'
 import animationData from 'src/assets/chef/waiter-edit.json'
 import { echo } from 'boot/echo'
+import ConfirmDialog from 'src/components/ConfirmDialog.vue'
 
+/* ✅ VARIABLES */
 const orders = ref([])
 const currentPage = ref(1)
 const hasMoreData = ref(true)
 const perPage = ref(10)
 const pendingOrders = ref(null)
 
+const isVisible = ref(false)
+const confirmItems = ref([])
+const confirmStatus = ref(null)
+
+const orderMap = ref(new Map())
+
+/* ✅ COMPUTED PROPERTIES */
+const orderFolio = computed(() => {
+  if (confirmItems.value.length > 0) {
+    const order = orderMap.value.get(confirmItems.value[0].order_id)
+    return order ? order.folio : ''
+  }
+  return ''
+})
+
+const selectedStatus = computed(() => (order) => {
+  const selectedItems = order.order_items.filter(item => item.checked)
+  if (selectedItems.length === 0) return null
+  const status = selectedItems[0].status_id
+  const allSameStatus = selectedItems.every(item => item.status_id === status)
+  return allSameStatus ? status : null
+})
+
+/* ✅ CICLO DE VIDA */
 onMounted(() => {
   echo.private('order-items-updated')
     .stopListening('OrderItemsUpdated')
@@ -169,103 +195,13 @@ onBeforeUnmount(() => {
   echo.private('order-item-deleted').stopListening('OrderItemDeleted')
 })
 
-const ordersUpdated = (event) => {
-  pendingOrders.value = event.pendingOrders
-  if (event.order) {
+/* ✅ WATCHERS */
+watchEffect(() => {
+  orderMap.value = new Map(orders.value.map(order => [order.id, order]))
+})
 
-    const existingOrder = orderMap.value.get(+event.order.id)
-
-    if (existingOrder || hasMoreData.value) {
-      return;
-    }
-
-    orders.value.push(event.order)
-  }
-};
-
-const orderItemDeleted = (event) => {
-
-  const order = orderMap.value.get(+event.orderItem.order_id)
-
-  if (order) {
-    order.order_items = order.order_items.filter(
-      item => +item.id !== +event.orderItem.id
-    )
-  }
-}
-const handleOrderUpdated = (event) => {
-  console.log('handleOrderUpdated', event)
-  const order = orderMap.value.get(+event.orderId)
-
-  if (order) {
-    const updatedItemsMap = new Map(event.orderItems.map(item => [item.id, item]))
-    console.log('updatedItemsMap', updatedItemsMap)
-
-    // ✅ Actualizar
-    order.order_items = updateExistingItems(order, updatedItemsMap)
-    // ✅ Agregar
-    addNewItems(order, updatedItemsMap)
-
-    // ✅ Desmarcar checkbox general
-    order.selectAll = false
-
-    // ✅ Finalizar orden si está completada
-    finalizeOrder(event, order)
-  }
-}
-
-const updateExistingItems = (order, updatedItemsMap) => {
-  return order.order_items.map(item => {
-    if (updatedItemsMap.has(item.id)) {
-      const updatedItem = updatedItemsMap.get(item.id)
-      return {
-        ...item,
-        ...updatedItem,
-        checked: false
-      }
-    }
-    return item
-  })
-}
-
-const addNewItems = (order, updatedItemsMap) => {
-  // ✅ Crear un Map para búsqueda rápida de ítems existentes
-  const existingItemsMap = new Map(order.order_items.map(item => [item.id, item]))
-  console.log('existingItemsMap', existingItemsMap)
-
-  for (const [id, item] of updatedItemsMap) {
-    console.log('id', id, 'item')
-    if (!existingItemsMap.has(id)) {
-      order.order_items.push({
-        ...item,
-        checked: false // ✅ Desmarcar después de agregar
-      })
-
-      console.log(`Nuevo item agregado con ID: ${id}`)
-    }
-  }
-}
-
-const finalizeOrder = (event, order) => {
-  if (event.completed) {
-    const orderIndex = orders.value.findIndex(o => +o.id === +event.orderId)
-    if (orderIndex !== -1) {
-      orders.value.splice(orderIndex, 1)
-      notifyInfo(`Orden ${order.folio} completada.`)
-    }
-  }
-}
-
-const handleWaiterEditingOrder = (event) => {
-
-  const order = orderMap.value.get(+event.order.id)
-
-  if (order) {
-    order.order_status_id = event.order.order_status_id
-  }
-}
+/* ✅ MÉTODOS (ordenados según uso en el template) */
 const onLoad = async (index, done) => {
-  console.log(index)
   if (!hasMoreData.value) return done(true)
 
   const response = await orderService.index({
@@ -284,6 +220,24 @@ const onLoad = async (index, done) => {
   done(false)
 }
 
+const handleScrollToBottom = async () => {
+  console.log('ok')
+}
+
+const changeStatus = (items, status) => {
+  if (!items.length) return
+  isVisible.value = true
+  confirmItems.value = items
+  confirmStatus.value = status
+}
+
+const updateDishStatus = async () => {
+  const response = await orderItemService.updateDishStatus(confirmItems.value, confirmStatus.value)
+  if (response.success) notifySuccess(response.message)
+  else notifyError(response.message)
+  isVisible.value = false
+}
+
 const toggleSelectAll = (order) => {
   order.order_items = order.order_items.map(item => {
     if (item.status_id !== ORDER_ITEM_STATUS.READY_TO_SERVE) {
@@ -294,40 +248,73 @@ const toggleSelectAll = (order) => {
 }
 
 const updateSelectAll = (order) => {
-  order.selectAll = order.order_items.map(item => item.status_id !== ORDER_ITEM_STATUS.READY_TO_SERVE ? item.checked : false)
+  order.selectAll = order.order_items
+    .map(item => item.status_id !== ORDER_ITEM_STATUS.READY_TO_SERVE ? item.checked : false)
     .every(checked => checked)
 }
 
-
-const handleScrollToBottom = async () => {
-  console.log('ok')
-};
-
-const updateDishStatus = async (items, status) => {
-  const response = await orderItemService.updateDishStatus(items, status)
-  if (response.success) notifySuccess(response.message)
-  else notifyError(response.message)
+const ordersUpdated = (event) => {
+  pendingOrders.value = event.pendingOrders
+  if (event.order) {
+    const existingOrder = orderMap.value.get(+event.order.id)
+    if (existingOrder || hasMoreData.value) return
+    orders.value.push(event.order)
+  }
 }
 
-const selectedStatus = computed(() => (order) => {
-  const selectedItems = order.order_items.filter(item => item.checked);
+const orderItemDeleted = (event) => {
+  const order = orderMap.value.get(+event.orderItem.order_id)
+  if (order) {
+    order.order_items = order.order_items.filter(
+      item => +item.id !== +event.orderItem.id
+    )
+  }
+}
 
-  if (selectedItems.length === 0) return null;
+const handleOrderUpdated = (event) => {
+  const order = orderMap.value.get(+event.orderId)
+  if (order) {
+    const updatedItemsMap = new Map(event.orderItems.map(item => [item.id, item]))
+    order.order_items = updateExistingItems(order, updatedItemsMap)
+    addNewItems(order, updatedItemsMap)
+    order.selectAll = false
+    finalizeOrder(event, order)
+  }
+}
 
-  const status = selectedItems[0].status_id;
-  const allSameStatus = selectedItems.every(item => item.status_id === status);
+const updateExistingItems = (order, updatedItemsMap) => {
+  return order.order_items.map(item => {
+    if (updatedItemsMap.has(item.id)) {
+      const updatedItem = updatedItemsMap.get(item.id)
+      return { ...item, ...updatedItem, checked: false }
+    }
+    return item
+  })
+}
 
-  return allSameStatus ? status : null;
-});
+const addNewItems = (order, updatedItemsMap) => {
+  const existingItemsMap = new Map(order.order_items.map(item => [item.id, item]))
+  for (const [id, item] of updatedItemsMap) {
+    if (!existingItemsMap.has(id)) {
+      order.order_items.push({ ...item, checked: false })
+    }
+  }
+}
 
-const orderMap = computed(() => {
-  return new Map(orders.value.map(order => [order.id, order]))
-})
+const finalizeOrder = (event, order) => {
+  if (event.completed) {
+    const orderIndex = orders.value.findIndex(order => +order.id === +event.orderId)
+    if (orderIndex !== -1) {
+      orders.value.splice(orderIndex, 1)
+      notifyInfo(`Orden ${order.folio} completada.`)
+    }
+  }
+}
 
+const handleWaiterEditingOrder = (event) => {
+  const order = orderMap.value.get(+event.order.id)
+  if (order) {
+    order.order_status_id = event.order.order_status_id
+  }
+}
 </script>
-
-<style scoped>
-.border-bottom {
-  border-bottom: none !important;
-}
-</style>

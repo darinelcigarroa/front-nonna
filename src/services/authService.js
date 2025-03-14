@@ -9,6 +9,11 @@ export default {
   async login(email, password) {
     try {
       const response = await api.post('/login', { email, password })
+
+      if (response.data.success) {
+        localStorage.setItem(AUTH_TOKEN_KEY, response.data.data.token)
+      }
+
       return response.data
     } catch (error) {
       return error.response?.data || {
@@ -25,8 +30,9 @@ export default {
     try {
       const response = await api.post('/logout')
 
-      return response.data
+      localStorage.removeItem(AUTH_TOKEN_KEY)
 
+      return response.data
     } catch (error) {
       return error.response?.data || {
         success: false,
@@ -34,7 +40,6 @@ export default {
       }
     }
   },
-
   /**
    * Verificar si el usuario está autenticado
    */

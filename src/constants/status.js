@@ -31,6 +31,7 @@ export const STATUS_ICONS = {
     [ORDER_ITEM_STATUS.CANCELED]: 'mdi-close-circle-outline'
 }
 
+
 export const getStatusColor = (statusId) => {
     return STATUS_COLORS[statusId] || 'grey-5'
 }
