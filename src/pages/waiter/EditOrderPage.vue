@@ -151,6 +151,7 @@ const handleOrderUpdated = (event) => {
 onUnmounted(() => {
   clearTimeout(timer);
   orderStore.cancelEditingOrder(orderID.value);
+  orderStore.resetState()
 });
 
 onBeforeUnmount(() => {

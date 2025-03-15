@@ -14,6 +14,17 @@ export const ORDER_STATUS = {
     EDIT: 5,
     CANCELED: 6
 };
+export const DISH_STATUS = {
+    POSTRE: 1,
+    ENTRADA: 2,
+    BEBIDA: 3
+};
+
+export const STATUS_DISH_ICON = {
+    [DISH_STATUS.POSTRE]: 'mdi-pot-steam',
+    [DISH_STATUS.ENTRADA]: 'mdi-cupcake',
+    [DISH_STATUS.BEBIDA]: 'mdi-cup'
+}
 
 export const STATUS_COLORS = {
     [ORDER_ITEM_STATUS.CREATED]: 'grey-5',
@@ -31,6 +42,11 @@ export const STATUS_ICONS = {
     [ORDER_ITEM_STATUS.CANCELED]: 'mdi-close-circle-outline'
 }
 
+
+export const getStatusDishIcon = (string) => {
+    const statusId = DISH_STATUS[string.toUpperCase()]
+    return STATUS_DISH_ICON[statusId] || 'mdi-food-fork-drink'
+}
 
 export const getStatusColor = (statusId) => {
     return STATUS_COLORS[statusId] || 'grey-5'

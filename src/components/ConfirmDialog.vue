@@ -38,10 +38,12 @@
             </q-card-section>
 
             <q-card-actions align="center" class="q-mt-md">
-                <q-btn flat label="Cancelar" color="grey" v-close-popup class="cancel-btn" />
+                <q-btn outline
+                    :style="props.confirmStatus === ORDER_ITEM_STATUS.PREPARING ? 'color: var(--q-accent)' : 'color: var(--q-cerise)'"
+                    label="Cancelar" v-close-popup class="cancel-btn" />
                 <q-btn label="Confirmar"
-                    :color="+props.confirmStatus === +ORDER_ITEM_STATUS.PREPARING ? 'accent' : 'mulberry'"
-                    class="delete-btn" @click="confirm" />
+                    :color="+props.confirmStatus === +ORDER_ITEM_STATUS.PREPARING ? 'accent' : 'cerise'"
+                    @click="confirm" />
             </q-card-actions>
         </q-card>
     </q-dialog>

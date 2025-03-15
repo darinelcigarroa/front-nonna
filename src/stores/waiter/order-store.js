@@ -11,7 +11,7 @@ export const useOrderStore = defineStore('order', {
     currentOrder: reactive({
       numberDiners: 1,
       quantity: 1,
-      observations: null,
+      observations: [],
       dish: null,
       typeDish: null,
       edit: false
@@ -68,7 +68,7 @@ export const useOrderStore = defineStore('order', {
     resetCurrentOrder() {
       Object.assign(this.currentOrder, {
         quantity: 1,
-        observations: null,
+        observations: [],
         dish: null,
         typeDish: null,
         edit: false
@@ -87,13 +87,16 @@ export const useOrderStore = defineStore('order', {
         return;
       }
 
+      // Buscar el platillo existente en la lista
       const existingOrder = this.orders.find(
         (item) => item.dish.id == dish.id && [1, 2].includes(item.status_id)
       );
 
       if (existingOrder) {
+        // Si el platillo ya existe, sumar la cantidad y concatenar la observación
         existingOrder.quantity += quantity;
       } else {
+        // Si es un nuevo platillo, crear observación inicial como "Platillo 1"
         this.orders.push({
           dish,
           quantity,
@@ -112,10 +115,11 @@ export const useOrderStore = defineStore('order', {
           notifySuccess(response.message)
           this.orders.splice(orderItem.originalIndex, 1)
         } else {
-          console.log('response', response)
           notifyError(response.message)
         }
+        return
       }
+      this.orders.splice(orderItem.originalIndex, 1)
     },
     editOrderItem(data) {
       const dishTypeStore = useDishTypeStore()

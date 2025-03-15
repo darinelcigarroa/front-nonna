@@ -20,17 +20,22 @@
 
           <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             @click="props.toggleFullscreen" v-show="mode === 'list'">
-            <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
-              {{ props.inFullscreen ? "Salir de Pantalla Completa" : "Pantalla Completa" }}
-            </q-tooltip>
+            <span>
+              <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
+                {{ props.inFullscreen ? "Salir de Pantalla Completa" : "Pantalla Completa" }}
+              </q-tooltip>
+            </span>
           </q-btn>
 
           <q-btn flat round dense :icon="mode === 'grid' ? 'list' : 'grid_on'"
             @click="mode = mode === 'grid' ? 'list' : 'grid'; separator = mode === 'grid' ? 'none' : 'horizontal';"
             v-show="!props.inFullscreen">
-            <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
-              {{ mode === "grid" ? "Ver Tabla" : "Ver Grid" }}
-            </q-tooltip>
+            <span>
+
+              <q-tooltip v-if="!$q.platform.is.mobile" v-close-popup>
+                {{ mode === "grid" ? "Ver Tabla" : "Ver Grid" }}
+              </q-tooltip>
+            </span>
           </q-btn>
 
         </template>

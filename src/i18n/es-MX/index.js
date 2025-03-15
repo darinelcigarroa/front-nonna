@@ -115,6 +115,10 @@ export default {
   create: 'Crear',
   show: 'Ver',
   go_to_profile: 'Ir al perfil',
+  finish: 'Finalizar',
+  clear_form: 'Limpiar formulario',
+  clear: 'Limpiar',
+
 
   // Gestión de Inventario
   inventory: 'Inventario',
