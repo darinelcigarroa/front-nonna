@@ -14,16 +14,18 @@ export const ORDER_STATUS = {
     EDIT: 5,
     CANCELED: 6
 };
-export const DISH_STATUS = {
+export const DISH_TYPES = {
     POSTRE: 1,
-    ENTRADA: 2,
-    BEBIDA: 3
+    PLATO_FUERTE: 2,
+    ENTRADA: 3,
+    BEBIDA: 4,
 };
 
-export const STATUS_DISH_ICON = {
-    [DISH_STATUS.POSTRE]: 'mdi-pot-steam',
-    [DISH_STATUS.ENTRADA]: 'mdi-cupcake',
-    [DISH_STATUS.BEBIDA]: 'mdi-cup'
+export const DISH_TYPES_ICON = {
+    [DISH_TYPES.ENTRADA]: 'mdi-pot-mix',
+    [DISH_TYPES.PLATO_FUERTE]: 'mdi-food-turkey',
+    [DISH_TYPES.POSTRE]: 'mdi-cupcake',
+    [DISH_TYPES.BEBIDA]: 'mdi-cup'
 }
 
 export const STATUS_COLORS = {
@@ -44,8 +46,8 @@ export const STATUS_ICONS = {
 
 
 export const getStatusDishIcon = (string) => {
-    const statusId = DISH_STATUS[string.toUpperCase()]
-    return STATUS_DISH_ICON[statusId] || 'mdi-food-fork-drink'
+    const statusId = DISH_TYPES[string.toUpperCase().replace(/\s+/g, '_')]
+    return DISH_TYPES_ICON[statusId] || 'mdi-food-fork-drink'
 }
 
 export const getStatusColor = (statusId) => {

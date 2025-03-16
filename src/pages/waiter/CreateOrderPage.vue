@@ -1,7 +1,6 @@
 <template>
   <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
-
-    <div class="row q-col-gutter-sm q-ma-xs q-mr-sm">
+    <div class="row q-col-gutter-sm q-pa-sm">
       <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
         <q-card flat bordered>
           <q-card-section class="flex justify-between">
