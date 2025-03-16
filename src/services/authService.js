@@ -40,6 +40,17 @@ export default {
       }
     }
   },
+  async updatePassword(payload) {
+    try {
+      const response = await api.post('/update-password', payload)
+      return response.data
+    } catch (error) {
+      return error.response?.data || {
+        success: false,
+        message: 'Error al actualizar la contraseña'
+      }
+    }
+  },
   /**
    * Verificar si el usuario está autenticado
    */

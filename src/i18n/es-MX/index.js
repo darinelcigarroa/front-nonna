@@ -18,7 +18,10 @@ export default {
   profile: 'Perfil',
   settings: 'Configuraciones',
   change_password: 'Cambiar contraseña',
-
+  first_name: 'Primer apellido',
+  second_surname: 'Segundo apellido',
+  email: 'Correo',
+  name: 'nombre',
   // Órdenes y Mesas
   finish_order: 'Finalizar orden',
   basic_information: 'Información básica',

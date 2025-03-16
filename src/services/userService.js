@@ -35,9 +35,9 @@ export default {
             }
         }
     },
-    async update(payload) {
+    async update(id, payload) {
         try {
-            const response = await api.patch(`order-item/${payload.orderID}`, payload)
+            const response = await api.patch(`user/${id}`, payload)
             return response.data
         } catch (error) {
             return error.response?.data || {

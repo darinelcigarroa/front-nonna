@@ -1,71 +1,179 @@
 <template>
   <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
-    <q-page class="row q-col-gutter-sm q-pa-sm">
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <q-card class="my-card" flat bordered>
-          <q-card-section horizontal>
-            <q-card-section class="q-pt-xs">
-              <div class="text-overline">US Region</div>
-              <div class="text-h5 q-mt-sm q-mb-xs">Mayank Patel</div>
-              <div class="text-caption text-grey">
-                Sales and Marketing Executive | Graduate and past committee | Keynote speaker on Selling and
-                Recruiting
-                Topics
-              </div>
-            </q-card-section>
+    <q-page class="q-pa-md flex flex-center">
+      <q-card class="col-12" style="border-radius: 10px; min-width: 90%;">
+        <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12 flex flex-center column">
+          <q-avatar size="12rem">
+            <q-img class="rounded-borders" src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          </q-avatar>
+          <span style="font-size: 2em;" class="text-uppercase q-my-sm">{{ fullName }}</span>
+          <div v-for="(role, index) in authStore.roles" :key="index">
+            <q-chip class="text-uppercase" :color="$q.dark.isActive ? 'grey' : 'green-2'">{{ role }}</q-chip>
+          </div>
+          <q-btn @click="isVisible = true" class="q-my-xs" rounded color="accent" label="Cambiar contrasena" />
+        </q-card-section>
+        <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <q-form @submit="updateUser" class="q-gutter-md">
+            <q-input filled v-model="authStore.user.name" :label="$t('name')" />
 
-            <q-card-section class="col-5 flex flex-center">
-              <q-img class="rounded-borders" src="https://cdn.quasar.dev/img/boy-avatar.png" />
-            </q-card-section>
+            <q-input filled v-model="authStore.user.first_surname" :label="$t('first_name')" />
+
+            <q-input filled v-model="authStore.user.second_surname" :label="$t('second_surname')" />
+
+            <q-input filled v-model="authStore.user.email" :label="$t('email')" />
+
+            <div class="flex flex-center">
+              <q-btn rounded :label="$t('update')" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+
+      </q-card>
+      <q-dialog v-model="isVisible" persistent>
+        <q-card class="row q-pa-md q-dialog-card">
+          <!-- Línea superior -->
+          <div class="top-line bg-primary" />
+
+          <!-- Icono flotante -->
+          <div class="icon-container bg-primary">
+            <q-icon name="mdi-account" color="white" size="lg" />
+          </div>
+
+          <q-card-section class="col-12 text-center">
+            <div class="text-h6 q-mt-sm">
+              Cambio de contraseña
+            </div>
           </q-card-section>
+          <q-card-section class="col-12">
+            <q-form class="col-12">
+              <q-input filled label="Contraseña actual" :type="isCurrentPasswordVisible ? 'text' : 'password'"
+                v-model="form.currentPassword">
+                <template v-slot:append>
+                  <q-icon :name="isCurrentPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'" class="cursor-pointer"
+                    @click="isCurrentPasswordVisible = !isCurrentPasswordVisible" />
+                </template>
+              </q-input>
 
-          <q-separator />
+              <q-input class="q-my-sm" filled label="Nueva contraseña"
+                :type="isNewPasswordVisible ? 'text' : 'password'" v-model="form.newPassword">
+                <template v-slot:append>
+                  <q-icon :name="isNewPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'" class="cursor-pointer"
+                    @click="isNewPasswordVisible = !isNewPasswordVisible" />
+                </template>
+              </q-input>
 
-          <q-card-section>
-            Assessing clients needs and present suitable promoted products. Liaising with and persuading targeted
-            doctors to prescribe our products utilizing effective sales skills.
-          </q-card-section>
-        </q-card>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <q-card>
-          <q-card-section>
-            <q-form class="q-gutter-md">
-              <q-input filled v-model="user.first_name" label="First Name" />
-
-              <q-input filled v-model="user.last_name" label="Last Name" />
-
-              <q-input filled v-model="user.age" label="Age" />
-
-              <q-input filled v-model="user.email" label="Email" />
-
-              <q-input filled v-model="user.phone" label="Phone" />
-
-              <div>
-                <q-btn :label="$t('update')" type="submit" color="primary" />
-              </div>
+              <q-input class="q-my-sm" filled label="Confirmar contraseña"
+                :type="isConfirmPasswordVisible ? 'text' : 'password'" v-model="form.newPassword_confirmation">
+                <template v-slot:append>
+                  <q-icon :name="isConfirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'" class="cursor-pointer"
+                    @click="isConfirmPasswordVisible = !isConfirmPasswordVisible" />
+                </template>
+              </q-input>
             </q-form>
           </q-card-section>
+
+
+          <q-card-actions class="col-12" align="center">
+            <q-btn color="accent" flat label="Cancelar" v-close-popup class="cancel-btn" />
+            <q-btn outline @click="updatePassword" style="color: var(--q-primary);" label="Confirmar" />
+          </q-card-actions>
         </q-card>
-      </div>
+      </q-dialog>
     </q-page>
   </transition>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      user: {
-        first_name: 'Mayank',
-        last_name: 'Patel',
-        age: 30,
-        email: 'm******@****.com',
-        phone: '98******23'
-      },
+<script setup>
+import authService from 'src/services/authService';
+import userService from 'src/services/userService';
+import { useAuthStore } from 'src/stores/auth-store';
+import { computed, ref } from 'vue';
+import { notifyError, notifySuccess } from 'src/utils/notify';
+
+
+const authStore = useAuthStore()
+const isVisible = ref(false)
+const form = ref({
+  currentPassword: '',
+  newPassword: '',
+  newPassword_confirmation: ''
+})
+const isCurrentPasswordVisible = ref(false);
+const isNewPasswordVisible = ref(false);
+const isConfirmPasswordVisible = ref(false);
+
+const updateUser = async () => {
+  try {
+    const result = await userService.update(authStore.user.id, authStore.user)
+    if (result.success) {
+      notifySuccess(result.message)
+    } else {
+      notifyError(result.message)
     }
-  },
+  } catch (e) {
+    notifyError(e)
+  }
 }
+const updatePassword = async () => {
+  try {
+    const result = await authService.updatePassword(form.value)
+    if (result.success) {
+      notifySuccess(result.message)
+      isVisible.value = false
+    } else {
+      notifyError(result.message)
+    }
+  } catch (e) {
+    notifyError(e)
+  }
+}
+
+const fullName = computed(() => authStore.fullName);
+
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-dialog-card {
+  max-width: 500px;
+  border-radius: 12px;
+  overflow: visible;
+  /* Permitir que el icono sobresalga */
+  position: relative;
+}
+
+.icon-container {
+  position: absolute;
+  top: -28px;
+  /* Lo saca fuera del contenedor */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.delete-btn {
+  width: 100px;
+  color: white;
+}
+
+.cancel-btn {
+  width: 100px;
+  color: #888;
+}
+
+.q-card-actions {
+  gap: 12px;
+}
+
+.top-line {
+  /* border-radius: 12px; */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+}
+</style>
