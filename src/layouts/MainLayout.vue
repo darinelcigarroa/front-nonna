@@ -70,7 +70,7 @@ const menuGroups = [
     roles: ["super-admin"],
     items: [
       { route: "dashboard", label: "dashboard", icon: "dashboard" },
-      { route: "createEmployee", label: "employees", icon: "mdi-account-group" },
+      { route: "indexEmployee", label: "employees", icon: "mdi-account-group" },
       { route: "createTables", label: "tables", icon: "table_bar" },
       { route: "createDishes", label: "dishes", icon: "local_dining" },
     ],

@@ -6,12 +6,6 @@ export default [
     meta: { requiresAuth: true, roles: ['super-admin'] }
   },
   {
-    path: '/create/employee',
-    name: 'createEmployee',
-    component: () => import('src/pages/admin/CreateEmployeePage.vue'),
-    meta: { requiresAuth: true, roles: ['super-admin'] }
-  },
-  {
     path: '/admin/tables',
     name: 'createTables',
     component: () => import('src/pages/admin/CreateTablesPage.vue'),

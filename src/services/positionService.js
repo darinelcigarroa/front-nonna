@@ -2,15 +2,14 @@ import { api } from 'boot/axios'
 
 
 export default {
-
-    async update(id, payload) {
+    async index() {
         try {
-            const response = await api.patch(`user/${id}`, payload)
+            const response = await api.get('catalogs/positions')
             return response.data
         } catch (error) {
             return error.response?.data || {
-                sucsses: false,
-                message: 'Error al obtener la orden'
+                success: false,
+                message: 'Error al obtener las posiciones'
             }
         }
     },
