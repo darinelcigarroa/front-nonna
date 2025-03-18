@@ -1,7 +1,7 @@
 <template>
     <!-- Name -->
     <div class="col-md-6 col-12">
-        <q-input v-model="form.name" label="Nombre" outlined>
+        <q-input v-model="employeeStore.formEmployee.name" label="Nombre" outlined>
             <template v-slot:append>
                 <q-icon name="mdi-clipboard-text-outline" class="cursor-pointer" />
             </template>
@@ -9,7 +9,7 @@
     </div>
     <!-- First Name -->
     <div class="col-md-6 col-12">
-        <q-input v-model="form.first_surname" label="Primer apellido" outlined>
+        <q-input v-model="employeeStore.formEmployee.first_surname" label="Primer apellido" outlined>
             <template v-slot:append>
                 <q-icon name="mdi-face-man" class="cursor-pointer" />
             </template>
@@ -18,7 +18,7 @@
 
     <!-- Last Name -->
     <div class="col-md-6 col-12">
-        <q-input v-model="form.second_surname" label="Segundo apellido" outlined>
+        <q-input v-model="employeeStore.formEmployee.second_surname" label="Segundo apellido" outlined>
             <template v-slot:append>
                 <q-icon name="mdi-face-woman" class="cursor-pointer" />
             </template>
@@ -27,19 +27,22 @@
 
     <!-- Position -->
     <div class="col-md-6 col-12">
-        <q-select outlined v-model="form.position_id" :options="positions" label="Posición" emit-value map-options
-            option-value="id" option-label="name">
-            <template v-if="form.position_id" v-slot:append>
-                <q-icon name="cancel" @click.stop.prevent="form.position_id = null" class="cursor-pointer" />
+        <q-select outlined v-model="employeeStore.formEmployee.position_id" :options="positions" label="Posición"
+            emit-value map-options option-value="id" option-label="name">
+            <template v-if="employeeStore.formEmployee.position_id" v-slot:append>
+                <q-icon name="cancel" @click.stop.prevent="employeeStore.formEmployee.position_id = null"
+                    class="cursor-pointer" />
             </template>
         </q-select>
     </div>
 
-    <!-- Phone Number -->
+    <!-- Salary -->
     <div class="col-md-6 col-12">
-        <q-input outlined v-model="form.salary" label="Salario" mask="#.##" fill-mask="0" reverse-fill-mask>
+        <q-input outlined v-model="employeeStore.formEmployee.salary" label="Salario" mask="#.##" fill-mask="0"
+            reverse-fill-mask>
             <template v-slot:append>
-                <q-icon name="mdi-currency-usd" @click.stop.prevent="model = null" class="cursor-pointer" />
+                <q-icon name="mdi-currency-usd" @click.stop.prevent="employeeStore.formEmployee.salary = null"
+                    class="cursor-pointer" />
             </template>
         </q-input>
     </div>
@@ -49,30 +52,28 @@
 import { onMounted, ref } from 'vue'
 import { notifyError } from 'src/utils/notify'
 import positionService from 'src/services/positionService'
+import { useEmployeeStore } from 'src/stores/employee/employee-store'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const positions = ref([])
+const employeeStore = useEmployeeStore()
 
-
-// Datos del formulario
-const form = ref({
-    name: '',
-    first_surname: '',
-    second_surname: '',
-    position_id: '',
-    salary: '',
-})
-// Exponer Form
-defineExpose({ form })
-
-onMounted(async () => {
+const loadPositions = async () => {
     const response = await positionService.index()
     if (response.success) {
-        positions.value = response.data.positions
+        positions.value = response.data.positions.map(pos => ({
+            ...pos,
+            name: t(pos.name)
+        }))
     } else {
         notifyError(response.message)
     }
+}
+
+onMounted(async () => {
+    loadPositions()
 })
-
-
 
 </script>

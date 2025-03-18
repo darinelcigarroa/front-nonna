@@ -29,20 +29,10 @@ export default {
             }
         }
     },
-    async edit(id) {
-        try {
-            const response = await api.get(`order-item/${id}/edit`)
-            return response.data
-        } catch (error) {
-            return error.response?.data || {
-                sucsses: false,
-                message: 'Error al obtener la orden'
-            }
-        }
-    },
     async update(payload) {
         try {
-            const response = await api.patch(`order-item/${payload.orderID}`, payload)
+            console.log(payload)
+            const response = await api.patch(`admin/employee/${payload.id}`, payload)
             return response.data
         } catch (error) {
             return error.response?.data || {

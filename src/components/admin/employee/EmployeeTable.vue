@@ -1,6 +1,6 @@
 <template>
-    <q-table flat bordered wrap-cells :rows="employees" :columns="columns" row-key="serial_no" :grid="mode == 'grid'"
-        :filter="filter" v-model:pagination="pagination" :hide-header="mode === 'grid'"
+    <q-table flat bordered wrap-cells :rows="employeeStore.dataEmployees" :columns="columns" row-key="serial_no"
+        :grid="mode == 'grid'" :filter="filter" v-model:pagination="pagination" :hide-header="mode === 'grid'"
         :rows-per-page-options="[5, 10, 20]" card-class="my-custom-grid" @request="onRequest">
         <template v-slot:top-left>
             <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">
@@ -32,7 +32,7 @@
         <template v-slot:body-cell-action="props">
             <q-td :props="props">
                 <div class="q-gutter-sm">
-                    <q-btn dense color="blue-9" icon="edit" />
+                    <q-btn @click="employeeStore.aditEmployee(props.row.id)" dense color="blue-9" icon="edit" />
                     <q-btn dense color="red" icon="delete" />
                 </div>
             </q-td>
@@ -41,9 +41,9 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
-import employeeService from 'src/services/employeeService';
+import { useEmployeeStore } from 'src/stores/employee/employee-store';
 
-const employees = ref([])
+const employeeStore = useEmployeeStore()
 
 const pagination = ref({
     rowsPerPage: 5,
@@ -110,20 +110,11 @@ const columns = ref([
 const onRequest = async (props) => {
     const { page, rowsPerPage } = props.pagination
 
-    // Actualizar valores de paginación
     pagination.value.page = page
     pagination.value.rowsPerPage = rowsPerPage
 
-    try {
-        // Llamada al backend para obtener los datos actualizados
-        const response = await employeeService.index(pagination.value)
-        const data = response.data.employees
-
-        employees.value = data.data
-        pagination.value.rowsNumber = data.total // ✅ Total de registros
-    } catch (error) {
-        console.error('Error al obtener empleados:', error)
-    }
+    const result = await employeeStore.getEmployee(pagination.value)
+    pagination.value.rowsNumber = result.total
 }
 
 </script>
