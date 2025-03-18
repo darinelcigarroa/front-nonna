@@ -59,7 +59,8 @@ export const useEmployeeStore = defineStore('employee', {
             return response
         },
         aditEmployee(id) {
-            this.formEmployee = this.dataEmployees.find((employee) => employee.id == id)
+            const employee = this.dataEmployees.find((employee) => employee.id == id)
+            this.formEmployee = { ...employee }
             this.editModal = true
         },
         onCancel() {

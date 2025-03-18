@@ -1,6 +1,7 @@
 import waiterRoutes from './modules/waiterRoutes'
 import chefRoutes from './modules/chefRoutes'
 import adminRoutes from './admin/adminRoutes'
+import tableRoutes from './admin/tableRoutes'
 import employeeRoutes from './admin/employeeRoutes'
 
 const routes = [
@@ -12,6 +13,7 @@ const routes = [
       ...chefRoutes,
       ...adminRoutes,
       ...employeeRoutes,
+      ...tableRoutes,
       {
         path: '', name: 'home', component: () => import('pages/IndexPage.vue'),
         meta: { requiresAuth: true }

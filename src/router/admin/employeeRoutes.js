@@ -12,18 +12,6 @@ export default [
         meta: { requiresAuth: true, roles: ['super-admin'] }
     },
     {
-        path: '/admin/tables',
-        name: 'createTables',
-        component: () => import('src/pages/admin/CreateTablesPage.vue'),
-        meta: { requiresAuth: true, roles: ['super-admin'] }
-    },
-    {
-        path: '/admin/dishes',
-        name: 'createDishes',
-        component: () => import('src/pages/admin/CreateDishesPage.vue'),
-        meta: { requiresAuth: true, roles: ['super-admin'] }
-    },
-    {
         path: '/admin/profile',
         name: 'myProfile',
         component: () => import('@/components/MyProfile.vue'),
