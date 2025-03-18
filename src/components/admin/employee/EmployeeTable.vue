@@ -33,7 +33,7 @@
             <q-td :props="props">
                 <div class="q-gutter-sm">
                     <q-btn @click="employeeStore.aditEmployee(props.row.id)" dense color="blue-9" icon="edit" />
-                    <q-btn dense color="red" icon="delete" />
+                    <q-btn @click="onDelete(props.row.id)" dense color="red" icon="delete" />
                 </div>
             </q-td>
         </template>
@@ -42,6 +42,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useEmployeeStore } from 'src/stores/employee/employee-store';
+import { notifyError, notifySuccess } from 'src/utils/notify';
 
 const employeeStore = useEmployeeStore()
 
@@ -115,6 +116,20 @@ const onRequest = async (props) => {
 
     const result = await employeeStore.getEmployee(pagination.value)
     pagination.value.rowsNumber = result.total
+}
+const onDelete = async (id) => {
+    const result = await employeeStore.deleteEmployee(id)
+    if (result.success) {
+        notifySuccess(result.message)
+        await onRequest({
+            pagination: {
+                page: pagination.value.page,
+                rowsPerPage: pagination.value.rowsPerPage
+            }
+        })
+    } else {
+        notifyError(result.message)
+    }
 }
 
 </script>

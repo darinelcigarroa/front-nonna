@@ -41,20 +41,9 @@ export default {
             }
         }
     },
-    async delete(orderItemID) {
+    async delete(id) {
         try {
-            const response = await api.delete(`order-item/${orderItemID}`)
-            return response.data
-        } catch (error) {
-            return error.response?.data || {
-                sucsses: false,
-                message: 'Error al obtener la orden'
-            }
-        }
-    },
-    async updateDishStatus(orderItems, status_id) {
-        try {
-            const response = await api.patch('order-items/update-dish-status', { orderItems, status_id });
+            const response = await api.delete(`admin/employee/${id}`)
             return response.data
         } catch (error) {
             return error.response?.data || {

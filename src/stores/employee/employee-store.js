@@ -54,6 +54,10 @@ export const useEmployeeStore = defineStore('employee', {
             return response
 
         },
+        async deleteEmployee(id) {
+            const response = await employeeService.delete(id)
+            return response
+        },
         aditEmployee(id) {
             this.formEmployee = this.dataEmployees.find((employee) => employee.id == id)
             this.editModal = true
