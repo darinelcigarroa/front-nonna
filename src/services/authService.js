@@ -6,9 +6,9 @@ export default {
   /**
    * Iniciar sesión con email y contraseña
    */
-  async login(email, password) {
+  async login(user_name, password) {
     try {
-      const response = await api.post('/login', { email, password })
+      const response = await api.post('/login', { user_name, password })
 
       if (response.data.success) {
         localStorage.setItem(AUTH_TOKEN_KEY, response.data.data.token)

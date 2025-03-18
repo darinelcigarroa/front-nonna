@@ -12,7 +12,7 @@
 
           <q-card-section>
             <q-form @submit="login" class="q-gutter-md">
-              <q-input v-model="form.email" filled :label="$t('user_name')" autocomplete="email" lazy-rules
+              <q-input v-model="form.user_name" filled :label="$t('user_name')" autocomplete="email" lazy-rules
                 :rules="[val => !!val || 'Campo obligatorio']" />
 
               <q-input v-model="form.password" filled autocomplete="password" :label="$t('password')" type="password"
@@ -35,13 +35,13 @@ import { useAuthStore } from '@/stores/auth-store'
 import { notifyError, notifySuccess } from 'src/utils/notify'
 
 const auth = useAuthStore()
-const form = ref({ email: '', password: '' })
+const form = ref({ user_name: '', password: '' })
 const loading = ref(false)
 const router = useRouter()
 
 const login = async () => {
   loading.value = true
-  const result = await auth.login(form.value.email, form.value.password)
+  const result = await auth.login(form.value.user_name, form.value.password)
 
   if (result.success) {
     notifySuccess(result.message)
