@@ -22,7 +22,7 @@
     </div>
 </template>
 <script setup>
-import { useTableStore } from '@/stores/table/table-store'
+import { useTableStore } from '@/stores/catalogs/table-store'
 const storeTable = useTableStore()
 
 </script>

@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import tableService from 'src/services/tableService'
+import tableService from 'src/services/catalogs/tableService'
 
 export const useTableStore = defineStore('table', {
     state: () => ({

@@ -93,8 +93,8 @@ import { useOrderStore } from "@/stores/waiter/order-store"
 import { ref, onMounted, watch, computed } from "vue"
 import { notifyError, notifySuccess, notifyWarning } from 'src/utils/notify';
 import { useQuasar } from 'quasar';
-import tableService from '@/services/tableService';
-import dishesService from '@/services/dishesService';
+import tableService from '@/services/catalogs/tableService';
+import dishesService from '@/services/catalogs/dishService';
 import { useDishTypeStore } from '@/stores/waiter/dish-type'
 import { useRouter, useRoute } from 'vue-router';
 

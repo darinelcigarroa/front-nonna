@@ -1,6 +1,6 @@
 <template>
-    <q-table flat bordered wrap-cells :rows="employeeStore.dataEmployees" :columns="columns" row-key="serial_no"
-        :grid="mode == 'grid'" :filter="filter" v-model:pagination="pagination" :hide-header="mode === 'grid'"
+    <q-table flat bordered wrap-cells :rows="employeeStore.dataEmployees" :columns="columns" :grid="mode == 'grid'"
+        :filter="filter" v-model:pagination="pagination" :hide-header="mode === 'grid'"
         :rows-per-page-options="[5, 10, 20]" card-class="my-custom-grid" @request="onRequest">
         <template v-slot:top-left>
             <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">

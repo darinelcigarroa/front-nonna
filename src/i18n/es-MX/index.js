@@ -9,7 +9,9 @@ export default {
   trends_in_dish_sales: 'Tendencias en Ventas de Platillos',
   user_name: 'Usuario',
   observation: 'Observaciones',
-
+  status: 'Estatus',
+  catalogs: 'Catálogos',
+  description: 'Descripción',
   // Autenticación y Usuarios
   username: 'Usuario',
   password: 'Contraseña',

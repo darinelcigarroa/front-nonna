@@ -71,8 +71,7 @@ const menuGroups = [
     items: [
       { route: "dashboard", label: "dashboard", icon: "dashboard" },
       { route: "indexEmployee", label: "employees", icon: "mdi-account-group" },
-      { route: "indexTable", label: "tables", icon: "table_bar" },
-      { route: "createDishes", label: "dishes", icon: "local_dining" },
+      { route: "adminCatalogs", label: "catalogs", icon: "mdi-apps" },
     ],
   },
   {

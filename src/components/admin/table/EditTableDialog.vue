@@ -24,7 +24,7 @@
 <script setup>
 import { notifyError, notifySuccess } from 'src/utils/notify'
 import FormTable from './FormTable.vue'
-import { useTableStore } from 'src/stores/table/table-store'
+import { useTableStore } from 'src/stores/catalogs/table-store'
 
 const storeTable = useTableStore()
 

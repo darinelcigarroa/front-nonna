@@ -11,4 +11,10 @@ export default [
     component: () => import('@/components/MyProfile.vue'),
     meta: { requiresAuth: true, roles: ['super-admin'] }
   },
+  {
+    path: '/admin/catalogs',
+    name: 'adminCatalogs',
+    component: () => import('@/pages/admin/CatalogsPage.vue'),
+    meta: { requiresAuth: true, roles: ['super-admin'] }
+  },
 ]
