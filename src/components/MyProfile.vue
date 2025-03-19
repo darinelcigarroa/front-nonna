@@ -14,11 +14,13 @@
         </q-card-section>
         <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <q-form @submit="updateUser" class="q-gutter-md">
-            <q-input filled v-model="authStore.user.name" :label="$t('name')" />
+            <q-input filled v-model="authStore.user.user_name" :label="$t('user_name')" />
 
-            <q-input filled v-model="authStore.user.first_surname" :label="$t('first_name')" />
+            <q-input filled v-model="authStore.user.employee.name" :label="$t('name')" />
 
-            <q-input filled v-model="authStore.user.second_surname" :label="$t('second_surname')" />
+            <q-input filled v-model="authStore.user.employee.first_surname" :label="$t('first_name')" />
+
+            <q-input filled v-model="authStore.user.employee.second_surname" :label="$t('second_surname')" />
 
             <q-input filled v-model="authStore.user.email" :label="$t('email')" />
 

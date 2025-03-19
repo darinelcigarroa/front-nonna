@@ -7,6 +7,14 @@
           {{ $t('basic_information') }}
         </div>
       </div>
+      <div class="row justify-between items-center full-width">
+        <div class="bg-green-1" style="display: inline-block; line-height: 1; padding: 2px;">
+          N.º de folio: {{ orderStore.currentOrder.folio }}
+        </div>
+        <div class="bg-blue-1" style="display: inline-block; line-height: 1; padding: 2px;">
+          Fecha: {{ orderStore.currentOrder.date }}
+        </div>
+      </div>
 
       <div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
         <label class="q-pb-xs">{{ $t('table_number') }}</label>
@@ -94,7 +102,7 @@ import { ref, onMounted, watch, computed } from "vue"
 import { notifyError, notifySuccess, notifyWarning } from 'src/utils/notify';
 import { useQuasar } from 'quasar';
 import tableService from '@/services/catalogs/tableService';
-import dishesService from '@/services/catalogs/dishService';
+import dishService from '@/services/catalogs/dishService';
 import { useDishTypeStore } from '@/stores/waiter/dish-type'
 import { useRouter, useRoute } from 'vue-router';
 
@@ -120,7 +128,7 @@ const orderID = route.params.id;
 
 onMounted(async () => {
   $q.loading.show()
-  const dataTable = await tableService.index()
+  const dataTable = await tableService.getTables()
 
   await dishTypeStore.index()
 
@@ -135,7 +143,7 @@ watch(() => orderStore.currentOrder.typeDish, async (newVal) => {
   if (!newVal) return;
   loadingDishes.value = true
 
-  const result = await dishesService.index({ typeDish: orderStore.currentOrder.typeDish.id });
+  const result = await dishService.getDishes({ typeDish: orderStore.currentOrder.typeDish.id });
 
   if (result.success) {
     dishes.value = result.data.dishes;

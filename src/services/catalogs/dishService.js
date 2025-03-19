@@ -43,7 +43,7 @@ export default {
     async delete(id) {
         try {
             const response = await api.delete(`catalogs/dish/${id}`)
-            console.log('response', response.data)
+
             return response.data
         } catch (error) {
             return error.response?.data || {
@@ -52,9 +52,9 @@ export default {
             }
         }
     },
-    async dishes(params) {
+    async getDishes(params) {
         try {
-            const response = await api.get('dishes', { params })
+            const response = await api.get('catalogs/get-dishes', { params })
             return response.data
 
         } catch (error) {

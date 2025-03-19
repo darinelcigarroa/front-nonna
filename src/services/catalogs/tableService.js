@@ -51,4 +51,16 @@ export default {
         }
     },
 
+    async getTables() {
+        try {
+            const response = await api.get('catalogs/get-tables')
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                success: false,
+                message: 'Error al obtener los empleados'
+            }
+        }
+    },
+
 }

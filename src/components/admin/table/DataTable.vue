@@ -13,6 +13,9 @@
 
         <!-- Opciones de vista -->
         <template v-slot:top-right="props">
+            <q-btn @click="tableStore.createModal = true" class="q-mx-sm" dense size="sm" round color="primary"
+                icon="mdi-plus" />
+
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen" v-if="mode === 'list'">
                 <q-tooltip :disable="$q.platform.is.mobile" v-close-popup>
