@@ -79,5 +79,15 @@ export default {
             }
         }
     },
-
+    async payOrder(order) {
+        try {
+            const response = await api.patch(`pay-order/${order.id}`, { order })
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    },
 }

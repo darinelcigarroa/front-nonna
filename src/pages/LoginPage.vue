@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { notifyError, notifySuccess } from 'src/utils/notify'
@@ -38,7 +38,7 @@ const auth = useAuthStore()
 const form = ref({ user_name: '', password: '' })
 const loading = ref(false)
 const router = useRouter()
-
+const isSoundEnabled = ref(true)
 const login = async () => {
   loading.value = true
   const result = await auth.login(form.value.user_name, form.value.password)
@@ -52,6 +52,13 @@ const login = async () => {
 
   loading.value = false
 }
+onMounted(() => {
+  document.addEventListener("click", () => {
+    isSoundEnabled.value = true;
+    console.log("Sonido habilitado por interacción del usuario.");
+  }, { once: true });
+});
+
 </script>
 
 <style>

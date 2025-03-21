@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import orderService from 'src/services/orderService'
 import { notifyWarning } from '@/utils/notify'
 import { reactive } from 'vue'
-import { notifyError, notifySuccess } from 'src/utils/notify'
+import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
 import { useDishTypeStore } from '@/stores/waiter/dish-type'
 import orderItemService from 'src/services/orderItemService'
 
@@ -152,6 +152,34 @@ export const useOrderStore = defineStore('order', {
 
       this.resetCurrentOrder()
     },
+    handleOrderUpdated(event) {
+      console.log('event', event)
+      if (+event.orderId == +this.currentOrder.orderID) {
+
+        const updatedDishes = [];
+
+        this.orders.forEach(item => {
+          const updatedItem = event.orderItems.find(updated => +updated.id === +item.id);
+          if (updatedItem) {
+            updatedDishes.push(updatedItem.dish_name);
+            Object.assign(item, updatedItem);
+          }
+        });
+        if (updatedDishes.length > 0) {
+          const message = `
+            <div>
+              <p>Los siguientes platillos han sido actualizados por el chef:</p>
+              <ul>
+                ${updatedDishes.map(dish => `<li>${dish}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+          notifyInfo(message, { html: true, timeout: 5000 }); // 10 segundos
+        }
+
+      }
+    }
+
   },
 
   persist: true,

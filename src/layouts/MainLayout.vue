@@ -45,26 +45,57 @@
         </div>
       </div>
     </q-drawer>
+
+
     <q-page-container>
       <q-page :class="[{ 'page-dark': $q.dark.isActive }]">
+
         <router-view />
+        <q-dialog v-model="isVisible" persistent>
+          <q-card class="q-pa-xl q-dialog-card">
+            <!-- Línea superior -->
+            <div class="top-line bg-accent" />
+
+            <!-- Icono flotante -->
+            <div class="icon-container bg-accent">
+              <q-icon name="mdi-food-fork-drink" color="white" size="lg" />
+            </div>
+
+            <q-card-section class="q-pt-none text-center">
+              <div class="text-h5 text-weight-bold q-mt-md ">
+                ¡Orden lista!
+              </div>
+              <div v-for="(order, index) in ordersReady" :key="index" class="q-mt-sm">
+                <span class="text-bold" style="font-size: 17px;">{{ order.folio }} - {{ order.table }}</span>
+              </div>
+            </q-card-section>
+
+            <q-card-actions align="center" class="q-mt-md">
+              <q-btn label="Confirmar" v-close-popup color="accent" @click="confirm" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { useQuasar } from 'quasar';
 import { notifyError, notifySuccess } from 'src/utils/notify';
 import { useRouter } from 'vue-router';
+import { echo } from 'boot/echo';
+import { useOrderStore } from '@/stores/waiter/order-store';
 
 const $q = useQuasar();
 const left = ref(false)
 const auth = useAuthStore()
 const router = useRouter()
-
+const orderStore = useOrderStore();
+const isVisible = ref(false)
+const ordersReady = ref([])
 const menuGroups = [
   {
     roles: ["super-admin"],
@@ -95,6 +126,7 @@ const menuGroups = [
   },
 ];
 
+// Methods
 const logout = (async () => {
   $q.loading.show();
   const result = await auth.logout()
@@ -106,6 +138,51 @@ const logout = (async () => {
   }
   $q.loading.hide();
 })
+const confirm = () => {
+  isVisible.value = true
+  ordersReady.value = []
+}
+// Función para reproducir el sonido
+const playNotificationSound = () => {
+  if (!isSoundEnabled.value) {
+    console.warn("El sonido está bloqueado por el navegador hasta que el usuario interactúe.");
+    return;
+  }
+
+  const audio = new Audio("/sounds/notificationOrderReady.mp3");
+  audio.play()
+    .then(() => console.log("Sonido reproducido correctamente"))
+    .catch((e) => console.error("Error reproduciendo sonido:", e));
+};
+
+const isSoundEnabled = ref(false);
+
+
+onMounted(() => {
+  document.addEventListener("click", () => {
+    isSoundEnabled.value = true;
+    console.log("Sonido habilitado por interacción del usuario.");
+  }, { once: true });
+});
+
+
+onMounted(() => {
+  if (auth.roles.includes('waiter')) {
+    echo.private('order-items-updated')
+      .stopListening('OrderItemsUpdated')
+      .listen('OrderItemsUpdated', (event) => {
+        console.log('event', event)
+        const order = auth.user.orders.find((order) => order.id == event.orderId)
+        if (event.completed && order !== undefined) {
+          ordersReady.value.push({ folio: order.folio, table: order.table.name })
+          isVisible.value = true
+          playNotificationSound(); // 🔹 Agregar la reproducción aquí
+        }
+        orderStore.handleOrderUpdated(event);
+      });
+  }
+});;
+
 </script>
 
 <style>
@@ -143,5 +220,50 @@ body {
 
 .header_dark {
   background: linear-gradient(145deg, rgb(61, 14, 42) 15%, rgb(14, 43, 78) 70%);
+}
+
+/* DIALOG */
+.q-dialog-card {
+  max-width: 500px;
+  /* border-radius: 15px !important; */
+  overflow: visible !important;
+  /* Permitir que el icono sobresalga */
+  position: relative;
+}
+
+.icon-container {
+  position: absolute;
+  top: -28px;
+  /* Lo saca fuera del contenedor */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.delete-btn {
+  width: 100px;
+  color: white;
+}
+
+.cancel-btn {
+  width: 100px;
+  color: #888;
+}
+
+.q-card-actions {
+  gap: 12px;
+}
+
+.top-line {
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  /* border-top-left-radius: 15px;
+  border-top-right-radius: 15px; */
 }
 </style>

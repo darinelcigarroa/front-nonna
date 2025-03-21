@@ -154,7 +154,7 @@ import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
 import LottieAnimation from 'src/components/LottieAnimation.vue'
 import animationData from 'src/assets/chef/waiter-edit.json'
 import { echo } from 'boot/echo'
-import ConfirmDialog from 'src/components/ConfirmDialog.vue'
+import ConfirmDialog from 'src/components/chef/ConfirmDialog.vue'
 import { getTextColor } from 'src/utils/theme';
 
 /* ✅ VARIABLES */

@@ -25,7 +25,10 @@
         <!-- Contenedor del Texto -->
         <div class="col column justify-center">
           <span class="text-body1" style="font-size: 1em;">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis omnis sequi libero.
+            {{ tip.phrase }}
+          </span>
+          <span class="text-weight-bolder">
+            {{ `- ${tip.author}` }}
           </span>
         </div>
       </q-card-section>
@@ -64,10 +67,11 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
 import { notifyError } from 'src/utils/notify';
+import { api } from 'boot/axios'
 
 const now = ref(new Date());
 const router = useRouter();
-
+const tip = ref([])
 const currentTime = computed(() => format(now.value, 'HH:mm a', { locale: es }));
 const date = computed(() => format(now.value, "EEEE d 'de' MMMM", { locale: es }));
 
@@ -76,8 +80,12 @@ const updateTime = () => {
 };
 
 let intervalId = null;
-
+const getPhrase = async () => {
+  const response = await api.get('/phrase')
+  tip.value = response.data
+}
 onMounted(async () => {
+  getPhrase()
   updateTime();
 });
 
