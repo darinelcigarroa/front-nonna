@@ -7,7 +7,8 @@ export default {
             const response = await api.get('admin/employee', {
                 params: {
                     rowsPerPage: pagination.rowsPerPage,
-                    page: pagination.page
+                    page: pagination.page,
+                    filter: pagination.filter
                 }
             })
             return response.data

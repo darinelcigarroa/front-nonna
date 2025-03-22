@@ -49,14 +49,16 @@ const employeeStore = useEmployeeStore()
 const pagination = ref({
     rowsPerPage: 5,
     page: 1,
-    rowsNumber: 0
+    rowsNumber: 0,
+    filter: null
 })
 
 onMounted(async () => {
     await onRequest({
         pagination: {
             page: pagination.value.page,
-            rowsPerPage: pagination.value.rowsPerPage
+            rowsPerPage: pagination.value.rowsPerPage,
+            filter: null
         }
     })
 })
@@ -113,6 +115,7 @@ const onRequest = async (props) => {
 
     pagination.value.page = page
     pagination.value.rowsPerPage = rowsPerPage
+    pagination.value.filter = filter.value
 
     const result = await employeeStore.getEmployee(pagination.value)
     pagination.value.rowsNumber = result.total
@@ -124,7 +127,7 @@ const onDelete = async (id) => {
         await onRequest({
             pagination: {
                 page: pagination.value.page,
-                rowsPerPage: pagination.value.rowsPerPage
+                rowsPerPage: pagination.value.rowsPerPage,
             }
         })
     } else {
