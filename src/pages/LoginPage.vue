@@ -54,9 +54,8 @@ const login = async () => {
 }
 onMounted(() => {
   document.addEventListener("click", () => {
-    isSoundEnabled.value = true;
-    console.log("Sonido habilitado por interacción del usuario.");
-  }, { once: true });
+    isSoundEnabled.value = true
+  }, { once: true })
 });
 
 </script>

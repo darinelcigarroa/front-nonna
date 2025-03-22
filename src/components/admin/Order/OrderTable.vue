@@ -98,7 +98,6 @@ const onSearchUpdate = (val) => {
 };
 
 const onRequest = (props) => {
-    console.log('on request', props)
     const { page, rowsPerPage } = props.pagination
 
     orderStore.pagination.page = page;

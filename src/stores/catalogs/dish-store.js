@@ -19,10 +19,8 @@ export const useDishStore = defineStore('dish', {
 
     actions: {
         async getDishes(pagination) {
-            console.log('get dishes')
             const response = await dishService.index(pagination)
             const data = response.data.dishes
-            console.log('data', data)
             this.dataDishes = data.data
 
             return data

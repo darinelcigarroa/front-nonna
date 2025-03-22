@@ -7,7 +7,8 @@ export default {
             const response = await api.get('catalogs/dish', {
                 params: {
                     rowsPerPage: pagination.rowsPerPage,
-                    page: pagination.page
+                    page: pagination.page,
+                    filter: pagination.filter
                 }
             })
             return response.data

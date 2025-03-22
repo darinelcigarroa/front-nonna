@@ -36,7 +36,6 @@ onMounted(() => {
 // Función para guardar datos
 const onSubmit = async () => {
     const result = await storeDish.saveDish()
-    console.log('result', result)
     if (result.success) {
         notifySuccess(result.message)
     } else {

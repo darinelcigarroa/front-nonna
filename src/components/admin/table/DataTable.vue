@@ -18,7 +18,7 @@
 
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen" v-if="mode === 'list'">
-                <q-tooltip :disable="$q.platform.is.mobile" v-close-popup>
+                <q-tooltip :disable="$q.platform.is.mobile">
                     {{ props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen' }}
                 </q-tooltip>
             </q-btn>
@@ -26,7 +26,7 @@
             <q-btn flat round dense :icon="mode === 'grid' ? 'list' : 'grid_on'"
                 @click="mode = mode === 'grid' ? 'list' : 'grid'; separator = mode === 'grid' ? 'none' : 'horizontal'"
                 v-if="!props.inFullscreen">
-                <q-tooltip :disable="$q.platform.is.mobile" v-close-popup>
+                <q-tooltip :disable="$q.platform.is.mobile">
                     {{ mode === 'grid' ? 'List' : 'Grid' }}
                 </q-tooltip>
             </q-btn>
@@ -78,14 +78,16 @@ const tableStore = useTableStore();
 const pagination = ref({
     rowsPerPage: 3,
     page: 1,
-    rowsNumber: 0
+    rowsNumber: 0,
+    filter: null
 });
 
 onMounted(async () => {
     await onRequest({
         pagination: {
             page: pagination.value.page,
-            rowsPerPage: pagination.value.rowsPerPage
+            rowsPerPage: pagination.value.rowsPerPage,
+            filter: null
         }
     });
 });
@@ -104,6 +106,7 @@ const onRequest = async (props) => {
     const { page, rowsPerPage } = props.pagination;
     pagination.value.page = page;
     pagination.value.rowsPerPage = rowsPerPage;
+    pagination.value.filter = filter.value
 
     const result = await tableStore.getTables(pagination.value);
     pagination.value.rowsNumber = result.total;
