@@ -12,6 +12,7 @@ export default {
   status: 'Estatus',
   catalogs: 'Catálogos',
   description: 'Descripción',
+  completed_orders: 'Ordenes completadas',
   // Autenticación y Usuarios
   username: 'Usuario',
   password: 'Contraseña',

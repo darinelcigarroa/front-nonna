@@ -147,7 +147,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
-import orderService from 'src/services/chef/orderService'
+import orderService from 'src/services/orderService'
 import orderItemService from 'src/services/orderItemService'
 import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, ORDER_STATUS, getStatusDishIcon } from '@/constants/status.js'
 import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'

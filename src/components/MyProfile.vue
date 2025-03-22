@@ -3,17 +3,17 @@
     <q-page class="q-pa-md flex flex-center">
       <q-card class="col-12" style="border-radius: 10px; min-width: 90%;">
         <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12 flex flex-center column">
-          <q-avatar size="12rem">
+          <q-avatar size="8rem">
             <q-img class="rounded-borders" src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
-          <span style="font-size: 2em;" class="text-uppercase q-my-sm">{{ fullName }}</span>
+          <span style="font-size: 1.8em;" class="text-uppercase q-my-sm">{{ fullName }}</span>
           <div v-for="(role, index) in authStore.roles" :key="index">
             <q-chip class="text-uppercase" :color="$q.dark.isActive ? 'grey' : 'green-2'">{{ role }}</q-chip>
           </div>
-          <q-btn @click="isVisible = true" class="q-my-xs" rounded color="accent" label="Cambiar contrasena" />
+          <q-btn dense @click="isVisible = true" class="q-my-xs" rounded color="accent" label="Cambiar contrasena" />
         </q-card-section>
         <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <q-form @submit="updateUser" class="q-gutter-md">
+          <q-form @submit="updateUser" class="q-gutter-sm">
             <q-input filled v-model="authStore.user.user_name" :label="$t('user_name')" />
 
             <q-input filled v-model="authStore.user.employee.name" :label="$t('name')" />

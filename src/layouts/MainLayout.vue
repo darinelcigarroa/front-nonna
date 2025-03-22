@@ -3,7 +3,6 @@
     <q-header reveal :class="$q.dark.isActive ? 'header_dark' : 'header_normal'">
       <q-toolbar>
         <q-btn @click="left = !left" flat round dense icon="menu" class="q-mr-sm" />
-        <!-- <q-toolbar-title to="/home">Dinamico</q-toolbar-title> -->
         <q-toolbar-title>
           <router-link :to="{ name: 'home' }" style="text-decoration: none;" class="text-white">
             LA NONNA
@@ -116,6 +115,12 @@ const menuGroups = [
     roles: ["chef"],
     items: [
       { route: "kitchen-orders", label: "kitchen_orders", icon: "mdi-silverware-fork-knife" },
+    ],
+  },
+  {
+    roles: ["super-admin"],
+    items: [
+      { route: "index-order", label: "completed_orders", icon: "mdi-order-bool-ascending" },
     ],
   },
   {

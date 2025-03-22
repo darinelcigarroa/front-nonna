@@ -1,4 +1,4 @@
-import waiterRoutes from './modules/waiterRoutes'
+import waiterRoutes from './orderRoutes'
 import chefRoutes from './modules/chefRoutes'
 import adminRoutes from './admin/adminRoutes'
 import tableRoutes from './admin/tableRoutes'

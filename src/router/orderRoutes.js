@@ -1,5 +1,11 @@
 export default [
   {
+    path: 'index',
+    name: 'index-order',
+    component: () => import('@/pages/admin/order/IndexPage.vue'),
+    meta: { requiresAuth: true, roles: ['super-admin'] }
+  },
+  {
     path: 'create-order',
     name: 'create-order',
     component: () => import('@/pages/waiter/CreateOrderPage.vue'),
