@@ -11,7 +11,14 @@ export const useEmployeeStore = defineStore('employee', {
             position_id: '',
             salary: '',
         },
+        pagination: ({
+            rowsPerPage: 5,
+            page: 1,
+            rowsNumber: 0,
+            filter: null
+        }),
         dataEmployees: [],
+        filterPosition: [],
         editModal: false,
         createModal: false
     }),
@@ -20,8 +27,8 @@ export const useEmployeeStore = defineStore('employee', {
     },
 
     actions: {
-        async getEmployee(pagination) {
-            const response = await employeeService.index(pagination)
+        async getEmployee() {
+            const response = await employeeService.index(this.pagination, this.filterPosition)
             const data = response.data.employees
             this.dataEmployees = data.data
 
@@ -74,6 +81,9 @@ export const useEmployeeStore = defineStore('employee', {
                 position_id: '',
                 salary: '',
             }
+        },
+        async applyFilter() {
+            await this.getEmployee()
         }
     },
     persist: true

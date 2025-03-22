@@ -2,13 +2,14 @@ import { api } from 'boot/axios'
 
 
 export default {
-    async index(pagination) {
+    async index(pagination, filterPosition) {
         try {
             const response = await api.get('admin/employee', {
                 params: {
                     rowsPerPage: pagination.rowsPerPage,
                     page: pagination.page,
-                    filter: pagination.filter
+                    filter: pagination.filter,
+                    filterPosition: filterPosition
                 }
             })
             return response.data

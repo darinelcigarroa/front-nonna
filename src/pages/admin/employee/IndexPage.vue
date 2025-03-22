@@ -12,8 +12,8 @@
 
         <div class="row q-gutter-sm items-center col-auto" style="flex-wrap: wrap;">
           <!-- Filtros -->
-          <q-btn color="white" text-color="dark" icon="mdi-filter" :label="$q.screen.gt.xs ? 'Filtros' : ''"
-            class="q-mb-xs" />
+          <q-btn @click="showFilterDialog" color="white" text-color="dark" icon="mdi-filter"
+            :label="$q.screen.gt.xs ? 'Filtros' : ''" class="q-mb-xs" />
           <!-- Exportar -->
           <q-btn color="white" text-color="dark" icon="mdi-export-variant" :label="$q.screen.gt.sm ? 'Exportar' : ''"
             class="q-mb-xs" />
@@ -29,6 +29,7 @@
       </q-card>
       <CreateEmployeeDialog />
       <EditEmployeeDialog />
+      <FilterDialog v-model="isVisible" />
     </q-page>
   </transition>
 </template>
@@ -38,7 +39,14 @@ import EmployeeTable from 'src/components/admin/employee/EmployeeTable.vue';
 import CreateEmployeeDialog from 'src/components/admin/employee/CreateEmployeeDialog.vue';
 import EditEmployeeDialog from 'src/components/admin/employee/EditEmployeeDialog.vue';
 import { useEmployeeStore } from 'src/stores/employee/employee-store';
+import FilterDialog from 'src/components/admin/employee/FilterDialog.vue';
+import { ref } from 'vue';
 
 const employeeStore = useEmployeeStore()
+const isVisible = ref(false)
+
+const showFilterDialog = () => {
+  isVisible.value = true
+}
 </script>
 <style></style>

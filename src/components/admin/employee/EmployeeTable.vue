@@ -1,6 +1,6 @@
 <template>
     <q-table flat bordered wrap-cells :rows="employeeStore.dataEmployees" :columns="columns" :grid="mode == 'grid'"
-        :filter="filter" v-model:pagination="pagination" :hide-header="mode === 'grid'"
+        :filter="filter" v-model:pagination="employeeStore.pagination" :hide-header="mode === 'grid'"
         :rows-per-page-options="[5, 10, 20]" card-class="my-custom-grid" @request="onRequest">
         <template v-slot:top-left>
             <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">
@@ -46,18 +46,11 @@ import { notifyError, notifySuccess } from 'src/utils/notify';
 
 const employeeStore = useEmployeeStore()
 
-const pagination = ref({
-    rowsPerPage: 5,
-    page: 1,
-    rowsNumber: 0,
-    filter: null
-})
-
 onMounted(async () => {
     await onRequest({
         pagination: {
-            page: pagination.value.page,
-            rowsPerPage: pagination.value.rowsPerPage,
+            page: employeeStore.pagination.page,
+            rowsPerPage: employeeStore.pagination.rowsPerPage,
             filter: null
         }
     })
@@ -113,12 +106,12 @@ const columns = ref([
 const onRequest = async (props) => {
     const { page, rowsPerPage } = props.pagination
 
-    pagination.value.page = page
-    pagination.value.rowsPerPage = rowsPerPage
-    pagination.value.filter = filter.value
+    employeeStore.pagination.page = page
+    employeeStore.pagination.rowsPerPage = rowsPerPage
+    employeeStore.pagination.filter = filter.value
 
-    const result = await employeeStore.getEmployee(pagination.value)
-    pagination.value.rowsNumber = result.total
+    const result = await employeeStore.getEmployee()
+    employeeStore.pagination.rowsNumber = result.total
 }
 const onDelete = async (id) => {
     const result = await employeeStore.deleteEmployee(id)
@@ -126,8 +119,8 @@ const onDelete = async (id) => {
         notifySuccess(result.message)
         await onRequest({
             pagination: {
-                page: pagination.value.page,
-                rowsPerPage: pagination.value.rowsPerPage,
+                page: employeeStore.pagination.page,
+                rowsPerPage: employeeStore.pagination.rowsPerPage,
             }
         })
     } else {
