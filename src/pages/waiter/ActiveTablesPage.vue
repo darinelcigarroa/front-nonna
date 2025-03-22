@@ -126,9 +126,8 @@ const paidOrder = (payload) => {
 const confirmPaymentOrder = async () => {
   currentPage.value = 1;
   hasMoreData.value = true;
-  orders.value = [];
-
-  onLoad(1, () => { });
+  const index = orders.value.findIndex((item) => item.id === order.value.id)
+  orders.value.splice(index, 1)
 };
 
 </script>

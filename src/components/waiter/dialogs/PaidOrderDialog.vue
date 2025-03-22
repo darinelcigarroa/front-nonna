@@ -15,8 +15,6 @@
                 <q-list>
                     <q-item>
                         <q-item-section avatar>
-                            <!-- <q-avatar square size="100px" font-size="82px" color="accent" text-color="white"
-                                icon="mdi-order-bool-descending-variant" /> -->
                             <q-avatar square size="100px" font-size="82px" color="primary" text-color="white"
                                 icon="mdi-barcode-scan" />
                         </q-item-section>
