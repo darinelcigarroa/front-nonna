@@ -16,5 +16,5 @@ export default [
     name: 'adminCatalogs',
     component: () => import('@/pages/admin/CatalogsPage.vue'),
     meta: { requiresAuth: true, roles: ['super-admin'] }
-  },
+  }
 ]

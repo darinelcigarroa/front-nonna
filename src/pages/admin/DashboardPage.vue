@@ -11,7 +11,7 @@
 
       <div class="row q-col-gutter-md">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <ChartCard title="Most Used Tables" :chartOptions="TableOptions" chartRefName="chartTables" />
+          <TableChart></TableChart>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <ChartCard title="Monthly Income Trend" :chartOptions="areaChartOption" chartRefName="chartSales" />
@@ -40,6 +40,7 @@ import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
 import { useQuasar } from 'quasar';
 import StatCard from '@/components/admin/StatCard.vue';
+import TableChart from '../../components/admin/charts/TableChart.vue';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, LineChart, PieChart]);
 
@@ -52,14 +53,6 @@ const stats = [
 
 const $q = useQuasar();
 const isReady = ref(false);
-const mesas = ref([
-  { mesa: "Mesa 1", uso: 50 },
-  { mesa: "Mesa 2", uso: 120 },
-  { mesa: "Mesa 3", uso: 90 },
-  { mesa: "Mesa 4", uso: 30 },
-  { mesa: "Mesa 5", uso: 80 }
-]);
-
 
 const generarIngresos = () => {
   return Array.from({ length: 9 }, () => Math.floor(Math.random() * (1500 - 200) + 200));
@@ -72,7 +65,6 @@ const actualizarIngresos = () => {
   ingresosActual.value = generarIngresos();
   ingresosPasado.value = generarIngresos();
 };
-const sortedMesas = mesas.value.sort((a, b) => b.uso - a.uso)
 
 const areaChartOption = computed(() => ({
   silent: true,
@@ -124,25 +116,6 @@ const areaChartOption = computed(() => ({
       color: '#25c0ea'
     }
   ]
-}))
-
-const TableOptions = computed(() => ({
-  tooltip: { trigger: 'axis' },
-  xAxis: {
-    type: 'category',
-    data: sortedMesas.map(m => m.mesa), // Nombres de las mesas
-    axisLabel: { color: '#676767' }
-  },
-  yAxis: {
-    type: 'value',
-    axisLabel: { color: '#676767' }
-  },
-  series: [{
-    name: 'Veces usada',
-    type: 'bar',
-    data: sortedMesas.map(m => m.uso), // Número de veces usada
-    color: '#3bb2b8'
-  }]
 }))
 
 const waiterOptions = computed(() => (
@@ -263,11 +236,7 @@ const foodOptions = computed(() => (
 onMounted(() => {
   isReady.value = true
   actualizarIngresos()
-
 });
-
-
-
 
 </script>
 

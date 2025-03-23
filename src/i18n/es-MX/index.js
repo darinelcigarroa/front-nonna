@@ -1,4 +1,7 @@
 export default {
+  // Graficas
+  most_used_tables: 'Mesas mas usadas',
+  download: 'Descargar',
   // General
   kitchen_orders: 'Pedidos de cocina',
   dashboard: 'Panel',
@@ -42,7 +45,6 @@ export default {
   create_an_order_to_send_to_the_chef: 'Crear un pedido para enviar al chef',
   check_out_the_tables_they_are_in_charge_of: 'Revisa las mesas que están a tu cargo',
   view_your_information: 'ver tu información',
-  most_used_tables: 'Mesas mas usadas',
   tracking_dishes_in_progress_for_the_chef: 'Seguimiento de platillos en proceso para el chef',
 
   // Comidas y Menú

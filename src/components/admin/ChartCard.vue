@@ -1,14 +1,21 @@
 <template>
   <q-card flat bordered class="shadow q-pa-none q-ma-none">
-    <q-card-section class="row">
-      <div :class="!$q.dark.isActive ? 'text-grey-7' : 'text-white'" class="text-h6 col-12">
+    <q-card-section class="row items-center justify-between">
+      <!-- Título -->
+      <div :class="!$q.dark.isActive ? 'text-grey-7' : 'text-white'" class="text-h6">
         {{ title }}
-        <q-btn class="float-right" flat dense icon="mdi-download-circle" @click="downloadChart"
+      </div>
+
+      <!-- Botones alineados a la derecha -->
+      <div class="row q-gutter-x-sm">
+        <q-btn flat dense icon="mdi-download-circle" @click="downloadChart"
           :color="!$q.dark.isActive ? 'primary' : 'white'">
           <q-tooltip>{{ $t('download') }}</q-tooltip>
         </q-btn>
+        <slot name="actions"></slot>
       </div>
     </q-card-section>
+
 
     <q-separator class="full-width" inset></q-separator>
 
