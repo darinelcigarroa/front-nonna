@@ -11,17 +11,16 @@
 
       <div class="row q-col-gutter-md">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <TableChart></TableChart>
+          <TableChart />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <ChartCard title="Monthly Income Trend" :chartOptions="areaChartOption" chartRefName="chartSales" />
+          <MonthlyIncomeTrend />
         </div>
       </div>
 
       <div class="row q-col-gutter-md q-pt-md">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <ChartCard title="Top Waiters by Number of Tables Served" :chartOptions="waiterOptions"
-            chartRefName="charWaiter" />
+          <WaiterServicesChart />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <ChartCard title="Trends in Dish Sales" :chartOptions="foodOptions" chartRefName="charDishes" />
@@ -33,14 +32,16 @@
 
 <script setup>
 import ChartCard from '@/components/admin/ChartCard.vue';
+import StatCard from '@/components/admin/StatCard.vue';
+import TableChart from '../../components/admin/charts/TableChart.vue';
+import MonthlyIncomeTrend from 'src/components/admin/charts/MonthlyIncomeTrendChart.vue';
+import WaiterServicesChart from 'src/components/admin/charts/WaiterServicesChart.vue';
 import { ref, onMounted, computed } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
 import { useQuasar } from 'quasar';
-import StatCard from '@/components/admin/StatCard.vue';
-import TableChart from '../../components/admin/charts/TableChart.vue';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, LineChart, PieChart]);
 
@@ -53,138 +54,6 @@ const stats = [
 
 const $q = useQuasar();
 const isReady = ref(false);
-
-const generarIngresos = () => {
-  return Array.from({ length: 9 }, () => Math.floor(Math.random() * (1500 - 200) + 200));
-};
-
-const ingresosActual = ref(generarIngresos());
-const ingresosPasado = ref(generarIngresos());
-
-const actualizarIngresos = () => {
-  ingresosActual.value = generarIngresos();
-  ingresosPasado.value = generarIngresos();
-};
-
-const areaChartOption = computed(() => ({
-  silent: true,
-  legend: {
-    textStyle: {
-      color: $q.dark.isActive ? 'white' : '#676767'
-    }
-  },
-  grid: {
-    bottom: '9%',
-    left: '9%',
-    top: '10%',
-    right: '5%',
-    show: true
-  },
-  tooltip: { show: true },
-  xAxis: {
-    type: 'category',
-    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep'],
-    axisLine: { show: false },
-    axisTick: { show: false },
-    axisLabel: {
-      color: $q.dark.isActive ? 'white' : '#676767'
-    }
-  },
-  yAxis: {
-    type: 'value',
-    axisLine: { show: false },
-    axisTick: { show: false },
-    axisLabel: {
-      color: $q.dark.isActive ? 'white' : '#676767'
-    }
-  },
-  series: [
-    {
-      name: 'Ingresos Mes Actual',
-      data: ingresosActual.value,
-      type: 'line',
-      areaStyle: {},
-      smooth: true,
-      color: '#e4a3e2'
-    },
-    {
-      name: 'Ingresos Mes Pasado',
-      data: ingresosPasado.value,
-      type: 'line',
-      areaStyle: {},
-      smooth: true,
-      color: '#25c0ea'
-    }
-  ]
-}))
-
-const waiterOptions = computed(() => (
-  {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer:
-      {
-        type: 'shadow'
-      },
-      backgroundColor: 'rgba(50,50,50,0.9)',
-
-    },
-    legend: {
-      textStyle: {
-        color: $q.dark.isActive ? 'white' : '#676767'
-      }
-    },
-    color: ['#eb2757', '#eb2757', '#fff'],
-    grid:
-    {
-      bottom: '3%',
-      left: '15%',
-      top: '18%',
-      right: '5%',
-      show: true
-    },
-    calculable: true,
-    xAxis:
-    {
-      type: 'value',
-      position: 'top',
-      axisLine: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      axisLabel: {
-        formatter: function (value,) {
-          return '$' + value;
-        },
-        color: $q.dark.isActive ? 'white' : '#676767'
-      }
-    },
-    yAxis: [
-      {
-        type: 'category',
-        data: ['Alex Morrow', 'Joanna Carter', 'Jimmy Joanna', 'Mack Hales'],
-        axisLine: {
-          show: false
-        },
-        axisTick: {
-          show: false
-        },
-        axisLabel: {
-          fontSize: 12,
-          color: $q.dark.isActive ? 'white' : '#676767'
-        }
-      }
-    ],
-    series: [{
-      name: 'Ventas',
-      type: 'bar',
-      data: [500, 650, 850, 700], // 🔥 Un solo conjunto de datos
-      barWidth: 30, // 🔥 Tamaño de barra ajustado
-    }]
-  }
-))
 
 const foodOptions = computed(() => (
   {
@@ -235,7 +104,6 @@ const foodOptions = computed(() => (
 
 onMounted(() => {
   isReady.value = true
-  actualizarIngresos()
 });
 
 </script>

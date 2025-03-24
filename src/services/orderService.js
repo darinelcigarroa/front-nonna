@@ -1,6 +1,5 @@
 import { api } from 'boot/axios'
 
-
 export default {
     async index(params) {
         try {

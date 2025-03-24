@@ -9,20 +9,20 @@
 
 <script setup>
 import ChartCard from '@/components/admin/ChartCard.vue';
-import tableService from 'src/services/catalogs/tableService';
+import chartService from 'src/services/chartService';
 import { computed, onMounted, ref } from 'vue';
 
 const chartTables = ref([])
-const currentPage = ref(1); // Página inicial
-const totalPages = ref(1); // Total de páginas (se actualizará dinámicamente)
-const rowsPerPage = 5; // Siempre serán 5 filas
+const currentPage = ref(1);
+const totalPages = ref(1);
+const rowsPerPage = 5;
 
 const mostUsedTables = async () => {
-    const response = await tableService.getMostUsedTables({ page: currentPage.value, rowsPerPage });
-    console.log('response', response.data)
+    const response = await chartService.getMostUsedTables({ page: currentPage.value, rowsPerPage });
+
     if (response.success) {
-        chartTables.value = response.data.tables.data; // Los datos paginados
-        totalPages.value = response.data.tables.last_page; // Total de páginas
+        chartTables.value = response.data.tables.data;
+        totalPages.value = response.data.tables.last_page;
     }
 };
 
@@ -40,7 +40,7 @@ const TableOptions = computed(() => ({
     series: [{
         name: 'Veces usada',
         type: 'bar',
-        data: chartTables.value.map((item) => item.total_uses), // Número de veces usada
+        data: chartTables.value.map((item) => item.total_uses),
         color: '#3bb2b8'
     }]
 }))

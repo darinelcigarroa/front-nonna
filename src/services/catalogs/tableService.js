@@ -51,7 +51,6 @@ export default {
             }
         }
     },
-
     async getTables() {
         try {
             const response = await api.get('catalogs/get-tables')
@@ -62,18 +61,5 @@ export default {
                 message: 'Error al obtener los empleados'
             }
         }
-    },
-    async getMostUsedTables(params) {
-        try {
-            console.log('params', params)
-            const response = await api.get('admin/get-most-used-tables', { params })
-            return response.data
-        } catch (error) {
-            return error.response?.data || {
-                success: false,
-                message: 'Error al obtener los empleados'
-            }
-        }
-    },
-
+    }
 }

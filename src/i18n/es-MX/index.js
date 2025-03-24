@@ -2,14 +2,15 @@ export default {
   // Graficas
   most_used_tables: 'Mesas mas usadas',
   download: 'Descargar',
+  monthly_income_trend: 'Tendencia de ingresos mensuales',
+  services_attended_by_a_waiter: 'Servicios atendidos por mesero',
+  trends_in_dish_sales: 'Tendencias en Ventas de Platillos',
   // General
   kitchen_orders: 'Pedidos de cocina',
   dashboard: 'Panel',
   employees: 'Empleados',
   tables: 'Mesas',
-  monthly_income_trend: 'Tendencia de ingresos mensuales',
-  top_waiters_by_number_of_tables_served: 'Mejores meseros por número de mesas servidas',
-  trends_in_dish_sales: 'Tendencias en Ventas de Platillos',
+
   user_name: 'Usuario',
   observation: 'Observaciones',
   status: 'Estatus',
