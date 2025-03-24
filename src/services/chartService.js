@@ -35,4 +35,15 @@ export default {
             }
         }
     },
+    async getTrendsMainCourseSales(params) {
+        try {
+            const response = await api.get('admin/get-trends-main-course-sales', { params })
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error inesperado'
+            }
+        }
+    },
 }

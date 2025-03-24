@@ -99,6 +99,7 @@ const waiterOptions = computed(() => (
             {
                 type: 'category',
                 data: namesWaiters.value,
+                inverse: true,
                 axisLine: {
                     show: false
                 },

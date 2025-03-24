@@ -23,7 +23,7 @@
           <WaiterServicesChart />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <ChartCard title="Trends in Dish Sales" :chartOptions="foodOptions" chartRefName="charDishes" />
+          <TrendsMainCourseSalesChart />
         </div>
       </div>
     </q-page>
@@ -31,17 +31,16 @@
 </template>
 
 <script setup>
-import ChartCard from '@/components/admin/ChartCard.vue';
 import StatCard from '@/components/admin/StatCard.vue';
 import TableChart from '../../components/admin/charts/TableChart.vue';
 import MonthlyIncomeTrend from 'src/components/admin/charts/MonthlyIncomeTrendChart.vue';
 import WaiterServicesChart from 'src/components/admin/charts/WaiterServicesChart.vue';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
-import { useQuasar } from 'quasar';
+import TrendsMainCourseSalesChart from 'src/components/admin/charts/TrendsMainCourseSalesChart.vue';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, LineChart, PieChart]);
 
@@ -52,55 +51,7 @@ const stats = [
   { value: 720, label: "New Customers", icon: "mdi-silverware-fork-knife", iconClass: "box_4", progress: 30 }
 ];
 
-const $q = useQuasar();
 const isReady = ref(false);
-
-const foodOptions = computed(() => (
-  {
-    tooltip: {
-      show: true
-    },
-    legend: {
-      orient: 'horizontal',
-      bottom: 0,
-      width: 300,
-      textStyle: {
-        color: $q.dark.isActive ? 'white' : '#676767'
-      }
-    },
-    color: ['#66e398', '#cc9dd1', '#f0d377'],
-    series: [
-      {
-        name: 'Competitor',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-        emphasis: {
-          show: true,
-        },
-        label: {
-          show: true,
-          position: 'inner',
-          formatter: function (param) {
-            return param.value + ' %'
-          },
-          fontSize: '20',
-          fontWeight: 'bold'
-
-        },
-        labelLine: {
-          show: false
-        },
-        selectedMode: 'single',
-        data: [
-          { value: 40, name: 'Product 1', selected: true },
-          { value: 20, name: 'Competitor 1', selected: false },
-          { value: 15, name: 'Competitor 2', selected: false },
-        ]
-      }
-    ]
-  }
-))
 
 onMounted(() => {
   isReady.value = true
