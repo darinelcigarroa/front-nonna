@@ -5,6 +5,7 @@ import { reactive } from 'vue'
 import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
 import { useDishTypeStore } from '@/stores/waiter/dish-type'
 import orderItemService from 'src/services/orderItemService'
+import { useAuthStore } from '../auth-store'
 
 export const useOrderStore = defineStore('order', {
   state: () => ({
@@ -26,9 +27,9 @@ export const useOrderStore = defineStore('order', {
   },
 
   actions: {
-    sendOrder() {
+    async storeOrder() {
       const orders = this.activeOrders
-
+      const autStore = useAuthStore()
       console.log('send orders', orders)
 
       const payload = {
@@ -37,7 +38,11 @@ export const useOrderStore = defineStore('order', {
         orders: orders
       }
 
-      const response = orderService.store(payload)
+      const response = await orderService.store(payload)
+
+      if (response.success) {
+        autStore.user.orders.push(response.data.order)
+      }
 
       return response
     },

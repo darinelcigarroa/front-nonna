@@ -236,7 +236,7 @@ const handleOrderAdded = async () => {
     return
   }
 
-  const response = await orderStore.sendOrder();
+  const response = await orderStore.storeOrder();
 
   if (response.success) {
     orderStore.resetState()
