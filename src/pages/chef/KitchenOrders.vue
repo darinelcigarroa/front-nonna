@@ -24,16 +24,15 @@
             <q-expansion-item class="text-weight-bold" :label="order.table.name">
               <q-card flat bordered class="q-pa-sm q-mt-xs" style="border-radius: 10px;">
                 <!-- Checkbox para seleccionar todos los items -->
-                <div class="row justify-between items-center q-mb-md"
-                  :class="{ 'bg-teal-1': order.order_status_id == ORDER_STATUS.EDIT }">
+                <div class="row justify-between items-center q-mb-md" :class="{ 'bg-teal-1': order.editing }">
                   <div class="row items-center">
                     <q-checkbox v-model="order.selectAll" label="Seleccionar todo"
                       @update:model-value="toggleSelectAll(order)" class="q-ml-sm" />
                   </div>
 
                   <!-- ✅ Animación Lottie al lado del checkbox -->
-                  <LottieAnimation v-if="order.order_status_id == ORDER_STATUS.EDIT" :animationData="animationData"
-                    :loop="true" :autoplay="true" width="60px" height="60px" class="q-ml-sm" />
+                  <LottieAnimation v-if="order.editing" :animationData="animationData" :loop="true" :autoplay="true"
+                    width="60px" height="60px" class="q-ml-sm" />
                 </div>
                 <!-- Renderizado de los items -->
                 <q-virtual-scroll style="max-height: 400px; overflow-y: auto;" :items="order.order_items"
@@ -146,7 +145,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import orderService from 'src/services/orderService'
 import orderItemService from 'src/services/orderItemService'
-import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, ORDER_STATUS, getStatusDishIcon } from '@/constants/status.js'
+import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, getStatusDishIcon } from '@/constants/status.js'
 import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
 import LottieAnimation from 'src/components/LottieAnimation.vue'
 import animationData from 'src/assets/chef/waiter-edit.json'
@@ -219,7 +218,7 @@ onBeforeUnmount(() => {
 
 /* ✅ WATCHERS */
 watchEffect(() => {
-  orderMap.value = new Map(orders.value.map(order => [order.id, order], console.log('ok')))
+  orderMap.value = new Map(orders.value.map(order => [order.id, order]))
 })
 
 /* ✅ MÉTODOS (ordenados según uso en el template) */
@@ -338,7 +337,7 @@ const finalizeOrder = (event, order) => {
 const handleWaiterEditingOrder = (event) => {
   const order = orderMap.value.get(+event.order.id)
   if (order) {
-    order.order_status_id = event.order.order_status_id
+    order.editing = event.order.editing
   }
 }
 

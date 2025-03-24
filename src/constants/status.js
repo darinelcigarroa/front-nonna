@@ -11,8 +11,7 @@ export const ORDER_STATUS = {
     COMPLETED: 2,
     SENT: 2,
     PAID: 3,
-    EDIT: 5,
-    CANCELED: 6
+    CANCELED: 5
 };
 export const DISH_TYPES = {
     POSTRE: 1,
