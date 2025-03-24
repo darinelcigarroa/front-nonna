@@ -1,5 +1,5 @@
 <template>
-    <ChartCard title="Trends in Dish Sales" :chartOptions="foodOptions" chartRefName="charDishes" />
+    <ChartCard :title="$t('trends_in_dish_sales')" :chartOptions="foodOptions" chartRefName="charDishes" />
 
 </template>
 

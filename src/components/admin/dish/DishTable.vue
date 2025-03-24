@@ -38,7 +38,7 @@
             <q-td :props="props">
                 <q-chip class="q-pa-sm text-weight-bold" dense :color="getStatusColor(props.row.status)"
                     text-color="white">
-                    {{ props.row.status }}
+                    {{ props.row.status ? 'Activo' : 'Inactivo' }}
                 </q-chip>
             </q-td>
         </template>

@@ -36,8 +36,8 @@
         <template v-slot:body-cell-status="props">
             <q-td :props="props">
                 <q-chip class="q-pa-sm text-weight-bold" dense :color="getStatusColor(props.row.status)"
-                    :text-color="props.row.status ? 'dark' : 'white'">
-                    {{ props.row.status }}
+                    text-color="white">
+                    {{ props.row.status ? 'Activo' : 'Inactivo' }}
                 </q-chip>
             </q-td>
         </template>
@@ -131,7 +131,7 @@ const onDelete = async (id) => {
  * Retorna el color del chip según el estatus
  */
 const getStatusColor = (status) => {
-    return status ? "green" : "secondary";
+    return status ? "green-8" : "secondary";
 };
 </script>
 
