@@ -59,7 +59,8 @@
                 <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
                   <span class="q-mx-xs q-mb-lg">{{ order.folio }}</span>
                 </div>
-                <div :class="[`box_button_${(index % 3) + 1}`, 'progress-btn']" class="flex items-center cursor-pointer"
+                <div :class="[`box_button_${(index % 3) + 1}`, 'progress-btn', { 'text-white': $q.dark.isActive }]"
+                  class="flex items-center cursor-pointer"
                   @click="$router.push({ name: 'edit-order', params: { id: order.id } })">
                   <q-icon name="edit" class="q-mx-sm" size="xs"></q-icon>
                   <span class="text-weight-bold" style="font-size: 16px;">{{ order.table.name }}</span>
@@ -75,14 +76,15 @@
         </template>
       </q-infinite-scroll>
     </transition>
-    <PaidOrderDialog :order="order" ref="paidOrderDialogRef" @pay-order="confirmPaymentOrder" />
+    <PaidOrderDialog :order="order" ref="paidOrderDialogRef" @action-order-dialog="confirmPaymentOrder" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import orderService from '@/services/orderService';
 import PaidOrderDialog from 'src/components/waiter/dialogs/PaidOrderDialog.vue';
+import { useDashboardStatsStore } from 'src/stores/dashboard-stats-store';
 
 const currentPage = ref(1)
 const perPage = ref(4)
@@ -90,6 +92,7 @@ const hasMoreData = ref(true)
 const orders = ref([])
 const paidOrderDialogRef = ref(null);
 const order = ref([])
+const stats = useDashboardStatsStore()
 
 const onLoad = async (index, done) => {
   if (!hasMoreData.value) return done(true)
@@ -106,11 +109,10 @@ const onLoad = async (index, done) => {
   }
   done(false)
 }
-
-const restaurantStatus = ref([
-  { id: 1, name: 'total_tables', icon: 'mdi-table-chair', total: 25, consumed: 20 },
-  { id: 2, name: 'total_dishes', icon: 'mdi-bowl-mix-outline', total: 35, consumed: 20 },
-  { id: 3, name: 'total_diners', icon: 'mdi-account-multiple-outline', total: 50, consumed: 20 },
+const restaurantStatus = computed(() => [
+  { id: 1, name: 'total_tables', icon: 'mdi-table-chair', total: stats.totalTables, consumed: stats.tablesConsumed },
+  { id: 2, name: 'total_dishes', icon: 'mdi-bowl-mix-outline', total: stats.totalDishes, consumed: stats.dishesConsumed },
+  { id: 3, name: 'total_diners', icon: 'mdi-account-multiple-outline', total: stats.totalDinners, consumed: stats.dinnersConsumed },
 ])
 
 const capacity = ((item) => {
@@ -130,6 +132,13 @@ const confirmPaymentOrder = async () => {
   orders.value.splice(index, 1)
 };
 
+const dashboardStats = () => {
+  stats.getStats()
+}
+
+onMounted(() => {
+  dashboardStats()
+})
 </script>
 
 <style scoped>

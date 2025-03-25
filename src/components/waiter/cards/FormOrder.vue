@@ -7,11 +7,13 @@
           {{ $t('basic_information') }}
         </div>
       </div>
-      <div class="row justify-between items-center full-width">
-        <div class="bg-green-1" style="display: inline-block; line-height: 1; padding: 2px;">
+      <div v-show="orderID !== undefined" class="row justify-between items-center full-width">
+        <div :class="[!$q.dark.isActive ? 'bg-green-1' : 'bg-white', 'text-dark']"
+          style="display: inline-block; line-height: 1; padding: 2px;">
           N.º de folio: {{ orderStore.currentOrder.folio }}
         </div>
-        <div class="bg-blue-1" style="display: inline-block; line-height: 1; padding: 2px;">
+        <div :class="[!$q.dark.isActive ? 'bg-green-1' : 'bg-white', 'text-dark', 'bg-blue-1']"
+          style="display: inline-block; line-height: 1; padding: 2px;">
           Fecha: {{ orderStore.currentOrder.date }}
         </div>
       </div>

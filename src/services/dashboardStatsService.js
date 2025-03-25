@@ -2,11 +2,10 @@ import { api } from 'boot/axios'
 
 
 export default {
-    async store(payload) {
+    async index() {
         try {
-            console.log(payload, api)
-            // const response = await api.post('/login', { email, password })
-            // return response.data
+            const response = await api.get('dashboard/stats')
+            return response.data
         } catch (error) {
             return error.response?.data || {
                 success: false,

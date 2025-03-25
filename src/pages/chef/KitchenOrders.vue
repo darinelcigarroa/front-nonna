@@ -145,13 +145,14 @@
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import orderService from 'src/services/orderService'
 import orderItemService from 'src/services/orderItemService'
-import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, getStatusDishIcon } from '@/constants/status.js'
-import { notifyError, notifyInfo, notifySuccess } from 'src/utils/notify'
+import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS, getStatusDishIcon, ORDER_STATUS } from '@/constants/status.js'
+import { notifyError, notifyInfo, notifySuccess, notifyWarning } from 'src/utils/notify'
 import LottieAnimation from 'src/components/LottieAnimation.vue'
 import animationData from 'src/assets/chef/waiter-edit.json'
 import { echo } from 'boot/echo'
 import ConfirmDialog from 'src/components/chef/ConfirmDialog.vue'
 import { getTextColor } from 'src/utils/theme';
+
 
 /* ✅ VARIABLES */
 const orders = ref([])
@@ -211,7 +212,6 @@ onBeforeUnmount(() => {
   }
 
   Object.entries(events).forEach(([channel, event]) => {
-    console.log('channel', channel, 'event', event)
     echo.private(channel).stopListening(event)
   })
 })
@@ -275,13 +275,30 @@ const updateSelectAll = (order) => {
 }
 
 const ordersUpdated = (event) => {
-  console.log('ordersUpdated', event)
   pendingOrders.value = event.pendingOrders
+
   if (event.order) {
     const existingOrder = orderMap.value.get(+event.order.id)
+    ordeCanceled(existingOrder, event)
     if (existingOrder || hasMoreData.value) return
-    console.log('event order', event.order)
-    orders.value.push(event.order)
+
+    // Insertar la orden en la posición correcta
+    const index = orders.value.findIndex(o => o.id > event.order.id)
+    if (index === -1) {
+      orders.value.push(event.order) // Si es la más grande, agregar al final
+    } else {
+      orders.value.splice(index, 0, event.order) // Insertar en la posición correcta
+    }
+  }
+}
+
+const ordeCanceled = (existingOrder, event) => {
+  if (existingOrder && event.order.order_status_id == ORDER_STATUS.CANCELED) {
+    const index = orders.value.findIndex(o => o.id === +event.order.id);
+    if (index !== -1) {
+      notifyWarning(`La orden ${existingOrder.folio} fue cancelada`)
+      orders.value.splice(index, 1);
+    }
   }
 }
 

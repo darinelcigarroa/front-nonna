@@ -78,17 +78,31 @@
             <q-card-section>
                 <q-btn :disable="!paymentType" unelevated color="primary" size="lg" class="full-width"
                     label="Orden pagada" @click="confirmAction" />
+                <q-btn outline unelevated color="primary" size="lg" class="q-my-sm full-width" label="Cancelar orden"
+                    @click="confirmCancelOrder = true" />
             </q-card-section>
         </q-card>
     </q-dialog>
-    <ConfirmDialog v-model="showConfirmDialog" :statusIcon="'mdi-check'">
+
+    <ConfirmDialog v-model="confirmPayOrder" :statusIcon="'mdi-check'">
         <q-card-section class="q-mt-lg text-center">
             <div style="font-size: 16px;">¿Estás seguro de marcar la orden como pagada?</div>
         </q-card-section>
 
         <q-card-actions align="right">
-            <q-btn flat label="Cancelar" color="grey" @click="showDialog = false" />
+            <q-btn flat label="Cancelar" color="grey" @click="confirmPayOrder = false" />
             <q-btn label="Confirmar" color="accent" @click="validateAndSubmit" />
+        </q-card-actions>
+    </ConfirmDialog>
+
+    <ConfirmDialog v-model="confirmCancelOrder" :statusIcon="'mdi-cancel'">
+        <q-card-section class="q-mt-lg text-center">
+            <div style="font-size: 16px;">¿Estás seguro de marcar la orden como cancelada?</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+            <q-btn flat label="Cancelar" color="grey" @click="confirmCancelOrder = false" />
+            <q-btn label="Confirmar" color="accent" @click="cancelOrder" />
         </q-card-actions>
     </ConfirmDialog>
 </template>
@@ -105,9 +119,10 @@ const paymentTypes = ref([])
 const paymentType = ref(null);
 const typePaymentRef = ref(null);
 const showDialog = ref(false);
-const showConfirmDialog = ref(false);
+const confirmPayOrder = ref(false);
+const confirmCancelOrder = ref(false)
 
-const emit = defineEmits(['payOrder'])
+const emit = defineEmits(['actionOrderDialog'])
 
 const open = () => {
     showDialog.value = true;
@@ -131,31 +146,42 @@ const validateAndSubmit = async () => {
         if (response.success) {
             notifySuccess(response.message)
             close()
-            emit('payOrder')
+            emit('actionOrderDialog')
         } else {
             notifyError(response.message)
         }
-        showConfirmDialog.value = false
+        confirmPayOrder.value = false
     } else {
         notifyWarning('El tipo de pago es requerido')
     }
 };
 
 const confirmAction = () => {
-    console.log('Acción confirmada')
-    showConfirmDialog.value = true
+    confirmPayOrder.value = true
+}
+
+const cancelOrder = async () => {
+    const order = { ...props.order }
+    const result = await orderService.cancelOrder(order)
+    if (result.success) {
+        confirmCancelOrder.value = false
+        notifySuccess(result.message)
+        close()
+        emit('actionOrderDialog')
+    } else {
+        notifyError(result.message)
+    }
 }
 
 onMounted(async () => {
     try {
         const response = await paymentTypeService.getPaymentTypes()
         paymentTypes.value = response.data.paymentTypes
-
     } catch (error) {
         notifyError(error)
     }
-
 })
+
 </script>
 
 <style scoped>

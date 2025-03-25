@@ -89,4 +89,15 @@ export default {
             }
         }
     },
+    async cancelOrder(order) {
+        try {
+            const response = await api.patch(`cancel-order/${order.id}`, { order })
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    },
 }

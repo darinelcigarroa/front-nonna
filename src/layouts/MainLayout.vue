@@ -150,42 +150,45 @@ const confirm = () => {
 // Función para reproducir el sonido
 const playNotificationSound = () => {
   if (!isSoundEnabled.value) {
-    console.warn("El sonido está bloqueado por el navegador hasta que el usuario interactúe.");
     return;
   }
 
   const audio = new Audio("/sounds/notificationOrderReady.mp3");
   audio.play()
-    .then(() => console.log("Sonido reproducido correctamente"))
-    .catch((e) => console.error("Error reproduciendo sonido:", e));
 };
 
 const isSoundEnabled = ref(false);
 
-
-onMounted(() => {
-  document.addEventListener("click", () => {
-    isSoundEnabled.value = true
-  }, { once: true })
-});
-
-
-onMounted(() => {
+const notificationOrdersReady = () => {
   if (auth.roles.includes('waiter')) {
     echo.private('order-items-updated')
       .stopListening('OrderItemsUpdated')
       .listen('OrderItemsUpdated', (event) => {
-        console.log('event', event)
-        const order = auth.user.orders.find((order) => order.id == event.orderId)
-        if (event.completed && order !== undefined) {
-          ordersReady.value.push({ folio: order.folio, table: order.table.name })
-          isVisible.value = true
-          playNotificationSound(); // 🔹 Agregar la reproducción aquí
-        }
-        orderStore.handleOrderUpdated(event);
+        showNotification(event)
       });
   }
-});;
+}
+
+const showNotification = (event) => {
+  const order = auth.user.orders.find((order) => order.id == event.orderId)
+  if (event.completed && order !== undefined) {
+    ordersReady.value.push({ folio: order.folio, table: order.table.name })
+    isVisible.value = true
+    playNotificationSound();
+  }
+  orderStore.handleOrderUpdated(event);
+}
+
+const enabledSound = () => {
+  document.addEventListener("click", () => {
+    isSoundEnabled.value = true
+  }, { once: true })
+}
+
+onMounted(() => {
+  enabledSound()
+  notificationOrdersReady()
+});
 
 </script>
 

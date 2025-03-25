@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-col-gutter-sm q-ma-xs q-mr-sm">
+  <div class="row q-col-gutter-sm q-pa-md">
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
       <q-card flat bordered class>
         <q-card-section class="flex justify-between">
