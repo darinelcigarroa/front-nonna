@@ -1,4 +1,6 @@
 export default {
+  // Buscadores
+  search_dish: 'Buscar platillo',
   // Graficas
   most_used_tables: 'Mesas mas usadas',
   download: 'Descargar',
@@ -127,7 +129,7 @@ export default {
   finish: 'Finalizar',
   clear_form: 'Limpiar formulario',
   clear: 'Limpiar',
-
+  desactivate_dishes: 'Desactivar platillos',
 
   // Gestión de Inventario
   inventory: 'Inventario',

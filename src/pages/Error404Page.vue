@@ -26,9 +26,9 @@
               <use xlink:href="#tornillo" y="60"></use>
             </g>
           </svg>
-          <span class="text-h1 text-center q-mt-md block">Oops! Page not found</span>
+          <span class="text-h1 text-center q-mt-md block">¡Oops! Página no encontrada</span>
           <span class="text-h4 text-center block">
-            <router-link :to="{ name: 'home' }">Go Home!</router-link>
+            <router-link :to="{ name: 'home' }">¡Inicio!</router-link>
           </span>
         </div>
       </q-page>

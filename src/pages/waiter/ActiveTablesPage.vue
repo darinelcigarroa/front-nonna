@@ -43,11 +43,11 @@
             <q-card-section class="row items-center q-pa-md no-wrap">
               <q-card-section class="flex" style="padding: 0;">
                 <q-avatar style="cursor: pointer;" @click="paidOrder(order)" rounded
-                  :class="[`box_button_${(index % 3) + 1}`]" text-color="dark">
+                  :class="[`box_button_${(index % 4) + 1}`]" text-color="white">
                   <q-icon name="table_bar" />
                 </q-avatar>
                 <div class="q-ml-sm column">
-                  <div :class="[`box_${(index % 3) + 1}`, 'text-weight-bold']">
+                  <div :class="[`box_${(index % 4) + 1}`, 'text-weight-bold']">
                     {{ order.order_status.name }}
                   </div>
                   <div :class="!$q.dark.isActive ? 'text-grey-8' : 'text-white'">
@@ -59,7 +59,7 @@
                 <div :class="[!$q.dark.isActive ? 'text-dark' : 'text-white', 'flex', 'text-h5', 'flex-center']">
                   <span class="q-mx-xs q-mb-lg">{{ order.folio }}</span>
                 </div>
-                <div :class="[`box_button_${(index % 3) + 1}`, 'progress-btn', { 'text-white': $q.dark.isActive }]"
+                <div :class="[`box_button_${(index % 4) + 1}`, 'progress-btn', { 'text-white': $q.dark.isActive }]"
                   class="flex items-center cursor-pointer"
                   @click="$router.push({ name: 'edit-order', params: { id: order.id } })">
                   <q-icon name="edit" class="q-mx-sm" size="xs"></q-icon>
@@ -146,40 +146,6 @@ onMounted(() => {
   border-radius: 12px;
 }
 
-.box_1 {
-  color: var(--q-secondary);
-}
-
-.base_box_button {
-  font-family: cursive;
-  font-size: 12px !important;
-}
-
-.box_button_1 {
-  color: var(--q-primary);
-  background-color: #e8686862;
-
-}
-
-.box_2 {
-  color: var(--q-accent);
-}
-
-.box_button_2 {
-  color: var(--q-accent);
-  background-color: #08446588;
-}
-
-.box_3 {
-  color: var(--q-teal);
-}
-
-.box_button_3 {
-  color: var(--q-teal);
-  background-color: #087e8b80;
-  /* background-color: rgba(8, 126, 139, 0.5); */
-}
-
 .permanent-flat.q-btn--actionable:not(.q-btn--disabled):hover::before,
 .permanent-flat.q-btn--actionable:not(.q-btn--disabled):active::before {
   background-color: transparent !important;
@@ -195,27 +161,6 @@ onMounted(() => {
   height: 8px;
   border-radius: 3px;
   background-color: #e9ecef;
-}
-
-.progress-bar-1 {
-  height: 8px;
-  border-radius: 3px;
-  background: -webkit-linear-gradient(45deg, #780000, #de52a5) !important;
-  background: linear-gradient(45deg, #780000, #de52a5) !important;
-}
-
-.progress-bar-2 {
-  height: 8px;
-  border-radius: 3px;
-  background: -webkit-linear-gradient(45deg, #003049, #bb6aa3) !important;
-  background: linear-gradient(45deg, #003049, #bb6aa3) !important;
-}
-
-.progress-bar-3 {
-  height: 8px;
-  border-radius: 3px;
-  background: -webkit-linear-gradient(45deg, #087e8b, #85ba62) !important;
-  background: linear-gradient(45deg, #087e8b, #85ba62) !important;
 }
 
 .progress-btn {

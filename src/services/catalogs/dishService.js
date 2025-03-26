@@ -65,4 +65,30 @@ export default {
             }
         }
     },
+    async getMenuDishes(search) {
+        try {
+            const response = await api.get('catalogs/get-menu-dishes', {
+                params: { search }
+            });
+            return response.data
+
+        } catch (error) {
+            return error.response?.data || {
+                success: false,
+                message: 'Error en login'
+            }
+        }
+    },
+    async toggleDishStatus(id) {
+        try {
+            const response = await api.patch(`catalogs/toggle-dish-status/${id}`)
+            return response.data
+
+        } catch (error) {
+            return error.response?.data || {
+                success: false,
+                message: 'Error en login'
+            }
+        }
+    },
 }

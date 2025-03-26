@@ -96,8 +96,9 @@ onUnmounted(() => {
 const cards = [
   { name: 'create_order', description: 'create_an_order_to_send_to_the_chef', image: 'create_order.svg', path: '/create-order', roles: ['super-admin', 'waiter'] },
   { name: 'active_services', description: 'check_out_the_tables_they_are_in_charge_of', image: 'active_tables.svg', path: '/active-tables', roles: ['super-admin', 'waiter'] },
-  { name: 'kitchen_orders', description: 'tracking_dishes_in_progress_for_the_chef', image: '328.svg', path: '/kitchen-orders', roles: ['super-admin', 'chef'] },
-  { name: 'profile', description: 'view_your_information', image: '481.svg', path: '/profile', roles: ['super-admin', 'waiter', 'chef'] },
+  { name: 'kitchen_orders', description: 'tracking_dishes_in_progress_for_the_chef', image: '240.svg', path: '/kitchen-orders', roles: ['super-admin', 'chef'] },
+  { name: 'deactivate_dishes', description: 'update_the_list_of_available_foods', image: 'dish.svg', path: '/desactivate-dishes', roles: ['super-admin', 'chef'] },
+  { name: 'profile', description: 'view_your_information', image: 'profile.svg', path: '/profile', roles: ['super-admin', 'waiter', 'chef'] },
 ];
 
 const navigateTo = (path) => {

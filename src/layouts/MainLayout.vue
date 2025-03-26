@@ -115,6 +115,7 @@ const menuGroups = [
     roles: ["chef"],
     items: [
       { route: "kitchen-orders", label: "kitchen_orders", icon: "mdi-silverware-fork-knife" },
+      { route: "desactivate-dishes", label: "desactivate_dishes", icon: "no_food" },
     ],
   },
   {
