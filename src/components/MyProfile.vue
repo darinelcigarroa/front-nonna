@@ -1,6 +1,9 @@
 <template>
   <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
     <q-page class="q-pa-md flex flex-center">
+
+      <LoadingComponent :loading="loading" />
+
       <q-card class="col-12" style="border-radius: 10px; min-width: 90%;">
         <q-card-section class="col-lg-6 col-md-6 col-sm-12 col-xs-12 flex flex-center column">
           <q-avatar size="8rem">
@@ -91,21 +94,24 @@ import userService from 'src/services/userService';
 import { useAuthStore } from 'src/stores/auth-store';
 import { computed, ref } from 'vue';
 import { notifyError, notifySuccess } from 'src/utils/notify';
-
+import LoadingComponent from './utils/LoadingComponent.vue';
 
 const authStore = useAuthStore()
 const isVisible = ref(false)
+const isCurrentPasswordVisible = ref(false);
+const isNewPasswordVisible = ref(false);
+const isConfirmPasswordVisible = ref(false);
+const loading = ref(false); // Controla el loading en q-page
 const form = ref({
   currentPassword: '',
   newPassword: '',
   newPassword_confirmation: ''
 })
-const isCurrentPasswordVisible = ref(false);
-const isNewPasswordVisible = ref(false);
-const isConfirmPasswordVisible = ref(false);
 
 const updateUser = async () => {
   try {
+    loading.value = true
+
     const result = await userService.update(authStore.user.id, authStore.user)
     if (result.success) {
       notifySuccess(result.message)
@@ -114,10 +120,13 @@ const updateUser = async () => {
     }
   } catch (e) {
     notifyError(e)
+  } finally {
+    loading.value = false
   }
 }
 const updatePassword = async () => {
   try {
+    loading.value = true
     const result = await authService.updatePassword(form.value)
     if (result.success) {
       notifySuccess(result.message)
@@ -127,6 +136,8 @@ const updatePassword = async () => {
     }
   } catch (e) {
     notifyError(e)
+  } finally {
+    loading.value = false
   }
 }
 

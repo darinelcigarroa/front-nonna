@@ -1,5 +1,5 @@
 <template>
-  <transition appear enter-active-class="animated bounceInLeft slower" leave-active-class="animated zoomOut slower">
+  <transition appear enter-active-class="animated zoomIn slower" leave-active-class="animated zoomOut slower">
     <q-page class="q-col-gutter-sm q-pa-lg" style="z-index: 1">
       <q-page-sticky position="top-right" :offset="[18, 18]" style="z-index: 2;">
         <q-btn color="secondary" glossy round size="md" icon="mdi-bell-ring" @click="handleScrollToBottom">

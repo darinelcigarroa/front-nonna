@@ -9,8 +9,14 @@
           <span class="q-mx-sm">{{ currentTime }}</span>
         </div>
       </div>
-      <div>
-        <span class="text-h5 text-weight-bolder">Hi, Darinel!</span>
+      <div class="column q-gutter-sm">
+        <span class="text-h6 text-weight-bolder">¡Hola, {{ authStore.name }}!</span>
+        <div>
+          <q-chip class="text-uppercase self-start text-weight-medium" size="0.9em"
+            v-for="(role, index) in authStore.roles" :key="index" color="primary" text-color="white">
+            {{ role }}
+          </q-chip>
+        </div>
       </div>
     </div>
 
@@ -68,12 +74,14 @@ import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
 import { notifyError } from 'src/utils/notify';
 import { api } from 'boot/axios'
+import { useAuthStore } from 'src/stores/auth-store';
 
 const now = ref(new Date());
 const router = useRouter();
 const tip = ref([])
 const currentTime = computed(() => format(now.value, 'HH:mm a', { locale: es }));
 const date = computed(() => format(now.value, "EEEE d 'de' MMMM", { locale: es }));
+const authStore = useAuthStore()
 
 const updateTime = () => {
   now.value = new Date();

@@ -1,4 +1,5 @@
 <template>
+
   <q-form class="q-gutter-md q-pa-md" ref="formRef">
     <div class="row q-col-gutter-md">
       <!-- Información Básica -->
@@ -127,9 +128,11 @@ const orderStore = useOrderStore();
 const dishTypeStore = useDishTypeStore();
 // 🟢 4. Variables de parámetros de ruta
 const orderID = route.params.id;
+const emit = defineEmits(['setLoading']);
+
 
 onMounted(async () => {
-  $q.loading.show()
+  emit('set-loading', true);
   const dataTable = await tableService.getTables()
 
   await dishTypeStore.index()
@@ -137,8 +140,8 @@ onMounted(async () => {
   if (dataTable.success) {
     numberTables.value = dataTable.data.tables
   }
+  emit('set-loading', false);
 
-  $q.loading.hide()
 })
 
 watch(() => orderStore.currentOrder.typeDish, async (newVal) => {
@@ -232,7 +235,7 @@ const updateOrderTable = (async () => {
   }
 })
 const handleOrderAdded = async () => {
-
+  emit('set-loading', true);
   if (orderStore.activeOrders.length === 0) {
     notifyWarning('No tienes platillos válidos')
     return
@@ -247,10 +250,10 @@ const handleOrderAdded = async () => {
   } else {
     notifyError(response.message)
   }
-
+  emit('set-loading', false);
 }
 const handleOrderUpdate = async () => {
-
+  emit('set-loading', true);
   if (orderStore.activeOrders.length === 0) {
     notifyWarning('No tienes platillos válidos')
     return
@@ -264,18 +267,7 @@ const handleOrderUpdate = async () => {
   } else {
     notifyError(response.message)
   }
+  emit('set-loading', false);
 
 }
-// const applyObservationToAll = ref(false);
-
-
-// const applyToAll = () => {
-//   if (applyObservationToAll.value) {
-//     const firstObservation = editableOrders.value[0]?.observations || '';
-//     editableOrders.value.forEach((order) => {
-//       order.observations = firstObservation;
-//     });
-//   }
-// };
-
 </script>

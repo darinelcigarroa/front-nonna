@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits } from 'vue'
+import { computed } from 'vue'
 import { getStatusColor, getStatusIcon, ORDER_ITEM_STATUS } from '@/constants/status.js'
 
 // ✅ Definir `modelValue` en props

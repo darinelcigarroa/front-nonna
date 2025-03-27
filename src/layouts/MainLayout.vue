@@ -95,6 +95,7 @@ const router = useRouter()
 const orderStore = useOrderStore();
 const isVisible = ref(false)
 const ordersReady = ref([])
+
 const menuGroups = [
   {
     roles: ["super-admin"],

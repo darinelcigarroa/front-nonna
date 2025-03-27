@@ -2,6 +2,7 @@
     <transition appear enter-active-class="animated  delay-1s zoomIn slower"
         leave-active-class="animated zoomOut slower">
         <q-page class="q-pa-md">
+            <LoadingComponent :loading="loading" />
 
             <q-card class="row">
                 <q-card-section class="full-width">
@@ -48,9 +49,8 @@ import dishService from 'src/services/catalogs/dishService';
 import { getStatusDishIcon } from '@/constants/status.js'
 import { onMounted, ref, watch } from 'vue';
 import { notifyError, notifySuccess } from 'src/utils/notify';
-import { useQuasar } from 'quasar';
+import LoadingComponent from '@/components/utils/LoadingComponent.vue';
 
-const $q = useQuasar();
 const typesDishes = ref([])
 const search = ref(null)
 const loading = ref(false)
@@ -70,9 +70,9 @@ const onRequest = async () => {
     loading.value = false
 }
 onMounted(async () => {
-    $q.loading.show()
+    loading.value = true
     await onRequest()
-    $q.loading.hide()
+    loading.value = false
 })
 
 watch(search, () => {
