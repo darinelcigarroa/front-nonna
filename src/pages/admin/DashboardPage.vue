@@ -48,8 +48,8 @@ use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent,
 const dashboardStats = computed(() => [
   { value: stats.currentMonthTotal, label: "Total Sales", icon: "mdi-currency-usd", iconClass: "box_1", progress: 70 },
   { value: stats.totalDishesMonth, label: "Total Dishes", icon: "mdi-food-turkey", iconClass: "box_2", progress: 40 },
-  { value: stats.totalCanceledOrders, label: "New Customers", icon: "mdi-file-cancel-outline", iconClass: "box_4", progress: 30 },
-  { value: stats.totalEmployees, label: "Total Employees", icon: "mdi-account-group", iconClass: "box_3", progress: 80 },
+  { value: stats.totalCanceledOrders, label: "New Customers", icon: "mdi-file-cancel-outline", iconClass: "box_3", progress: 30 },
+  { value: stats.totalEmployees, label: "Total Employees", icon: "mdi-account-group", iconClass: "box_4", progress: 80 },
 ]);
 
 const stats = useDashboardStatsStore()

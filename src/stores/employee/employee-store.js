@@ -19,6 +19,7 @@ export const useEmployeeStore = defineStore('employee', {
         }),
         dataEmployees: [],
         filterPosition: [],
+        exportPosition: ['all'],
         editModal: false,
         createModal: false
     }),
@@ -84,7 +85,25 @@ export const useEmployeeStore = defineStore('employee', {
         },
         async applyFilter() {
             await this.getEmployee()
+        },
+        async exportExcel() {
+            const result = await employeeService.exportEmployeesExcel(this.exportPosition);
+            console.log('result', result)
+            if (!result || result.sucsses === false) {
+                console.error('Error al exportar:', result.message);
+                return;
+            }
+
+            const url = window.URL.createObjectURL(result); // Usar directamente el blob recibido
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'empleados.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
         }
+
     },
     persist: true
 })

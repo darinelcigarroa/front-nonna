@@ -54,5 +54,19 @@ export default {
             }
         }
     },
+    async exportEmployeesExcel(params) {
+        try {
+            const response = await api.get('admin/export/employee/excel', {
+                params,
+                responseType: 'blob'
+            });
 
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    }
 }
