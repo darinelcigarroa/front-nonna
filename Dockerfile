@@ -13,19 +13,12 @@ RUN npm install
 # Construir la aplicación
 RUN npm run build
 
-# Etapa 2: Servir la aplicación sin Nginx, directamente con un servidor HTTP simple
-FROM node:20-alpine
+# Etapa 2: Servir la aplicación con Nginx
+FROM nginx:alpine
 
-# Instalar un servidor HTTP simple como 'http-server' para servir archivos estáticos
-RUN npm install -g http-server
-
-WORKDIR /usr/src/app
-
-# Copiar los archivos construidos desde la etapa anterior
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY app.conf /etc/nginx/conf.d/default.conf
 
-# Exponer el puerto 8080 para el servidor HTTP
-EXPOSE 8080
+EXPOSE 80
 
-# Comando para iniciar el servidor HTTP
-CMD ["http-server", "/usr/share/nginx/html", "-p", "8080"]
+CMD ["nginx", "-g", "daemon off;"]
