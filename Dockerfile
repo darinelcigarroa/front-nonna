@@ -3,14 +3,14 @@ FROM node:20-alpine as builder
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json package-lock.json ./
 
 RUN chmod -R 777 /usr/src/app
-RUN yarn install --frozen-lockfile --no-cache
+RUN npm install
 
 COPY . .
 
-RUN yarn run build
+RUN npm run build
 
 # Etapa 2: Servir la aplicación con Nginx
 FROM nginx:alpine
