@@ -5,7 +5,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN yarn install
+RUN chmod -R 777 /usr/src/app
+RUN yarn install --frozen-lockfile --no-cache
 
 COPY . .
 
