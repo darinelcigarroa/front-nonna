@@ -6,7 +6,11 @@ WORKDIR /usr/src/app
 COPY package*.json package-lock.json ./
 
 RUN chmod -R 777 /usr/src/app
-RUN npm install
+
+RUN apk update && apk add --no-cache linux-headers
+
+RUN npm install -g @quasar/cli
+
 
 COPY . .
 
