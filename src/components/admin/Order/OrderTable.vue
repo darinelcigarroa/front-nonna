@@ -69,11 +69,27 @@ const columns = ref([
         sortable: true
     },
     {
-        name: "formatted_date",
+        name: "payment_date",
         required: true,
-        label: "Fecha",
+        label: "Fecha de pago",
         align: "center",
-        field: "formatted_date",
+        field: row => row.payment_date ?? "SIN FECHA",
+        sortable: true
+    },
+    {
+        name: "cancellation_date",
+        required: true,
+        label: "Fecha de cancelación",
+        align: "center",
+        field: row => row.cancellation_date ?? "SIN FECHA",
+        sortable: true
+    },
+    {
+        name: "paymentType",
+        required: true,
+        label: "Tipo de pago",
+        align: "center",
+        field: row => row.payment_type?.name ?? "NO ESPECIFICADO",
         sortable: true
     },
     {

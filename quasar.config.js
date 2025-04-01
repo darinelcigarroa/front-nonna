@@ -115,7 +115,7 @@ export default defineConfig((ctx) => {
           spinnerSize: 70,
         }
       },
-
+      lang: 'es',
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 

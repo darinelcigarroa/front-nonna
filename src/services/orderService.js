@@ -100,4 +100,18 @@ export default {
             }
         }
     },
+    async exportOrderExcel(params) {
+        try {
+            const response = await api.get('admin/export/order/excel', {
+                params,
+                responseType: 'blob'
+            })
+            return response.data
+        } catch (error) {
+            return error.response?.data || {
+                sucsses: false,
+                message: 'Error al obtener la orden'
+            }
+        }
+    }
 }

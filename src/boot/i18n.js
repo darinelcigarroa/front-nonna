@@ -13,6 +13,7 @@ export default defineBoot(({ app }) => {
     messages
   });
 
+
   // Guardar 'es-MX' en localStorage si aún no está guardado
   if (!localStorage.getItem('lang')) {
     localStorage.setItem('lang', 'es-MX');

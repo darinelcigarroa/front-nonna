@@ -33,18 +33,35 @@
             <q-td :props="props">
                 <div class="q-gutter-sm">
                     <q-btn @click="employeeStore.aditEmployee(props.row.id)" dense color="blue-9" icon="edit" />
-                    <q-btn @click="onDelete(props.row.id)" dense color="red" icon="delete" />
+                    <q-btn @click="employeeId = props.row.id; confirmDeleteEmployee = true" dense color="red"
+                        icon="delete" />
                 </div>
             </q-td>
         </template>
+
     </q-table>
+
+    <ConfirmDialog :background="'bg-primary'" v-model="confirmDeleteEmployee" :statusIcon="'mdi-check'">
+        <q-card-section class="q-mt-lg text-center">
+            <div style="font-size: 16px;">¿Estás seguro de eliminar el empleado?</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+            <q-btn flat label="Cancelar" color="grey" @click="confirmPayOrder = false" />
+            <q-btn label="Confirmar" color="primary" @click="onDelete()" />
+        </q-card-actions>
+    </ConfirmDialog>
+
 </template>
 <script setup>
+import ConfirmDialog from 'src/components/utils/ConfirmDialog.vue';
 import { ref, onMounted } from 'vue'
 import { useEmployeeStore } from 'src/stores/employee/employee-store';
 import { notifyError, notifySuccess } from 'src/utils/notify';
 
 const employeeStore = useEmployeeStore()
+const confirmDeleteEmployee = ref(false)
+const employeeId = ref(null)
 
 onMounted(async () => {
     await onRequest({
@@ -82,6 +99,14 @@ const columns = ref([
         sortable: true
     },
     {
+        name: "user",
+        required: true,
+        label: "nombre de usuario",
+        align: "left",
+        field: row => row.user?.user_name ?? '',
+        sortable: true
+    },
+    {
         name: "position",
         align: "left",
         label: "Posición",
@@ -113,8 +138,8 @@ const onRequest = async (props) => {
     const result = await employeeStore.getEmployee()
     employeeStore.pagination.rowsNumber = result.total
 }
-const onDelete = async (id) => {
-    const result = await employeeStore.deleteEmployee(id)
+const onDelete = async () => {
+    const result = await employeeStore.deleteEmployee(employeeId.value)
     if (result.success) {
         notifySuccess(result.message)
         await onRequest({
@@ -126,6 +151,8 @@ const onDelete = async (id) => {
     } else {
         notifyError(result.message)
     }
+    confirmDeleteEmployee.value = false
+    employeeId.value = null
 }
 
 </script>

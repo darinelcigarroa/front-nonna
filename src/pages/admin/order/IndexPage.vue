@@ -15,8 +15,8 @@
           <q-btn @click="showFilter" color="white" text-color="dark" icon="mdi-filter"
             :label="$q.screen.gt.xs ? 'Filtros' : ''" class="q-mb-xs" />
           <!-- Exportar -->
-          <q-btn color="white" text-color="dark" icon="mdi-export-variant" :label="$q.screen.gt.sm ? 'Exportar' : ''"
-            class="q-mb-xs" />
+          <q-btn @click="ShowExportExcel" color="white" text-color="dark" icon="mdi-export-variant"
+            :label="$q.screen.gt.sm ? 'Exportar' : ''" class="q-mb-xs" />
         </div>
       </q-toolbar>
 
@@ -26,19 +26,27 @@
       </q-card>
 
       <FilterDialog v-model="isVisible"></FilterDialog>
+      <ExportDialog v-model="visibleExport"></ExportDialog>
     </q-page>
   </transition>
 </template>
 
 <script setup>
-import OrderTable from 'src/components/admin/Order/OrderTable.vue';
-import FilterDialog from 'src/components/admin/Order/FilterDialog.vue';
+import OrderTable from '@/components/admin/Order/OrderTable.vue';
+import FilterDialog from '@/components/admin/Order/FilterDialog.vue';
+import ExportDialog from '@/components/admin/Order/ExportsExcel/ExportDialog.vue';
+
 import { ref } from 'vue';
 
 const isVisible = ref(false)
+const visibleExport = ref(false)
 
 const showFilter = () => {
   isVisible.value = true
+}
+
+const ShowExportExcel = () => {
+  visibleExport.value = true
 }
 </script>
 <style></style>

@@ -41,7 +41,7 @@ import EmployeeTable from 'src/components/admin/employee/EmployeeTable.vue';
 import CreateEmployeeDialog from 'src/components/admin/employee/CreateEmployeeDialog.vue';
 import EditEmployeeDialog from 'src/components/admin/employee/EditEmployeeDialog.vue';
 import FilterDialog from 'src/components/admin/employee/FilterDialog.vue';
-import ExportDialog from 'src/components/admin/employee/ExportDialog.vue';
+import ExportDialog from 'src/components/admin/employee/ExportsExcel/ExportDialog.vue';
 import { useEmployeeStore } from 'src/stores/employee/employee-store';
 import { ref } from 'vue';
 

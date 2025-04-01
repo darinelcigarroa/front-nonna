@@ -12,7 +12,8 @@ export default {
   dashboard: 'Panel',
   employees: 'Empleados',
   tables: 'Mesas',
-
+  deactivate_dishes: 'Desactivar platillos',
+  update_the_list_of_available_foods: 'Actualizar la lista de alimentos disponibles',
   user_name: 'Usuario',
   observation: 'Observaciones',
   status: 'Estatus',

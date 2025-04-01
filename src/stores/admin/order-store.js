@@ -11,6 +11,7 @@ export const useOrderStore = defineStore('storeAdmin', {
             rowsNumber: 0
         },
         filterStatuses: [],
+        exportFilter: { date: '', status: [] },
         search: null
     }),
     actions: {
@@ -30,7 +31,23 @@ export const useOrderStore = defineStore('storeAdmin', {
         },
         async applyFilter() {
             await this.index()
-        }
+        },
+        async exportExcel() {
+            const result = await orderService.exportOrderExcel(this.exportFilter);
+            if (!result || result.sucsses === false) {
+                console.error('Error al exportar:', result.message);
+                return;
+            }
+
+            const url = window.URL.createObjectURL(result); // Usar directamente el blob recibido
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'ordenes.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        },
     }
 })
 

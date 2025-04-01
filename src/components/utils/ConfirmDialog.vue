@@ -2,10 +2,10 @@
     <q-dialog v-model="isVisible" persistent>
         <q-card class="q-pa-md q-dialog-card">
             <!-- Línea superior -->
-            <div class="top-line bg-accent" />
+            <div class="top-line " :class="background" />
 
             <!-- Icono flotante -->
-            <div class="icon-container bg-accent">
+            <div :class="[background, 'icon-container']">
                 <q-icon :name="statusIcon" color="white" size="lg" />
             </div>
 
@@ -26,6 +26,10 @@ const props = defineProps({
     statusIcon: {
         type: String,
         required: true
+    },
+    background: {
+        type: String,
+        default: 'bg-accent'
     }
 })
 

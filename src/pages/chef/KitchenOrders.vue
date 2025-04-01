@@ -14,7 +14,7 @@
       </q-page-sticky>
       <q-infinite-scroll @load="onLoad" :offset="16">
         <q-timeline color=" secondary">
-          <q-timeline-entry heading body="November, 2017" />
+          <q-timeline-entry heading :body="currentTime" />
           <q-timeline-entry v-for="order in orders" :key="order.id" color="secondary">
             <div class="row justify-between items-center full-width">
               <div class="text-weight-bold">{{ order.folio }}</div>
@@ -150,11 +150,15 @@ import { notifyError, notifyInfo, notifySuccess, notifyWarning } from 'src/utils
 import LottieAnimation from 'src/components/LottieAnimation.vue'
 import animationData from 'src/assets/chef/waiter-edit.json'
 import { echo } from 'boot/echo'
+import { es } from 'date-fns/locale';
 import ConfirmDialog from 'src/components/chef/ConfirmDialog.vue'
 import { getTextColor } from 'src/utils/theme';
+import { format } from 'date-fns';
 
 
 /* ✅ VARIABLES */
+const now = ref(new Date());
+
 const orders = ref([])
 const currentPage = ref(1)
 const hasMoreData = ref(true)
@@ -166,6 +170,12 @@ const confirmItems = ref([])
 const confirmStatus = ref(null)
 
 const orderMap = ref(new Map())
+
+const currentTime = computed(() => format(now.value, 'HH:mm a', { locale: es }));
+
+const updateTime = () => {
+  now.value = new Date();
+};
 
 /* ✅ COMPUTED PROPERTIES */
 const orderFolio = computed(() => {
@@ -201,6 +211,9 @@ onMounted(() => {
   echo.private('order-item-deleted')
     .stopListening('OrderItemDeleted')
     .listen('OrderItemDeleted', orderItemDeleted)
+
+  updateTime();
+
 })
 
 onBeforeUnmount(() => {

@@ -83,26 +83,26 @@
             </q-card-section>
         </q-card>
     </q-dialog>
-
-    <ConfirmDialog v-model="confirmPayOrder" :statusIcon="'mdi-check'">
+    <ConfirmDialog :background="'bg-green-7'" v-model="confirmPayOrder" :statusIcon="'mdi-check'">
         <q-card-section class="q-mt-lg text-center">
             <div style="font-size: 16px;">¿Estás seguro de marcar la orden como pagada?</div>
         </q-card-section>
 
         <q-card-actions align="right">
             <q-btn flat label="Cancelar" color="grey" @click="confirmPayOrder = false" />
-            <q-btn label="Confirmar" color="accent" @click="validateAndSubmit" />
+            <q-btn label="Confirmar" color="green-7" @click="validateAndSubmit" />
         </q-card-actions>
     </ConfirmDialog>
 
-    <ConfirmDialog v-model="confirmCancelOrder" :statusIcon="'mdi-cancel'">
+
+    <ConfirmDialog :background="'bg-orange-8'" v-model="confirmCancelOrder" :statusIcon="'mdi-cancel'">
         <q-card-section class="q-mt-lg text-center">
             <div style="font-size: 16px;">¿Estás seguro de marcar la orden como cancelada?</div>
         </q-card-section>
 
         <q-card-actions align="right">
             <q-btn flat label="Cancelar" color="grey" @click="confirmCancelOrder = false" />
-            <q-btn label="Confirmar" color="accent" @click="cancelOrder" />
+            <q-btn label="Confirmar" color="orange-8" @click="cancelOrder" />
         </q-card-actions>
     </ConfirmDialog>
 </template>
@@ -186,7 +186,8 @@ onMounted(async () => {
 
 <style scoped>
 .my-cart {
-    min-width: 400px;
+    /* max-height: 0vh; */
+    min-width: 500px;
     margin: auto;
 }
 </style>
