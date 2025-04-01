@@ -4,11 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
-RUN quasar build
+RUN yarn run build
 
 FROM nginx:alpine
 
