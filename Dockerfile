@@ -1,5 +1,5 @@
 # Etapa 1: Construir la aplicación Quasar
-FROM node:26-alpine
+FROM node:26-alpine as builder
 
 WORKDIR /usr/src/app
 
