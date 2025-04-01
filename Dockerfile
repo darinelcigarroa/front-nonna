@@ -1,16 +1,13 @@
 # Etapa 1: Construir la aplicación Quasar
-FROM node:26-alpine
+FROM node:20-alpine as builder
 
 WORKDIR /usr/src/app
 
 COPY package*.json package-lock.json ./
 
-RUN chmod -R 777 /usr/src/app
-
 RUN apk update && apk add --no-cache linux-headers
 
-RUN npm install -g @quasar/cli
-
+RUN npm install
 
 COPY . .
 
