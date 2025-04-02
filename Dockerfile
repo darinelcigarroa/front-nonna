@@ -1,21 +1,30 @@
-
 # Etapa 1: Construcción de la aplicación Quasar
-FROM node:23-alpine as builder
+FROM node:20-alpine as builder
 
+# Aceptar argumentos de nombre de usuario y UID
+ARG USER
+ARG UID
+
+# Crear el usuario con el UID especificado
+RUN adduser -D -u $UID $USER
+
+# Establecer el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copiar los archivos de configuración de dependencias
-COPY package*.json ./ 
-
-# Instalar las dependencias del proyecto
-RUN apk add --no-cache linux-headers
-RUN npm install
-
-# Copiar el resto del código fuente de la aplicación
-COPY . .
+# Instalar dependencias del sistema necesarias para la compilación
+RUN apk update && apk add --no-cache linux-headers zsh
 
 # Instalar Quasar CLI globalmente
-RUN npm install -g @quasar/cli
+RUN npm install -g @quasar/cli --no-cache
+
+# Copiar los archivos de configuración de dependencias
+COPY package*.json ./
+
+# Instalar las dependencias del proyecto
+RUN npm install
+
+# Copiar el código fuente de la aplicación
+COPY . .
 
 # Construir la aplicación para producción
 RUN quasar build
@@ -26,7 +35,7 @@ FROM nginx:alpine
 # Copiar los archivos construidos desde la etapa anterior al directorio de Nginx
 COPY --from=builder /usr/src/app/dist/spa/ /usr/share/nginx/html/
 
-# Copiar el archivo de configuración de Nginx
+# Copiar el archivo de configuración de Nginx (si tienes uno específico)
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Ajustar los permisos para las carpetas y archivos
@@ -37,4 +46,3 @@ EXPOSE 80
 
 # Comando para ejecutar Nginx en primer plano
 CMD ["nginx", "-g", "daemon off;"]
-
