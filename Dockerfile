@@ -18,19 +18,17 @@ RUN npm install -g @quasar/cli
 # Construir la aplicación para producción
 RUN quasar build
 
-# Etapa 2: Servir la aplicación con http-server (sin Nginx)
-FROM node:20-alpine
+# Etapa 2: Servir la aplicación con Nginx
+FROM nginx:alpine
 
-WORKDIR /usr/src/app
-
-# Instalar http-server para servir los archivos estáticos
-RUN npm install -g http-server
-
-# Copiar los archivos construidos desde la etapa anterior
+# Copiar los archivos construidos desde la etapa anterior al directorio de Nginx
 COPY --from=builder /usr/src/app/dist/spa/ /usr/share/nginx/html/
 
-# Exponer el puerto proporcionado por Railway
-EXPOSE $PORT
+# Copiar el archivo de configuración de Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Comando para ejecutar http-server y servir la aplicación
-CMD ["http-server", "/usr/share/nginx/html", "-p", "$PORT"]
+# Exponer el puerto 80
+EXPOSE 80
+
+# Comando para ejecutar Nginx en primer plano
+CMD ["nginx", "-g", "daemon off;"]
