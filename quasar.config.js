@@ -37,6 +37,9 @@ export default defineConfig((ctx) => {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
       },
+      env: {
+        VITE_API_BASE_URL: process.env.VITE_API_BASE_URL
+      },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
