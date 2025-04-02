@@ -3,7 +3,8 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 COPY . .
 
-RUN npm install
+RUN npm install -g @quasar/cli --no-cache
+
 RUN quasar clean
 RUN quasar build
 
