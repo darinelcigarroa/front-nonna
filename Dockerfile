@@ -1,44 +1,24 @@
-# Etapa 1: Construcción de la aplicación Quasar
+# Etapa 1: Construir la aplicación Quasar
 FROM node:20-alpine as builder
 
-# Establecer el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Instalar dependencias del sistema necesarias para la compilación
-RUN apk update && apk add --no-cache linux-headers zsh
-
-# Instalar Quasar CLI globalmente
-RUN npm install -g @quasar/cli --no-cache
-
-# Copiar los archivos de configuración de dependencias
-COPY package*.json ./
-
-# Eliminar node_modules y package-lock.json si existen
-RUN rm -rf node_modules package-lock.json
-
-# Instalar las dependencias del proyecto
-RUN npm install --no-cache --legacy-peer-deps
-
-# Copiar el código fuente de la aplicación
+# Copiar todo el código del proyecto primero
 COPY . .
 
-# Construir la aplicación para producción
-RUN quasar build
+# Instalar dependencias
+RUN apk add --no-cache linux-headers
+RUN npm install
+
+# Construir la aplicación
+RUN npm run build
 
 # Etapa 2: Servir la aplicación con Nginx
 FROM nginx:alpine
 
-# Copiar los archivos construidos desde la etapa anterior al directorio de Nginx
-COPY --from=builder /usr/src/app/dist/spa/ /usr/share/nginx/html/
+COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY app.conf /etc/nginx/conf.d/default.conf
 
-# Copiar el archivo de configuración de Nginx (si tienes uno específico)
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Ajustar los permisos para las carpetas y archivos
-RUN chown -R nginx:nginx /usr/share/nginx/html
-
-# Exponer el puerto 80
 EXPOSE 80
 
-# Comando para ejecutar Nginx en primer plano
 CMD ["nginx", "-g", "daemon off;"]
