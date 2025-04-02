@@ -1,13 +1,6 @@
 # Etapa 1: Construcción de la aplicación Quasar
 FROM node:20-alpine as builder
 
-# Aceptar argumentos de nombre de usuario y UID
-ARG USER
-ARG UID
-
-# Crear el usuario con el UID especificado
-RUN adduser -D -u $UID $USER
-
 # Establecer el directorio de trabajo
 WORKDIR /usr/src/app
 
