@@ -1,19 +1,24 @@
-# Etapa 1: Construir la aplicación Quasar
+# Etapa 1: Construcción de la aplicación Quasar
 FROM node:20-alpine as builder
 
 WORKDIR /usr/src/app
 
-# Copiar todo el código del proyecto primero
-COPY . .
+# Copiar los archivos de configuración de dependencias
+COPY package*.json ./
 
-# Instalar dependencias
-RUN apk add --no-cache linux-headers
+# Instalar las dependencias del proyecto
 RUN npm install
 
-# Construir la aplicación
-RUN npm run build
+# Copiar el resto del código fuente de la aplicación
+COPY . .
 
-# Etapa 2: Servir la aplicación con http-server
+# Instalar Quasar CLI globalmente
+RUN npm install -g @quasar/cli
+
+# Construir la aplicación para producción
+RUN quasar build
+
+# Etapa 2: Servir la aplicación con http-server (sin Nginx)
 FROM node:20-alpine
 
 WORKDIR /usr/src/app
@@ -22,10 +27,10 @@ WORKDIR /usr/src/app
 RUN npm install -g http-server
 
 # Copiar los archivos construidos desde la etapa anterior
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY --from=builder /usr/src/app/dist/spa/ /usr/share/nginx/html/
 
-# Exponer el puerto 8080
-EXPOSE 8080
+# Exponer el puerto proporcionado por Railway
+EXPOSE $PORT
 
-# Comando para ejecutar http-server y servir la aplicación en el puerto 8080
-CMD ["http-server", "/usr/share/nginx/html", "-p", "8080"]
+# Comando para ejecutar http-server y servir la aplicación
+CMD ["http-server", "/usr/share/nginx/html", "-p", "$PORT"]
