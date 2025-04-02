@@ -24,8 +24,8 @@ RUN npm install -g http-server
 # Copiar los archivos construidos desde la etapa anterior
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
-# Exponer el puerto proporcionado por Railway
-EXPOSE $PORT
+# Exponer el puerto 8080
+EXPOSE 8080
 
-# Comando para ejecutar http-server y servir la aplicación
-CMD ["http-server", "/usr/share/nginx/html", "-p", "$PORT"]
+# Comando para ejecutar http-server y servir la aplicación en el puerto 8080
+CMD ["http-server", "/usr/share/nginx/html", "-p", "8080"]
