@@ -7,8 +7,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Instalar las dependencias del proyecto
-RUN npm install || (cat /root/.npm/_logs/*.log && exit 1)
-
+RUN npm install
 
 # Copiar el resto del código fuente de la aplicación
 COPY . .
