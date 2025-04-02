@@ -13,6 +13,9 @@ RUN npm install
 # Construir la aplicación
 RUN npm run build
 
+# Verificar si la carpeta dist/spa tiene archivos generados
+RUN ls -l /usr/src/app/dist/spa
+
 # Etapa 2: Servir la aplicación con Nginx
 FROM nginx:alpine
 
