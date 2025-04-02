@@ -8,4 +8,5 @@ RUN npm run build
 
 # Instalar y usar un servidor estático
 RUN npm install -g serve
-CMD ["serve", "-s", "dist/spa", "-l", "$PORT"]
+CMD ["serve", "-s", "dist/spa", "-l", "8080"]
+
