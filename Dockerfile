@@ -13,12 +13,19 @@ RUN npm install
 # Construir la aplicación
 RUN npm run build
 
-# Etapa 2: Servir la aplicación con Nginx
-FROM nginx:alpine
+# Etapa 2: Servir la aplicación con http-server
+FROM node:20-alpine
 
+WORKDIR /usr/src/app
+
+# Instalar http-server para servir los archivos estáticos
+RUN npm install -g http-server
+
+# Copiar los archivos construidos desde la etapa anterior
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
-COPY app.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+# Exponer el puerto proporcionado por Railway
+EXPOSE $PORT
 
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para ejecutar http-server y servir la aplicación
+CMD ["http-server", "/usr/share/nginx/html", "-p", "$PORT"]
