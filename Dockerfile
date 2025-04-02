@@ -4,7 +4,7 @@ FROM node:20-alpine as builder
 WORKDIR /usr/src/app
 
 # Copiar los archivos de configuración de dependencias
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Instalar las dependencias del proyecto
 RUN npm install
@@ -26,6 +26,9 @@ COPY --from=builder /usr/src/app/dist/spa/ /usr/share/nginx/html/
 
 # Copiar el archivo de configuración de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Ajustar los permisos para las carpetas y archivos
+RUN chown -R nginx:nginx /usr/share/nginx/html
 
 # Exponer el puerto 80
 EXPOSE 80
