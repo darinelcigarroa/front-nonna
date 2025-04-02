@@ -5,7 +5,7 @@ COPY . .
 
 RUN npm install -g @quasar/cli --no-cache
 
-RUN quasar clean
+# RUN quasar clean
 RUN quasar build
 
 
