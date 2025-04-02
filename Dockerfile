@@ -1,16 +1,25 @@
-FROM node:20-alpine
+# Usa una imagen base de Node.js
+FROM node:18-alpine AS build
 
-WORKDIR /usr/src/app
-COPY . .
+# Establece el directorio de trabajo
+WORKDIR /app
 
-# Instalar dependencias antes de ejecutar la construcción
+# Copia los archivos del proyecto
+COPY package.json package-lock.json ./
 RUN npm install
 
-RUN npm install -g @quasar/cli --no-cache
+# Copia el resto del código
+COPY . .
 
-# Ejecutar la construcción
-RUN quasar build --verbose
+# Construye la aplicación
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+RUN npm run build
 
-# Instalar y usar un servidor estático
-RUN npm install -g serve
-CMD ["serve", "-s", "dist/spa", "-l", "8080"]
+# Servidor para archivos estáticos
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expone el puerto
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
