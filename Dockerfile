@@ -1,27 +1,13 @@
-# Etapa 1: Construir la aplicación Quasar
-FROM node:20-alpine as builder
+# Usar una imagen de Node.js ligera
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# Copiar todo el código del proyecto primero
 COPY . .
 
-# Instalar dependencias
-RUN apk add --no-cache linux-headers
 RUN npm install
-
-# Construir la aplicación
 RUN npm run build
 
-# Verificar si la carpeta dist/spa tiene archivos generados
-RUN ls -l /usr/src/app/dist/spa
-
-# Etapa 2: Servir la aplicación con Nginx
-FROM nginx:alpine
-
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Instalar y usar un servidor estático
+RUN npm install -g serve
+CMD ["serve", "-s", "dist/spa", "-l", "3000"]
