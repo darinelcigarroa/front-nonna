@@ -13,11 +13,14 @@ RUN npm install -g @quasar/cli --no-cache
 # Copiar los archivos de configuración de dependencias
 COPY package*.json ./
 
+# Eliminar node_modules y package-lock.json si existen
+RUN rm -rf node_modules package-lock.json
+
+# Instalar las dependencias del proyecto
+RUN npm install --no-cache --legacy-peer-deps
+
 # Copiar el código fuente de la aplicación
 COPY . .
-
-# Instalar las dependencias del proyecto (sin ejecutar postinstall)
-RUN npm install --no-cache --no-optional
 
 # Construir la aplicación para producción
 RUN quasar build
