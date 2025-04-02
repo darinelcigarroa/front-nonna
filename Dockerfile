@@ -4,7 +4,9 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN npm install
-RUN npm run build
+RUN quasar clean
+RUN quasar build
+
 
 # Instalar y usar un servidor estático
 RUN npm install -g serve
