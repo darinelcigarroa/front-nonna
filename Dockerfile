@@ -1,3 +1,4 @@
+
 # Etapa 1: Construcción de la aplicación Quasar
 FROM node:23-alpine as builder
 
@@ -7,6 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./ 
 
 # Instalar las dependencias del proyecto
+RUN apk add --no-cache linux-headers
 RUN npm install
 
 # Copiar el resto del código fuente de la aplicación
@@ -35,3 +37,4 @@ EXPOSE 80
 
 # Comando para ejecutar Nginx en primer plano
 CMD ["nginx", "-g", "daemon off;"]
+
