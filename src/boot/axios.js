@@ -8,6 +8,7 @@ const api = axios.create({
   headers: { 'Accept': 'application/json' }
 })
 
+console.log('url', import.meta.env.VITE_API_BASE_URL)
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('auth_token')
