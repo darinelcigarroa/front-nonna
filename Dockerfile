@@ -10,6 +10,9 @@ RUN npm install -g @quasar/cli --no-cache
 # Pasar la variable de entorno directamente en el build
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
+# Verificar si la variable se está asignando correctamente
+RUN echo "VITE_API_BASE_URL: $VITE_API_BASE_URL"
+
 RUN quasar build
 
 # Instalar y usar un servidor estático
