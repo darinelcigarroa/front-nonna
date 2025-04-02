@@ -38,7 +38,7 @@ export default defineConfig((ctx) => {
         node: 'node20',
       },
       env: {
-        VITE_API_BASE_URL: process.env.VITE_API_BASE_URL
+        VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
