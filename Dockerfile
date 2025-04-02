@@ -14,7 +14,7 @@ RUN npm install -g @quasar/cli --no-cache
 COPY package*.json ./
 
 # Instalar las dependencias del proyecto
-RUN npm install
+# RUN npm install
 
 # Copiar el código fuente de la aplicación
 COPY . .
