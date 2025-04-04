@@ -2,7 +2,7 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card style="background: transparent;" v-bind:style="$q.screen.lt.xl ? { width: '50%' } : { width: '80%' }">
+        <q-card style="background: transparent;" v-bind:style="$q.screen.lt.xl ? { width: '80%' } : { width: '70%' }">
 
           <div class="background">
             <div class="shape"></div>
