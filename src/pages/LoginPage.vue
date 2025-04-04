@@ -2,7 +2,8 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card style="background: transparent;" v-bind:style="$q.screen.lt.xl ? { width: '80%' } : { width: '70%' }">
+        <q-card class="card-container" style="background: transparent;"
+          :style="$q.screen.gt.sm ? { width: '40%' } : { width: '90%' }">
 
           <div class="background">
             <div class="shape"></div>
@@ -11,8 +12,8 @@
           <q-card-section class="card-login full-width">
 
             <q-card-section class="text-center">
-              <q-avatar size="103px" class="shadow-10">
-                <img src="profile.svg" />
+              <q-avatar size="110px">
+                <img src="profile-2.svg" />
               </q-avatar>
               <div class="text-h6 q-pt-lg text-white">Iniciar sesión</div>
             </q-card-section>
@@ -94,9 +95,6 @@ onMounted(() => {
 
 .bg-image {
   background-color: #000;
-  /* background-image: linear-gradient(132deg, #080808 0%, #16A085 100%); */
-  /* background-color: #00DBDE; */
-  /* background-color: #121717; */
   position: relative;
   width: 100%;
   height: 100%;
@@ -114,8 +112,8 @@ onMounted(() => {
 }
 
 .background .shape {
-  height: 150px;
-  width: 150px;
+  height: 160px;
+  width: 160px;
   position: absolute;
   border-radius: 50%;
   z-index: 1;
