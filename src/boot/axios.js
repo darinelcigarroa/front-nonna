@@ -1,14 +1,13 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 import { echo } from 'src/boot/echo'
+import { useRouter } from 'vue-router'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: false,
   headers: { 'Accept': 'application/json' }
 })
-
-console.log('url', import.meta.env.VITE_API_BASE_URL)
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('auth_token')
@@ -23,6 +22,22 @@ api.interceptors.request.use(config => {
 
   return config
 })
+
+// Interceptor de respuestas (aquí limpias la sesión si hay error 401/419)
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && (error.response.status === 401 || error.response.status === 419)) {
+      localStorage.clear()
+
+      // Redirige al login usando el router
+      const router = useRouter()
+      router.push({ name: 'login' }) // Asegúrate que la ruta tenga el name "login"
+    }
+
+    return Promise.reject(error)
+  }
+)
 
 export default defineBoot(({ app }) => {
   app.config.globalProperties.$axios = axios
