@@ -86,14 +86,14 @@ const columns = ref([
     {
         name: "first_surname",
         align: "left",
-        label: "Primer apellido",
+        label: "Apellido paterno",
         field: "first_surname",
         sortable: true
     },
     {
         name: "second_surname",
         required: true,
-        label: "Segundo apellido",
+        label: "Apellido materno",
         align: "left",
         field: "second_surname",
         sortable: true

@@ -1,6 +1,6 @@
 <template>
   <transition appear enter-active-class="animated fadeInLeft slower" leave-active-class="animated zoomOut slower">
-    <q-page class="q-pt-xs q-ma-md">
+    <q-page class="q-pa-md">
       <div class="row q-my-md shadow">
         <div v-for="(stat, index) in dashboardStats" :key="stat.label" class="col-md-3 col-lg-3 col-sm-12 col-xs-12"
           :class="stat.iconClass">

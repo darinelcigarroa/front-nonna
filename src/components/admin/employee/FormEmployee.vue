@@ -9,7 +9,7 @@
     </div>
     <!-- First Name -->
     <div class="col-md-6 col-12">
-        <q-input v-model="employeeStore.formEmployee.first_surname" label="Primer apellido" outlined>
+        <q-input v-model="employeeStore.formEmployee.first_surname" label="Apellido paterno" outlined>
             <template v-slot:append>
                 <q-icon name="mdi-face-man" class="cursor-pointer" />
             </template>
@@ -18,7 +18,7 @@
 
     <!-- Last Name -->
     <div class="col-md-6 col-12">
-        <q-input v-model="employeeStore.formEmployee.second_surname" label="Segundo apellido" outlined>
+        <q-input v-model="employeeStore.formEmployee.second_surname" label="Apellido materno" outlined>
             <template v-slot:append>
                 <q-icon name="mdi-face-woman" class="cursor-pointer" />
             </template>
