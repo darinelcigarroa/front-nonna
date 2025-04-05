@@ -7,14 +7,14 @@ const getToken = () => localStorage.getItem('auth_token') || '';
 
 const echo = new Echo({
     broadcaster: 'pusher',
-    key: import.meta.env.VITE_REVERB_APP_KEY || '',
-    cluster: import.meta.env.VITE_REVERB_APP_CLUSTER || 'mt1',
-    wsHost: import.meta.env.VITE_REVERB_HOST || '127.0.0.1',
-    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
-    wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
-    forceTLS: true,
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    cluster: import.meta.env.VITE_REVERB_APP_CLUSTER,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: false,
     enabledTransports: ['ws', 'wss'],
-    authEndpoint: `${import.meta.env.VITE_API_BASE_URL || ''}/broadcasting/auth`,
+    authEndpoint: `${import.meta.env.VITE_API_BASE_URL}/broadcasting/auth`,
     auth: {
         headers: {
             Authorization: `Bearer ${getToken()}`
