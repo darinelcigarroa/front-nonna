@@ -1,16 +1,30 @@
-# Usa una imagen de Nginx con Alpine
+# Usa una imagen de Node.js con Alpine
 FROM node:20-alpine AS build
 
 WORKDIR /usr/src/app
 COPY . .
 
+# Define las variables de entorno y pásalas al contenedor
+ARG VITE_API_BASE_URL
+ARG VITE_REVERB_APP_KEY
+ARG VITE_REVERB_HOST
+ARG VITE_REVERB_PORT
+ARG VITE_REVERB_SCHEME
+ARG VITE_REVERB_APP_CLUSTER
+
+# Establecer las variables de entorno en el contenedor
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+ENV VITE_REVERB_APP_KEY=${VITE_REVERB_APP_KEY}
+ENV VITE_REVERB_HOST=${VITE_REVERB_HOST}
+ENV VITE_REVERB_PORT=${VITE_REVERB_PORT}
+ENV VITE_REVERB_SCHEME=${VITE_REVERB_SCHEME}
+ENV VITE_REVERB_APP_CLUSTER=${VITE_REVERB_APP_CLUSTER}
+
 # Instalar dependencias
 RUN npm install
 RUN npm install -g @quasar/cli --no-cache
 
-# Pasar la variable de entorno y construir
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+# Construir la aplicación
 RUN quasar build --verbose
 
 # Segunda etapa: Servidor Nginx
