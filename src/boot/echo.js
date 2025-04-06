@@ -4,11 +4,13 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 const getToken = () => localStorage.getItem('auth_token') || '';
-
+console.log('key', import.meta.env.VITE_REVERB_APP_KEY)
+console.log('wsHost', import.meta.env.VITE_REVERB_HOST)
+console.log('wsPort', import.meta.env.VITE_REVERB_PORT)
 const echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    cluster: import.meta.env.VITE_REVERB_APP_CLUSTER,
+    // cluster: import.meta.env.VITE_REVERB_APP_CLUSTER,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
