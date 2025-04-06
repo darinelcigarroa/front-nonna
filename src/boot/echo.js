@@ -14,7 +14,7 @@ const echo = new Echo({
     key: import.meta.env.VITE_REVERB_APP_KEY,
     cluster: import.meta.env.VITE_REVERB_APP_CLUSTER,
     wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wsPort: '',
     wssPort: import.meta.env.VITE_REVERB_PORT,
     forceTLS: false,
     enabledTransports: ['ws', 'wss'],
