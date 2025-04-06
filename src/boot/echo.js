@@ -7,6 +7,8 @@ const getToken = () => localStorage.getItem('auth_token') || '';
 console.log('key', import.meta.env.VITE_REVERB_APP_KEY)
 console.log('wsHost', import.meta.env.VITE_REVERB_HOST)
 console.log('wsPort', import.meta.env.VITE_REVERB_PORT)
+console.log('ok', `${import.meta.env.VITE_API_BASE_URL || ''}/broadcasting/auth`)
+
 const echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
