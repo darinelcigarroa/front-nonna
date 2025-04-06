@@ -8,7 +8,7 @@ console.log('key', import.meta.env.VITE_REVERB_APP_KEY)
 console.log('wsHost', import.meta.env.VITE_REVERB_HOST)
 console.log('wsPort', import.meta.env.VITE_REVERB_PORT)
 console.log('ok', `${import.meta.env.VITE_API_BASE_URL || ''}/broadcasting/auth`)
-
+console.log(`Bearer ${getToken()}`)
 const echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
