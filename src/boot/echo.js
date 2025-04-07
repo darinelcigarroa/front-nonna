@@ -22,6 +22,10 @@ const echo = new Echo({
     }
 });
 
+echo.connector.pusher.connection.bind('connected', () => {
+    console.log('✅ Echo conectado correctamente');
+});
+
 // ✅ Método para actualizar el token
 export const updateEchoToken = () => {
     echo.options.auth.headers.Authorization = `Bearer ${getToken()}`;
