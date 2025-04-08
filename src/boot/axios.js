@@ -14,6 +14,7 @@ api.interceptors.request.use(config => {
 
   // Evita agregar el token en login/register
   const isAuthRoute = !['/login', '/register'].some(url => config.url?.includes(url))
+  console.log('url', config.url)
   console.log('isAuthRoute', isAuthRoute)
   if (token && isAuthRoute) {
     config.headers.Authorization = `Bearer ${token}`
