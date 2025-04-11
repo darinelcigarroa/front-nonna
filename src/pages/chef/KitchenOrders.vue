@@ -38,8 +38,8 @@
                 <q-virtual-scroll style="max-height: 400px; overflow-y: auto;" :items="order.order_items"
                   v-slot="{ item, index }" virtual-scroll-item-size="100" virtual-scroll-sticky>
 
-                  <q-card :key="item.id" class="col-lg-4 fit col-md-4 col-sm-12 col-xs-12 no-shadow q-px-sm no-border">
-                    <q-item>
+                  <q-card :key="item.id" class="col-lg-4 fit col-md-4 col-sm-12 col-xs-12 no-shadow no-border">
+                    <q-item class="q-pa-none q-pa-sm">
                       <!-- Checkbox individual -->
                       <q-checkbox class="q-mx-xs" v-if="item.status_id !== ORDER_ITEM_STATUS.READY_TO_SERVE"
                         v-model="item.checked" @update:model-value="updateSelectAll(order)" />
@@ -47,7 +47,7 @@
 
                       <!-- Avatar y detalles del platillo -->
                       <q-item-section avatar>
-                        <q-avatar size="4opx" class="shadow-4 bg-secondary">
+                        <q-avatar size="40px" class="shadow-4 bg-secondary">
                           <q-icon class="q-px-sm" color="white" size="sm"
                             :name="getStatusDishIcon(item.dish_type)"></q-icon>
                         </q-avatar>
