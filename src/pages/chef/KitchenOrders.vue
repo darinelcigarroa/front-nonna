@@ -52,62 +52,63 @@
                             :name="getStatusDishIcon(item.dish_type)"></q-icon>
                         </q-avatar>
                       </q-item-section>
+                      <div class="row justify-between full-width">
+                        <q-item-section class="col-12 col-sm">
+                          <q-item-label :class="[getTextColor(), 'text-bold']">
+                            <span>{{ item.dish_name }}</span>
+                          </q-item-label>
 
-                      <q-item-section>
-                        <q-item-label :class="[getTextColor(), 'text-bold']">
-                          <span>{{ item.dish_name }}</span>
-                        </q-item-label>
+                          <q-item-label :class="[getTextColor()]">
+                            Cantidad: {{ item.quantity }}
+                          </q-item-label>
 
-                        <q-item-label :class="[getTextColor()]">
-                          Cantidad: {{ item.quantity }}
-                        </q-item-label>
+                          <q-item-label :class="[getTextColor()]">
+                            Observaciones
+                            <q-avatar class="bg-red-2 q-ml-xs" size="sm" font-size="18px" text-color="primary"
+                              :icon="item.showObservations ? 'mdi-chevron-down' : 'mdi-chevron-right'"
+                              @click="toggleObservations(item)" />
+                          </q-item-label>
 
-                        <q-item-label :class="[getTextColor()]">
-                          Observaciones
-                          <q-avatar class="bg-red-2 q-ml-xs" size="sm" font-size="18px" text-color="primary"
-                            :icon="item.showObservations ? 'mdi-chevron-down' : 'mdi-chevron-right'"
-                            @click="toggleObservations(item)" />
-                        </q-item-label>
-
-                        <transition appear enter-active-class="animated zoomIn slow"
-                          leave-active-class="animated zoomOut fast">
-                          <div v-show="item.showObservations" class="q-my-xs">
-                            <q-item-label v-for="(observation, index) in item.observations" :key="index"
-                              :class="[getTextColor('', 'text-grey-11'), 'text-weight-thin']">
-                              <span class="text-weight-bold">{{ `Platillo ${index + 1}` }}</span>
-                              <span>{{ `- ${observation}` }}</span>
-                            </q-item-label>
-                          </div>
-                        </transition>
-
-                        <q-item-label style="overflow: hidden;">
-                          <transition appear enter-active-class="animated fadeIn slow"
-                            leave-active-class="animated fadeOutRight slow"
-                            @leave="(el) => { el.style.height = '0px'; }">
-                            <div :key="item.order_item_status?.id">
-                              <q-chip :color="getStatusColor(item.order_item_status?.id)" text-color="dark" dense
-                                class="text-weight-bold text-center" square>
-                                <q-icon :name="getStatusIcon(item.order_item_status?.id)" class="q-mr-xs" />
-                                {{ item.order_item_status?.name }}
-                              </q-chip>
+                          <transition appear enter-active-class="animated zoomIn slow"
+                            leave-active-class="animated zoomOut fast">
+                            <div v-show="item.showObservations" class="q-my-xs">
+                              <q-item-label v-for="(observation, index) in item.observations" :key="index"
+                                :class="[getTextColor('', 'text-grey-11'), 'text-weight-thin']">
+                                <span class="text-weight-bold">{{ `Platillo ${index + 1}` }}</span>
+                                <span>{{ `- ${observation}` }}</span>
+                              </q-item-label>
                             </div>
                           </transition>
-                        </q-item-label>
-                      </q-item-section>
-                      <!-- Botones de acción -->
-                      <q-item-section side column>
-                        <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
-                          @click="changeStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
-                          icon="mdi-chef-hat" class="bg-accent text-white">
-                          <q-tooltip>¡Voy a preparar!</q-tooltip>
-                        </q-btn>
 
-                        <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.PREPARING"
-                          @click="changeStatus([item], ORDER_ITEM_STATUS.READY_TO_SERVE)" size="md" dense flat round
-                          icon="mdi-silverware-fork-knife" class="bg-mulberry text-white">
-                          <q-tooltip>¡Listo para servir!</q-tooltip>
-                        </q-btn>
-                      </q-item-section>
+                          <q-item-label style="overflow: hidden;">
+                            <transition appear enter-active-class="animated fadeIn slow"
+                              leave-active-class="animated fadeOutRight slow"
+                              @leave="(el) => { el.style.height = '0px'; }">
+                              <div :key="item.order_item_status?.id">
+                                <q-chip :color="getStatusColor(item.order_item_status?.id)" text-color="dark" dense
+                                  class="text-weight-bold text-center" square>
+                                  <q-icon :name="getStatusIcon(item.order_item_status?.id)" class="q-mr-xs" />
+                                  {{ item.order_item_status?.name }}
+                                </q-chip>
+                              </div>
+                            </transition>
+                          </q-item-label>
+                        </q-item-section>
+                        <!-- Botones de acción -->
+                        <q-item-senction class="col-12 col-sm-auto row justify-start items-center">
+                          <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
+                            @click="changeStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
+                            icon="mdi-chef-hat" class="bg-accent text-white">
+                            <q-tooltip>¡Voy a preparar!</q-tooltip>
+                          </q-btn>
+
+                          <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.PREPARING"
+                            @click="changeStatus([item], ORDER_ITEM_STATUS.READY_TO_SERVE)" size="md" dense flat round
+                            icon="mdi-silverware-fork-knife" class="bg-mulberry text-white">
+                            <q-tooltip>¡Listo para servir!</q-tooltip>
+                          </q-btn>
+                        </q-item-senction>
+                      </div>
                     </q-item>
                     <q-separator v-if="index < order.order_items.length - 1" inset />
                   </q-card>
