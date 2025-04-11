@@ -95,7 +95,7 @@
                           </q-item-label>
                         </q-item-section>
                         <!-- Botones de acción -->
-                        <q-item-senction class="col-12 col-sm-auto row justify-start items-center">
+                        <q-item-senction class="col-12 col-sm-auto row justify-start items-center bg-blue-2">
                           <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
                             @click="changeStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
                             icon="mdi-chef-hat" class="bg-accent text-white">
