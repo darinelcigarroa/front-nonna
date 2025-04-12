@@ -27,14 +27,19 @@ import FormEmployee from './FormEmployee.vue'
 import { useEmployeeStore } from 'src/stores/employee/employee-store'
 
 const storeEmployee = useEmployeeStore()
+const emit = defineEmits(['update:loading'])
 
 const onSubmit = async () => {
+    emit('update:loading', true)
+
     const result = await storeEmployee.updateEmployee()
     if (result.success) {
         notifySuccess(result.message)
     } else {
         notifyError(result.message)
     }
+    emit('update:loading', false)
+
 }
 
 const onCancel = () => {

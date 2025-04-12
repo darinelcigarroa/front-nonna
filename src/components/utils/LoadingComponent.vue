@@ -17,7 +17,7 @@ defineProps({
 
 <style scoped>
 .loading {
-    z-index: 1;
+    z-index: 9999;
     background-color: var(--q-loading);
 }
 </style>

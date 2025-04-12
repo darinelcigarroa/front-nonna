@@ -73,7 +73,7 @@ export const useOrderStore = defineStore('order', {
         quantity: 1,
         observations: [],
         dish: null,
-        typeDish: null,
+        // typeDish: null,
         edit: false
       });
     },

@@ -50,7 +50,7 @@
           El tiempo de edición está a punto de terminar. ¿Quieres extenderlo por 5 minutos?
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Extender 5 minutos" color="accent" @click="extendTime" />
+          <q-btn flat label="Extender 5 minutos" color="dark" @click="extendTime" />
         </q-card-actions>
       </q-card>
     </q-dialog>

@@ -1,14 +1,14 @@
 <template>
+    <LoadingComponent :loading="loading" />
     <transition appear enter-active-class="animated  delay-1s zoomIn slower"
         leave-active-class="animated zoomOut slower">
         <q-page class="q-pa-md">
-            <LoadingComponent :loading="loading" />
 
             <q-card class="row">
                 <q-card-section class="full-width">
                     <q-input v-model="search" outlined :label="$t('search_dish')">
                         <template v-slot:append>
-                            <q-btn flat round icon="search" @click="onRequest" :loading="loading" />
+                            <q-btn flat round icon="search" :loading="loadingSearch" />
                         </template>
                     </q-input>
 
@@ -54,20 +54,23 @@ import LoadingComponent from '@/components/utils/LoadingComponent.vue';
 const typesDishes = ref([])
 const search = ref(null)
 const loading = ref(false)
+const loadingSearch = ref(false)
 
 const desactivateDish = async (id) => {
+
     const result = await dishService.toggleDishStatus(id)
     if (result.success) {
         notifySuccess(result.message)
     } else {
         notifyError(result.message)
     }
+
 }
 const onRequest = async () => {
-    loading.value = true;
+    loadingSearch.value = true;
     const response = await dishService.getMenuDishes(search.value);
     typesDishes.value = response.data.typesDishes;
-    loading.value = false
+    loadingSearch.value = false
 }
 onMounted(async () => {
     loading.value = true

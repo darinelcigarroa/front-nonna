@@ -47,7 +47,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-            <q-btn flat label="Cancelar" color="grey" @click="confirmPayOrder = false" />
+            <q-btn flat label="Cancelar" color="grey" @click="confirmDeleteEmployee = false" />
             <q-btn label="Confirmar" color="primary" @click="onDelete()" />
         </q-card-actions>
     </ConfirmDialog>
@@ -62,6 +62,7 @@ import { notifyError, notifySuccess } from 'src/utils/notify';
 const employeeStore = useEmployeeStore()
 const confirmDeleteEmployee = ref(false)
 const employeeId = ref(null)
+const emit = defineEmits(['update:loading'])
 
 onMounted(async () => {
     await onRequest({
@@ -139,6 +140,8 @@ const onRequest = async (props) => {
     employeeStore.pagination.rowsNumber = result.total
 }
 const onDelete = async () => {
+    confirmDeleteEmployee.value = false
+    emit('update:loading', true)
     const result = await employeeStore.deleteEmployee(employeeId.value)
     if (result.success) {
         notifySuccess(result.message)
@@ -153,6 +156,7 @@ const onDelete = async () => {
     }
     confirmDeleteEmployee.value = false
     employeeId.value = null
+    emit('update:loading', false)
 }
 
 </script>

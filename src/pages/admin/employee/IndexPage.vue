@@ -1,6 +1,6 @@
 <template>
+  <LoadingComponent :loading="isLoading" />
   <transition appear enter-active-class="animated zoomIn slow" leave-active-class="animated zoomOut slow">
-
     <q-page class="q-pa-sm">
       <q-toolbar class="q-pa-sm row items-center q-gutter-md" style="flex-wrap: wrap;">
         <!-- Título -->
@@ -25,10 +25,11 @@
 
 
       <q-card class="full-width">
-        <EmployeeTable />
+        <!-- <EmployeeTable /> -->
+        <EmployeeTable @update:loading="isLoading = $event" />
       </q-card>
-      <CreateEmployeeDialog />
-      <EditEmployeeDialog />
+      <CreateEmployeeDialog @update:loading="isLoading = $event" />
+      <EditEmployeeDialog @update:loading="isLoading = $event" />
       <FilterDialog v-model="isVisible" />
       <ExportDialog v-model="showExportDialog" />
 
@@ -42,12 +43,15 @@ import CreateEmployeeDialog from 'src/components/admin/employee/CreateEmployeeDi
 import EditEmployeeDialog from 'src/components/admin/employee/EditEmployeeDialog.vue';
 import FilterDialog from 'src/components/admin/employee/FilterDialog.vue';
 import ExportDialog from 'src/components/admin/employee/ExportsExcel/ExportDialog.vue';
+import LoadingComponent from '@/components/utils/LoadingComponent.vue';
+
 import { useEmployeeStore } from 'src/stores/employee/employee-store';
 import { ref } from 'vue';
 
 const showExportDialog = ref(false)
 const employeeStore = useEmployeeStore()
 const isVisible = ref(false)
+const isLoading = ref(false)
 
 const showFilterDialog = () => {
   isVisible.value = true
