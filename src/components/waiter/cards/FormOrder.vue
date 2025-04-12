@@ -154,8 +154,6 @@ watch(() => orderStore.currentOrder.typeDish, async (newVal) => {
 });
 
 watch(() => orderStore.currentOrder.quantity, async (newVal, oldVal) => {
-  console.log('Cantidad:', newVal, oldVal);
-
   if (!newVal) return;
 
   if (oldVal > newVal) {

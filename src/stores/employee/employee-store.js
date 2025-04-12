@@ -88,7 +88,7 @@ export const useEmployeeStore = defineStore('employee', {
         },
         async exportExcel() {
             const result = await employeeService.exportEmployeesExcel(this.exportPosition);
-            console.log('result', result)
+
             if (!result || result.sucsses === false) {
                 console.error('Error al exportar:', result.message);
                 return;

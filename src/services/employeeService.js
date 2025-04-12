@@ -33,7 +33,6 @@ export default {
     },
     async update(payload) {
         try {
-            console.log(payload)
             const response = await api.patch(`admin/employee/${payload.id}`, payload)
             return response.data
         } catch (error) {

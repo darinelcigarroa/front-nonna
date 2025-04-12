@@ -22,9 +22,6 @@ const echo = new Echo({
     }
 });
 
-echo.connector.pusher.connection.bind('connected', () => {
-    console.log('✅ Echo conectado correctamente');
-});
 
 // ✅ Método para actualizar el token
 export const updateEchoToken = () => {
@@ -44,10 +41,6 @@ export const activateEcho = () => {
 
     // Volvemos a conectar
     echo.connect();
-
-    echo.connector.pusher.connection.bind('connected', () => {
-        console.log('Echo reconectado correctamente');
-    });
 };
 
 // ✅ Método para desconectar Echo
