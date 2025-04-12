@@ -26,7 +26,6 @@ const getColors = () => {
 const onRequest = async () => {
     const response = await chartService.getTrendsMainCourseSales({ page: currentPage.value, rowsPerPage });
     if (response.success) {
-        console.log('response', response.data.result);
         chartData.value = response.data.result;
         totalPages.value = response.data.result.last_page;
     }

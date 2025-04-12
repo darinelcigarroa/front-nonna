@@ -10,7 +10,7 @@
 
         <q-separator inset></q-separator>
         <q-card-section>
-          <FormOrder></FormOrder>
+          <FormOrder @set-loading="setLoading" />
         </q-card-section>
       </q-card>
     </div>
@@ -50,7 +50,7 @@
           El tiempo de edición está a punto de terminar. ¿Quieres extenderlo por 5 minutos?
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Extender 5 minutos" color="accent" @click="extendTime" />
+          <q-btn flat label="Extender 5 minutos" color="dark" @click="extendTime" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -72,6 +72,7 @@ const router = useRouter();
 const route = useRoute();
 const orderStore = useOrderStore();
 const q = useQuasar();
+const loading = ref(false)
 
 const orderID = ref(route.params.id);
 const tab = ref('ordering');
@@ -125,6 +126,11 @@ const cancelOrder = () => {
   orderStore.resetState();
   router.push({ name: 'home' });
 };
+
+const setLoading = (value) => {
+  loading.value = value;
+};
+
 
 // ✅ Hooks
 onMounted(async () => {

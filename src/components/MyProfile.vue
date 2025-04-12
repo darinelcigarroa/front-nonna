@@ -101,7 +101,7 @@ const isVisible = ref(false)
 const isCurrentPasswordVisible = ref(false);
 const isNewPasswordVisible = ref(false);
 const isConfirmPasswordVisible = ref(false);
-const loading = ref(false); // Controla el loading en q-page
+const loading = ref(false);
 const form = ref({
   currentPassword: '',
   newPassword: '',

@@ -14,7 +14,7 @@
         <div>
           <q-chip class="text-uppercase self-start text-weight-medium" size="0.9em"
             v-for="(role, index) in authStore.roles" :key="index" color="primary" text-color="white">
-            {{ role }}
+            <span>{{ $t(role) }}</span>
           </q-chip>
         </div>
       </div>

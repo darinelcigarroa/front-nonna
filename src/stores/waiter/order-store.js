@@ -30,7 +30,6 @@ export const useOrderStore = defineStore('order', {
     async storeOrder() {
       const orders = this.activeOrders
       const autStore = useAuthStore()
-      console.log('send orders', orders)
 
       const payload = {
         num_dinners: this.currentOrder.numberDiners,
@@ -67,7 +66,6 @@ export const useOrderStore = defineStore('order', {
       return response
     },
     async cancelEditingOrder(orderID) {
-      console.log('orderId', orderID)
       return await orderService.cancelEditing(orderID)
     },
     resetCurrentOrder() {
@@ -75,7 +73,7 @@ export const useOrderStore = defineStore('order', {
         quantity: 1,
         observations: [],
         dish: null,
-        typeDish: null,
+        // typeDish: null,
         edit: false
       });
     },
@@ -84,7 +82,6 @@ export const useOrderStore = defineStore('order', {
     },
     // Functions orderItem
     setOrder() {
-      console.log('set order')
       const { dish, quantity = 1, typeDish, observations } = this.currentOrder || {};
 
       if (!dish) {
@@ -133,7 +130,7 @@ export const useOrderStore = defineStore('order', {
       Object.assign(this.currentOrder, {
         orderItemID: data.id,
         quantity: data.quantity,
-        observations: data.observations,
+        observations: data.observations ?? [],
         dish: data.dish,
         typeDish: dishType,
         originalIndex: data.originalIndex,
@@ -141,8 +138,6 @@ export const useOrderStore = defineStore('order', {
       });
     },
     updateOrderTable() {
-
-      console.log('update order')
       const updateIndex = this.currentOrder.originalIndex
 
       if (!this.currentOrder || !this.currentOrder.dish) {
@@ -158,7 +153,6 @@ export const useOrderStore = defineStore('order', {
       this.resetCurrentOrder()
     },
     handleOrderUpdated(event) {
-      console.log('event', event)
       if (+event.orderId == +this.currentOrder.orderID) {
 
         const updatedDishes = [];
@@ -184,7 +178,6 @@ export const useOrderStore = defineStore('order', {
 
       }
     }
-
   },
 
   persist: true,

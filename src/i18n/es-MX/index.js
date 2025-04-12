@@ -1,4 +1,8 @@
 export default {
+  // Employees
+  chef: 'Chef',
+  waiter: 'Mesero(a)',
+  accountant: 'Contador(a)',
   // Buscadores
   search_dish: 'Buscar platillo',
   // Graficas
@@ -90,8 +94,6 @@ export default {
 
   // Cocina y Estado de Pedidos
   kitchen: 'Cocina',
-  chef: 'Chef',
-  waiter: 'Mesero',
   prepare_order: 'Preparar orden',
   ready_to_serve: 'Listo para servir',
   served: 'Servido',
