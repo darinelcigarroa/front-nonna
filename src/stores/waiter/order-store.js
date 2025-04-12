@@ -133,7 +133,7 @@ export const useOrderStore = defineStore('order', {
       Object.assign(this.currentOrder, {
         orderItemID: data.id,
         quantity: data.quantity,
-        observations: data.observations,
+        observations: data.observations ?? [],
         dish: data.dish,
         typeDish: dishType,
         originalIndex: data.originalIndex,
@@ -184,7 +184,6 @@ export const useOrderStore = defineStore('order', {
 
       }
     }
-
   },
 
   persist: true,

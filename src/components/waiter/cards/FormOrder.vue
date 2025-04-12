@@ -65,11 +65,8 @@
       <div class="col-12">
         <q-checkbox v-model="activeObservations" label="Observaciones" color="primary" keep-color />
         <br>
-
         <div v-if="activeObservations">
-          <!-- <label class="q-pb-xs">{{ $t('observation') }}</label> -->
-          <q-virtual-scroll style="max-height: 200px" :items="Array.from({ length: orderStore.currentOrder.quantity })"
-            virtual-scroll-item-size="50" separator>
+          <q-virtual-scroll :items="observationsList" virtual-scroll-item-size="50" separator>
             <template v-slot="{ index }">
               <div :key="index" class="q-my-sm">
                 <q-input v-model="orderStore.currentOrder.observations[index]" :label="`${$t('dish')} ${index + 1}`"
@@ -77,9 +74,9 @@
               </div>
             </template>
           </q-virtual-scroll>
-
         </div>
       </div>
+
     </div>
 
     <!-- Botones -->
@@ -132,7 +129,7 @@ const emit = defineEmits(['setLoading']);
 
 
 onMounted(async () => {
-  emit('set-loading', true);
+  emit('setLoading', true);
   const dataTable = await tableService.getTables()
 
   await dishTypeStore.index()
@@ -140,7 +137,7 @@ onMounted(async () => {
   if (dataTable.success) {
     numberTables.value = dataTable.data.tables
   }
-  emit('set-loading', false);
+  emit('setLoading', false);
 
 })
 
@@ -163,7 +160,7 @@ watch(() => orderStore.currentOrder.quantity, async (newVal, oldVal) => {
 
   if (oldVal > newVal) {
     // 🔥 Si se reduce la cantidad, eliminamos las observaciones sobrantes
-    orderStore.currentOrder.observations.splice(newVal);
+    // orderStore.currentOrder.observations.splice(newVal);
   }
 });
 
@@ -235,7 +232,7 @@ const updateOrderTable = (async () => {
   }
 })
 const handleOrderAdded = async () => {
-  emit('set-loading', true);
+  emit('setLoading', true);
   if (orderStore.activeOrders.length === 0) {
     notifyWarning('No tienes platillos válidos')
     return
@@ -250,10 +247,10 @@ const handleOrderAdded = async () => {
   } else {
     notifyError(response.message)
   }
-  emit('set-loading', false);
+  emit('setLoading', false);
 }
 const handleOrderUpdate = async () => {
-  emit('set-loading', true);
+  emit('setLoading', true);
   if (orderStore.activeOrders.length === 0) {
     notifyWarning('No tienes platillos válidos')
     return
@@ -267,7 +264,11 @@ const handleOrderUpdate = async () => {
   } else {
     notifyError(response.message)
   }
-  emit('set-loading', false);
-
+  emit('setLoading', false);
 }
+const observationsList = computed(() => {
+  const qty = orderStore.currentOrder?.quantity
+  return Number.isInteger(qty) && qty > 0 ? Array.from({ length: qty }) : []
+})
+
 </script>
