@@ -53,7 +53,7 @@
                         </q-avatar>
                       </q-item-section>
                       <div class="row justify-between full-width">
-                        <q-item-section class="col-12 col-sm">
+                        <div class="col-12 col-sm">
                           <q-item-label :class="[getTextColor(), 'text-bold']">
                             <span>{{ item.dish_name }}</span>
                           </q-item-label>
@@ -93,9 +93,9 @@
                               </div>
                             </transition>
                           </q-item-label>
-                        </q-item-section>
+                        </div>
                         <!-- Botones de acción -->
-                        <q-item-senction class="col-12 col-sm-auto row justify-start items-center">
+                        <div class="col-12 col-sm-auto row justify-start items-center">
                           <q-btn v-show="item.status_id === ORDER_ITEM_STATUS.IN_KITCHEN"
                             @click="changeStatus([item], ORDER_ITEM_STATUS.PREPARING)" size="md" dense flat round
                             icon="mdi-chef-hat" class="bg-accent text-white">
@@ -107,7 +107,7 @@
                             icon="mdi-silverware-fork-knife" class="bg-mulberry text-white">
                             <q-tooltip>¡Listo para servir!</q-tooltip>
                           </q-btn>
-                        </q-item-senction>
+                        </div>
                       </div>
                     </q-item>
                     <q-separator v-if="index < order.order_items.length - 1" inset />
@@ -171,11 +171,14 @@ const confirmItems = ref([])
 const confirmStatus = ref(null)
 
 const orderMap = ref(new Map())
+let intervalId = null;
 
 const currentTime = computed(() => format(now.value, 'HH:mm a', { locale: es }));
 
+
 const updateTime = () => {
   now.value = new Date();
+
 };
 
 /* ✅ COMPUTED PROPERTIES */
@@ -214,10 +217,12 @@ onMounted(() => {
     .listen('OrderItemDeleted', orderItemDeleted)
 
   updateTime();
-
+  setInterval(updateTime, 1000);
 })
 
 onBeforeUnmount(() => {
+  clearInterval(intervalId)
+
   const events = {
     'order-items-updated': 'OrderItemsUpdated',
     'waiter-editing-order': 'WaiterEditingOrder',

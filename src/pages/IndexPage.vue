@@ -95,6 +95,7 @@ const getPhrase = async () => {
 onMounted(async () => {
   getPhrase()
   updateTime();
+  setInterval(updateTime, 1000);
 });
 
 onUnmounted(() => {
